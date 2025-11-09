@@ -1,0 +1,44 @@
+- creer le projet vueJs :
+	npm create vue@latest my-app
+
+|  [ ] TypeScript
+|  [ ] Support de JSX
+|  [x] Router (développement SPA)
+|  [x] Pinia (gestion de l'état)
+|  [ ] Vitest (tests unitaires)
+|  [ ] Tests de bout en bout
+|  [x] ESLint (prévention des erreurs)
+|  [x] Prettier (formatage du code)
+
+- entrer dans le dossier : 
+	cd my-app
+
+- installer packages : 
+	npm install primevue primeicons @primeuix/themes
+	npm install pinia-plugin-persistedstate
+	npm install axios
+	npm install sweetalert2 crypto-js
+	npm install -D tailwindcss postcss autoprefixer
+	npx tailwindcss-cli@latest init -p
+	npm install bootstrap
+
+- lancer : 
+	npm run dev
+---------------------------------------------------------------------------------
+
+Vérifie que ton vite.config.js contient bien :
+
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+})
+
+---------------------------------------------------------------------------------
