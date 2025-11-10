@@ -114,8 +114,6 @@ const internalInstance = getCurrentInstance()
 const stopSync = internalInstance.appContext.config.globalProperties.$syncLoadingStore(loading)
 
 onMounted(async () => {
-  // const sessionOk = await initSession()
-  // if (!sessionOk) return
 
   preloader.hide()
   await nextTick()

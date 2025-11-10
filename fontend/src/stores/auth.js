@@ -211,7 +211,7 @@ export const useAuthStore = defineStore("auth", {
       removeSecureItem("jwt_token");
       removeSecureItem("refresh_token");
       removeSecureItem("session_expire");
-      setSecureItem("session_expired", "false");
+      setSecureItem("session_expired", "true");
 
       delete axios.defaults.headers.common["Authorization"];
 

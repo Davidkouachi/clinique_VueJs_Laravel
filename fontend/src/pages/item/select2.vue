@@ -90,14 +90,6 @@ async function chargerOptions() {
     selectLoading.value = true
     options.value = []
 
-    // const token = localStorage.getItem('jwt_token')
-    // if (!token) {
-    //   showToast('warn', 'Alerte', 'Session expirée, veuillez vous reconnecter')
-    //   return
-    // }
-
-    // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
     const response = await axios.get('/api/users/list')
     const data = response.data.data || []
 
@@ -168,8 +160,7 @@ async function verifierMatricule() {
 }
 
 onMounted(async () => {
-  // const sessionOk = await initSession()
-  // if (!sessionOk) return
+  
   preloader.hide()
   await nextTick()
 

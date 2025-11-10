@@ -66,9 +66,9 @@
                 </div>
                 <!-- <div class="alert alert-warning text-bg-warning" role="alert">
                     <strong>
-                        Bon(s) en stock : 
+                        Bon(s) en stock : 0
                         <br> 
-                        Bon(s) uilisé(s) : 
+                        Bon(s) uilisé(s) : 0
                     </strong>
                 </div> -->
                 <ul>
@@ -77,41 +77,91 @@
                   <li>
                     <ul>
                       <template v-for="(item, index) in filteredMenu" :key="index">
-                        <li v-if="!item.children">
-                          <router-link :to="item.to" active-class="active">
-                            <i :class="item.icon"></i><span>{{ item.label }}</span>
+                        
+                        <!-- 🌟 MENU SANS ENFANTS -->
+                        <li v-if="!item.children" :id="item.id">
+                          <router-link
+                            :to="item.to"
+                            active-class="active"
+                            custom
+                            v-slot="{ href, isActive }"
+                          >
+                            <a
+                              :href="href"
+                              :class="{ active: isActive || activeTemp === item.to }"
+                              @click.prevent="navigateWithPreloader(item.to)"
+                            >
+                              <i :class="item.icon"></i>
+                              <span>{{ item.label }}</span>
+                            </a>
                           </router-link>
                         </li>
 
-                        <li v-else class="submenu">
+                        <!-- 🌟 MENU AVEC SOUS-MENUS -->
+                        <li v-else class="submenu" :id="item.id">
                           <a href="javascript:void(0);">
                             <i :class="item.icon"></i>
                             <span>{{ item.label }}</span>
                             <span class="menu-arrow"></span>
                           </a>
+
                           <ul>
                             <template v-for="(child, cIndex) in item.children" :key="cIndex">
-                              <li v-if="!child.children">
-                                <router-link :to="child.to" active-class="active">{{ child.label }}</router-link>
+                              
+                              <!-- 🔹 SOUS-MENU SIMPLE -->
+                              <li v-if="!child.children" :id="child.id">
+                                <router-link
+                                  :to="child.to"
+                                  active-class="active"
+                                  custom
+                                  v-slot="{ href, isActive }"
+                                >
+                                  <a
+                                    :href="href"
+                                    :class="{ active: isActive || activeTemp === child.to }"
+                                    @click.prevent="navigateWithPreloader(child.to)"
+                                  >
+                                    {{ child.label }}
+                                  </a>
+                                </router-link>
                               </li>
-                              <li v-else class="submenu submenu-two">
+
+                              <!-- 🔹 SOUS-MENU AVEC ENFANTS (si nécessaire) -->
+                              <li v-else class="submenu" :id="child.id">
                                 <a href="javascript:void(0);">
-                                  {{ child.label }}<span class="menu-arrow inside-submenu"></span>
+                                  <span>{{ child.label }}</span>
+                                  <span class="menu-arrow"></span>
                                 </a>
                                 <ul>
-                                  <li v-for="(subChild, scIndex) in child.children" :key="scIndex">
-                                    <router-link :to="subChild.to" active-class="active">{{ subChild.label }}</router-link>
-                                  </li>
+                                  <template v-for="(subChild, sIndex) in child.children" :key="sIndex">
+                                    <li :id="subChild.id">
+                                      <router-link
+                                        :to="subChild.to"
+                                        active-class="active"
+                                        custom
+                                        v-slot="{ href, isActive }"
+                                      >
+                                        <a
+                                          :href="href"
+                                          :class="{ active: isActive || activeTemp === subChild.to }"
+                                          @click.prevent="navigateWithPreloader(subChild.to)"
+                                        >
+                                          {{ subChild.label }}
+                                        </a>
+                                      </router-link>
+                                    </li>
+                                  </template>
                                 </ul>
                               </li>
+
                             </template>
                           </ul>
                         </li>
+
                       </template>
                     </ul>
                   </li>
-                </ul>
-                   
+                </ul>  
             </div>
             <div class="sidebar-footer border-top mt-3">
                 <div class="trial-item mt-0 p-3 text-center">
@@ -137,57 +187,125 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import router from "@/route/index";
+import { usePreloaderStore } from "@/stores/preloader";
 
+const preloader = usePreloaderStore();
 const auth = useAuthStore();
+const activeTemp = ref(null); // 💡 active temporaire
 
 // Menu principal avec permissions
 const menuItems = [
   {
+    id: 'menu-home',
     label: 'Home',
     icon: 'fa fa-th-large',
     to: '/',
     permissions: ['admin', 'user'],
   },
   {
+    id: 'menu-user',
     label: 'User',
     icon: 'fa fa-user',
     to: '/User',
     permissions: ['admin', 'user'],
   },
   {
+    id: 'menu-about',
     label: 'About',
     icon: 'fa fa-th-large',
     to: '/about',
     permissions: ['admin', 'user'],
   },
   {
+    id: 'menu-items',
     label: 'Items',
     icon: 'ti ti-apps',
     permissions: ['admin', 'user'],
     children: [
-      { label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
-      { label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
+      { id: 'submenu-select2', label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
+      { id: 'submenu-datatable', label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
     ],
   },
   {
+    id: 'menu-applications',
     label: 'Applications',
     icon: 'ti ti-apps',
     permissions: ['user'],
     children: [
-      { label: 'Chat', to: '/', permissions: ['user'] },
+      { id: 'submenu-chat', label: 'Chat', to: '/', permissions: ['user'] },
       {
+        id: 'submenu-calls',
         label: 'Calls',
         permissions: ['user'],
         children: [
-          { label: 'Voice Call', to: '/', permissions: ['user'] },
+          { id: 'submenu-voice-call', label: 'Voice Call', to: '/', permissions: ['user'] },
         ],
       },
-      { label: 'Search Result', to: '/', permissions: ['user'] },
+      { id: 'submenu-search-result', label: 'Search Result', to: '/', permissions: ['user'] },
     ],
   },
 ];
+
+// 🌟 Navigation + preloader + effet "active"
+function navigateWithPreloader(to) {
+  closeSidebar();
+
+  // Active visuellement tout de suite
+  activeTemp.value = to;
+
+  // Trouver l'ID correspondant dans menuItems
+  function findId(items, targetTo) {
+    for (let item of items) {
+      if (item.to === targetTo) return item.id;
+      if (item.children) {
+        const childId = findId(item.children, targetTo);
+        if (childId) return childId;
+      }
+    }
+    return null;
+  }
+
+  const activeId = findId(menuItems, to);
+  if (activeId) {
+    setActiveMenu(activeId);
+  }
+
+  // Affiche le loader
+  preloader.show();
+
+  // Lance la navigation
+  router.push(to).catch(() => {});
+}
+
+// Fonction pour gérer l'état actif
+function setActiveMenu(buttonId) {
+  // Supprimer 'active' de tous les liens
+  $('.sidebar li a').removeClass('active');
+
+  // Trouver le lien qui correspond à l'ID ou href
+  let $clicked = $('#' + buttonId);
+
+  // Ajouter 'active' sur le lien cliqué
+  $clicked.addClass('active');
+
+  // Si c'est un sous-menu, ouvrir le parent
+  let $parentSubmenu = $clicked.closest('.submenu');
+  if ($parentSubmenu.length) {
+      // Dérouler le sous-menu
+      $parentSubmenu.find('ul').slideDown();
+      // Ajouter la classe 'subdrop' sur le lien parent
+      $parentSubmenu.children('a').addClass('subdrop');
+  }
+
+  // Fermer les autres sous-menus qui ne contiennent pas le lien cliqué
+  $('.submenu').not($parentSubmenu).each(function () {
+      $(this).children('ul').slideUp();
+      $(this).children('a').removeClass('subdrop');
+  });
+}
 
 // Fonction récursive pour filtrer le menu selon les rôles
 function filterMenu(items, userRoles) {
@@ -220,16 +338,16 @@ const filteredMenu = computed(() => {
 });
 
 function init() {
-  // Gestion du clic sur les liens du menu et sous-menu
+  // Gestion des clics sur tous les liens du menu
   $('.sidebar-menu').on('click', 'a', function (e) {
     const $link = $(this);
     const $parentLi = $link.parent('li');
 
-    // 🔸 Gestion du sous-menu (déroulement)
     if ($parentLi.hasClass('submenu')) {
-      e.preventDefault();
+      e.preventDefault(); // empêche le lien parent de rediriger
       const $submenu = $link.next('ul');
 
+      // 🔽 Ouvrir / fermer le sous-menu
       if (!$link.hasClass('subdrop')) {
         $parentLi.siblings('li').find('ul:visible').slideUp(250);
         $parentLi.siblings('li').find('a.subdrop').removeClass('subdrop');
@@ -239,13 +357,16 @@ function init() {
         $submenu.slideUp(250);
         $link.removeClass('subdrop');
       }
+
+      // ⚠️ NE PAS fermer la sidebar ici → on veut juste dérouler le menu
+      return;
     }
 
-    // ✅ Fermer la sidebar après tout clic (menu ou sous-menu)
+    // ✅ Si c’est un lien normal (pas de sous-menu), on ferme la sidebar
     closeSidebar();
   });
 
-  // Garde le sous-menu actif ouvert au chargement
+  // Garde les sous-menus actifs ouverts
   $('.sidebar-menu ul li.submenu a.active')
     .parents('ul')
     .prev('a')
@@ -254,17 +375,12 @@ function init() {
     .show();
 }
 
-// 🔹 Fonction pour fermer la sidebar
+// 🔹 Fonction générique pour fermer la sidebar
 function closeSidebar() {
-  $('.main-wrapper').removeClass('slide-nav');
-  $('.sidebar-overlay').removeClass('opened');
-  $('html').removeClass('menu-opened');
+  document.querySelector('.main-wrapper')?.classList.remove('slide-nav');
+  document.querySelector('.sidebar-overlay')?.classList.remove('opened');
+  document.querySelector('html')?.classList.remove('menu-opened');
 }
-
-// 🔹 Fermer aussi quand on clique sur le bouton de fermeture
-// $(document).on('click', '.sidebar-close', function () {
-//   closeSidebar();
-// });
 
 onMounted(() => {
   init();

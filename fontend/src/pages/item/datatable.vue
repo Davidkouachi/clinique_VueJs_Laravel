@@ -256,8 +256,7 @@ const closeModal = () => {
 }
 
 onMounted(async () => {
-  // const sessionOk = await initSession()
-  // if (!sessionOk) return
+
   preloader.hide()
   await nextTick()
 

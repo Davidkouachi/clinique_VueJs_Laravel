@@ -44,17 +44,24 @@ const { showSwal } = useSwalAlert();
 
 let swalShown = false;
 
-onMounted(async () => {
-  preloader.show();
-  removeAllExcept("1");
+onMounted( () => {
+  // preloader.show();
+  // removeAllExcept("1");
 
   // 🔸 Si la session est déjà expirée dans le localStorage
   if (localStorage.getItem("session_expired") === "true") {
     auth.setExpired();
   }
 
-  preloader.hide();
-  await nextTick();
+  // preloader.hide();
+  // await nextTick();
+
+  // setTimeout(async () => {
+  //   preloader.hide()
+  //   // await nextTick()
+
+  // }, 800)
+
 });
 
 // 🕑 Surveille expiration du token

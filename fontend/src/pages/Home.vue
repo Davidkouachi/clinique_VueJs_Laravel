@@ -294,8 +294,9 @@ const stopSync = internalInstance.appContext.config.globalProperties.$syncLoadin
 const stopSync2 = internalInstance.appContext.config.globalProperties.$syncLoadingStore(loading2)
 
 onMounted(async () => {
-  // const sessionOk = await initSession()
-  // if (!sessionOk) return
+  const logoutPreloader = document.getElementById('preloaderLogout');
+  if (logoutPreloader) logoutPreloader.remove();
+  
   preloader.hide()
   await nextTick()
 
