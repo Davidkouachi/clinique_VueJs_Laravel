@@ -127,7 +127,7 @@
                               </li>
 
                               <!-- 🔹 SOUS-MENU AVEC ENFANTS (si nécessaire) -->
-                              <li v-else class="submenu" :id="child.id">
+                              <li v-else class="submenu submenu-two" :id="child.id">
                                 <a href="javascript:void(0);">
                                   <span>{{ child.label }}</span>
                                   <span class="menu-arrow"></span>
@@ -233,18 +233,16 @@ const menuItems = [
     id: 'menu-applications',
     label: 'Applications',
     icon: 'ti ti-apps',
-    permissions: ['user'],
+    permissions: ['admin', 'user'],
     children: [
-      { id: 'submenu-chat', label: 'Chat', to: '/', permissions: ['user'] },
       {
         id: 'submenu-calls',
-        label: 'Calls',
-        permissions: ['user'],
+        label: 'Maintenance',
+        permissions: ['admin', 'user'],
         children: [
-          { id: 'submenu-voice-call', label: 'Voice Call', to: '/', permissions: ['user'] },
+          { id: 'submenu-voice-call', label: 'Style 1', to: '/maintenance', permissions: ['admin', 'user'] },
         ],
       },
-      { id: 'submenu-search-result', label: 'Search Result', to: '/', permissions: ['user'] },
     ],
   },
 ];
@@ -280,31 +278,51 @@ function navigateWithPreloader(to) {
   router.push(to).catch(() => {});
 }
 
-// Fonction pour gérer l'état actif
+// ✅ Fonction corrigée : ouverture/fermeture propre des sous-menus
 function setActiveMenu(buttonId) {
-  // Supprimer 'active' de tous les liens
-  $('.sidebar li a').removeClass('active');
+  const $clicked = $('#' + buttonId).find('a').first();
 
-  // Trouver le lien qui correspond à l'ID ou href
-  let $clicked = $('#' + buttonId);
+  // Si c’est un menu principal sans enfants : activer directement
+  if (!$clicked.closest('.submenu').length && !$clicked.closest('.submenu-two').length) {
+    $('.sidebar li a').removeClass('active');
+    $clicked.addClass('active');
 
-  // Ajouter 'active' sur le lien cliqué
-  $clicked.addClass('active');
-
-  // Si c'est un sous-menu, ouvrir le parent
-  let $parentSubmenu = $clicked.closest('.submenu');
-  if ($parentSubmenu.length) {
-      // Dérouler le sous-menu
-      $parentSubmenu.find('ul').slideDown();
-      // Ajouter la classe 'subdrop' sur le lien parent
-      $parentSubmenu.children('a').addClass('subdrop');
+    // Fermer tous les sous-menus
+    $('.submenu ul, .submenu-two ul').slideUp();
+    $('.submenu > a, .submenu-two > a').removeClass('subdrop');
+    return;
   }
 
-  // Fermer les autres sous-menus qui ne contiennent pas le lien cliqué
-  $('.submenu').not($parentSubmenu).each(function () {
-      $(this).children('ul').slideUp();
-      $(this).children('a').removeClass('subdrop');
-  });
+  // 🔹 Si c’est un sous-menu 2 (niveau enfant d’un sous-menu)
+  const $submenuTwo = $clicked.closest('.submenu-two');
+  const $submenu = $clicked.closest('.submenu');
+
+  // Cas : clic sur un lien enfant final (pas un <a> parent de sous-menu)
+  if ($submenuTwo.length || $submenu.length) {
+    $('.sidebar li a').removeClass('active');
+    $clicked.addClass('active');
+
+    // Vérifier si le parent est déjà ouvert
+    const alreadyOpen = $submenuTwo.children('a').hasClass('subdrop') || $submenu.children('a').hasClass('subdrop');
+
+    // Si déjà ouvert → on ne referme pas à nouveau
+    if (!alreadyOpen) {
+      // Fermer tous les autres sous-menus
+      $('.submenu ul, .submenu-two ul').slideUp();
+      $('.submenu > a, .submenu-two > a').removeClass('subdrop');
+
+      // Ouvrir le bon chemin
+      if ($submenuTwo.length) {
+        $submenuTwo.children('ul').slideDown();
+        $submenuTwo.children('a').addClass('subdrop');
+        $submenu.children('ul').slideDown();
+        $submenu.children('a').addClass('subdrop');
+      } else if ($submenu.length) {
+        $submenu.children('ul').slideDown();
+        $submenu.children('a').addClass('subdrop');
+      }
+    }
+  }
 }
 
 // Fonction récursive pour filtrer le menu selon les rôles

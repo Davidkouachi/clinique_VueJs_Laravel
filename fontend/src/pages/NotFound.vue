@@ -12,12 +12,13 @@
                             <img src="@/assets/img/error-404.svg" alt="image" class="img-fluid">
                         </div>
                         <div class="text-center">
-                            <h4 class="mb-2 fw-bold text-danger">Oups, Page introuvable</h4>
+                            <h2 class="mb-2 fw-bold text-danger">Erreur 404</h2>
+                            <h4 class="mb-2 fw-bold text-danger">Page introuvable</h4>
                             <p class="fs-14 text-center text-dark">
                               Erreur 404 . Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
                             </p>
                             <div class="d-flex justify-content-center pb-3">
-                              <button @click="redirectToHome" class="btn btn-primary d-flex align-items-center">
+                              <button @click="redirectToHome" class="btn btn-outline-danger d-flex align-items-center">
                                 <i class="ti ti-chevron-left me-2"></i>
                                 {{ buttonText }}
                               </button>
@@ -34,14 +35,16 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { showPreloader } from '@/function/showPreloader';
 import { useRouter } from 'vue-router';
 import { getSecureItem } from "@/stores/secureStorage";
+import { usePreloaderStore } from '@/stores/preloader';
 
 const router = useRouter();
 const auth = useAuthStore();
+const preloader = usePreloaderStore();
 
 // ✅ utiliser des refs pour que le template réagisse
 const buttonText = ref('');
@@ -57,7 +60,10 @@ function redirectToHome() {
   }, 1000);
 }
 
-onMounted(() => {
+onMounted(async () => {
+  preloader.hide()
+  await nextTick()
+
   if (getSecureItem("session_expired") === false) {
     buttonText.value = 'Retour vers le Tableau de bord';
     preloaderMessage.value = 'Redirection vers le Tableau de Bord...';
@@ -66,6 +72,7 @@ onMounted(() => {
     preloaderMessage.value = 'Redirection vers la page de connexion...';
   }
 });
+
 </script>
 
 <style scoped>

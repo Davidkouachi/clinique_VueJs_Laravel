@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import NotFound from '@/pages/NotFound.vue';
+import Maintenance from '@/pages/Maintenance.vue';
+
 import Login from '@/pages/auth/login.vue';
 import User from '@/pages/User.vue';
 import Home from '@/pages/Home.vue';
@@ -18,6 +20,7 @@ const routes = [
   { path: '/select2', name: 'Select2', component: Select2, meta: { title: 'Select2', requiresAuth: true } },
   { path: '/datatable', name: 'DataTable', component: DataTable, meta: { title: 'DataTable', requiresAuth: true } },
 
+  { path: '/maintenance', name: 'Maintenance', component: Maintenance, meta: { title: 'Maintenance', requiresAuth: true } },
   // 🚨 Route 404 (toujours en dernier)
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, meta: { title: 'Page introuvable' } },
 ];

@@ -210,7 +210,7 @@ async function fetchEmployes() {
 
         showPreloader(message, () => {
           exportFunc(donneesRecherchees);
-        }, 1000);
+        }, 2000);
       };
 
       // ⚙️ Initialisation du tableau avec les callbacks propres
