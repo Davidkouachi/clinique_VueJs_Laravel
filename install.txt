@@ -24,6 +24,11 @@
 	npm install qrcode.vue
 	npm install chart.js vue-chartjs
 	npm install chartjs-plugin-datalabels
+	npm install primevue primeicons @primevue/themes
+	npm install @primevue/themes
+	npm install primevue@^3
+	npm install primevue primeicons
+
 
 - lancer : 
 	npm run dev

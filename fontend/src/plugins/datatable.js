@@ -76,32 +76,6 @@ export default function initDataTable(selector, withExport = false, exportFuncti
       order: []
     }
 
-    // if (withExport) {
-    //   defaultOptions.buttons = [
-    //     // { extend: 'copy', text: '<i class="pi pi-copy"></i> Copier' },
-    //     // { extend: 'csv', text: '<i class="pi pi-file"></i> CSV' },
-    //     { extend: 'excel', text: '<i class="pi pi-file-excel"></i> Excel' },
-    //     { 
-    //       text: `<button type="button" class="btn btn-danger btn-sm">
-    //         <i class="pi pi-file-pdf me-1"></i>
-    //         PDF
-    //       </button>`,
-    //       className: 'dt-button', // garde la compatibilité DataTables
-    //       action: function (e, dt, node, config) {
-    //         if (!pdfFunction) return console.warn('Aucune fonction PDF définie !');
-
-    //         // const data = dt.rows({ search: 'applied' }).data().toArray();
-    //         // console.log('📄 Données exportées vers PDF :', data);
-
-    //         // Ici tu appelles ta fonction PDF avec les données
-    //         // pdfFunction(data);
-    //         pdfFunction();
-    //       }
-    //     },
-    //     // { extend: 'print', text: '<i class="pi pi-print"></i> Imprimer' }
-    //   ]
-    // }
-
     console.log(withExport)
     console.log(exportFunctions)
 

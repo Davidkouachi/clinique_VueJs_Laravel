@@ -12,6 +12,7 @@ import Select2 from '@/pages/item/select2.vue';
 import DataTable from '@/pages/item/datatable.vue';
 import CodeQr from '@/pages/item/CodeQr.vue';
 import Graphique from '@/pages/item/Graphique.vue';
+import virtualTable from '@/pages/item/virtialTable/virtualTable.vue';
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -25,6 +26,7 @@ const routes = [
   { path: '/datatable', name: 'DataTable', component: DataTable, meta: { title: 'DataTable', requiresAuth: true } },
   { path: '/code-qr', name: 'CodeQr', component: CodeQr, meta: { title: 'CodeQr', requiresAuth: true } },
   { path: '/graphique', name: 'Graphique', component: Graphique, meta: { title: 'Graphique', requiresAuth: true } },
+  { path: '/virtualTable', name: 'virtualTable', component: virtualTable, meta: { title: 'virtualTable', requiresAuth: true } },
 
   { path: '/maintenance', name: 'Maintenance', component: Maintenance, meta: { title: 'Maintenance', requiresAuth: true } },
   // 🚨 Route 404 (toujours en dernier)

@@ -30,7 +30,7 @@
                     />
                   </div>
 
-                  <h5 class="fw-bold mt-4 mb-2">Scannez ce code QR</h5>
+                  <h5 class="fw-bold mt-2 mb-2">Scannez ce code QR</h5>
                   <p class="fs-16">
                     Vous pouvez aussi copier ce lien :<br>
                     <a :href="qrValue" target="_blank">{{ qrValue }}</a>

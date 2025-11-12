@@ -193,15 +193,39 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user_list(Request $request)
-    {
-        $data = DB::table('users')->select('id', 'name', 'email', 'login')->get();
+    // public function user_list(Request $request)
+    // {
+    //     $data = DB::table('users')->select('id', 'name', 'email', 'login')->get();
 
-        return response()->json([
-            'success' => $data->isNotEmpty(),
-            'data' => $data,
-        ], $data->isNotEmpty() ? 200 : 204);
+    //     return response()->json([
+    //         'success' => $data->isNotEmpty(),
+    //         'data' => $data,
+    //     ], $data->isNotEmpty() ? 200 : 204);
+    // }
+
+public function user_list(Request $request)
+{
+    // Récupérer les utilisateurs existants
+    $data = DB::table('users')->select('id', 'name', 'email', 'login')->get();
+
+    // Si moins de 100 utilisateurs, compléter avec des fake
+    $count = $data->count();
+    if ($count < 100) {
+        for ($i = $count + 1; $i <= 100; $i++) {
+            $data->push((object)[
+                'id' => $i,
+                'name' => "User $i",
+                'email' => "user$i@example.com",
+                'login' => "user$i",
+            ]);
+        }
     }
+
+    return response()->json([
+        'success' => true,
+        'data' => $data,
+    ], 200);
+}
 
     public function user_count(Request $request)
     {

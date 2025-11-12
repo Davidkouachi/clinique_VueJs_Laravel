@@ -149,7 +149,6 @@ const donnees = ref([])
 const loading = ref(true)
 const showModal = ref(false)
 const userSelected = ref({})
-const searchTerm = ref('')
 
 async function fetchEmployes() {
   loading.value = true

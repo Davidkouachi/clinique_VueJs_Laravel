@@ -226,7 +226,15 @@ const menuItems = [
     permissions: ['admin', 'user'],
     children: [
       { id: 'submenu-select2', label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
-      { id: 'submenu-datatable', label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
+      {
+        id: 'submenu-Table',
+        label: 'Table',
+        permissions: ['admin', 'user'],
+        children: [
+          { id: 'submenu-datatable', label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
+          { id: 'submenu-virtualTable', label: 'VirtualTable', to: '/virtualTable', permissions: ['admin', 'user'] },
+        ],
+      },
       { id: 'submenu-codeqr', label: 'CodeQr', to: '/code-qr', permissions: ['admin', 'user'] },
       { id: 'submenu-graphique', label: 'Graphique', to: '/graphique', permissions: ['admin', 'user'] },
     ],
@@ -238,11 +246,11 @@ const menuItems = [
     permissions: ['admin', 'user'],
     children: [
       {
-        id: 'submenu-calls',
+        id: 'submenu-maintenance',
         label: 'Maintenance',
         permissions: ['admin', 'user'],
         children: [
-          { id: 'submenu-voice-call', label: 'Style 1', to: '/maintenance', permissions: ['admin', 'user'] },
+          { id: 'submenu-m-style1', label: 'Style 1', to: '/maintenance', permissions: ['admin', 'user'] },
         ],
       },
     ],
