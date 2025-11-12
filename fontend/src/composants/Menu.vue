@@ -232,7 +232,7 @@ const menuItems = [
         permissions: ['admin', 'user'],
         children: [
           { id: 'submenu-datatable', label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
-          { id: 'submenu-virtualTable', label: 'VirtualTable', to: '/virtualTable', permissions: ['admin', 'user'] },
+          { id: 'submenu-primeVueTable', label: 'PrimeVueTable', to: '/primeVueTable', permissions: ['admin', 'user'] },
         ],
       },
       { id: 'submenu-codeqr', label: 'CodeQr', to: '/code-qr', permissions: ['admin', 'user'] },

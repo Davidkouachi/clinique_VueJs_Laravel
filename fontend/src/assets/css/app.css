@@ -198,3 +198,91 @@ table.dataTable thead th {
   background-color: #2e37a4 !important; /* Couleur bleue Bootstrap */
   color: #fff !important;
 }
+
+
+
+
+
+
+
+
+.card-modern {
+  background: #fff;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* CSS pour le header uniquement */
+.table-header {
+  background-color: #2e37a4; /* Couleur de fond */
+  color: white !important;            /* Couleur du texte */
+  font-weight: 600;          /* Optionnel : pour le texte en gras */
+  text-align: center;        /* Optionnel : aligner le texte */
+}
+
+/* Pour rendre le header personnalisé transparent */
+.datatable-header {
+  background-color: transparent !important;
+}
+
+/* 🌈 Hover + striped */
+.datatable-striped-hover .p-datatable-tbody > tr {
+  transition: background-color 0.25s ease;
+  cursor: pointer;
+  border-bottom: 1px solid #e3e7ea;
+}
+.datatable-striped-hover .p-datatable-tbody > tr:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Styliser le bouton principal */
+.action-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  transition: 0.3s;
+}
+.action-icon:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Styliser le menu PrimeVue (popup) */
+.p-menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: none;
+  min-width: 190px;
+  background-color: #fff;
+  padding: 0.6rem;       /* enlever padding interne */
+}
+
+/* Supprimer margin/padding sur la liste */
+.p-menu .p-menu-list {
+  padding: 0;       /* ul à l'intérieur */
+  margin: 0;        /* enlever espace autour */
+}
+
+/* Chaque item prend toute la largeur */
+.p-menu .p-menuitem-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;        /* enlever margin si présent */
+  color: #333;
+  transition: 0.2s;
+}
+
+/* Hover */
+.p-menu .p-menuitem-link:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+/* Icone */
+.p-menu .p-menuitem-link i {
+  margin-right: 0.5rem;
+}
+

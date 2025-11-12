@@ -137,7 +137,6 @@ import initDataTable from '@/plugins/datatable.js'
 import { pdfListeUser } from '@/data/pdf/pdf_liste_user.js'
 import { useToastAlert } from '@/function/ToastAlert'
 import { useAuthStore } from '@/stores/auth'
-import { initSession } from '@/stores/useSession'
 import { showPreloader } from '@/function/showPreloader';
 
 const auth = useAuthStore()
