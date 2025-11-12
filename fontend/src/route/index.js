@@ -7,8 +7,11 @@ import Login from '@/pages/auth/login.vue';
 import User from '@/pages/User.vue';
 import Home from '@/pages/Home.vue';
 import About from '@/pages/About.vue';
+
 import Select2 from '@/pages/item/select2.vue';
 import DataTable from '@/pages/item/datatable.vue';
+import CodeQr from '@/pages/item/CodeQr.vue';
+import Graphique from '@/pages/item/Graphique.vue';
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -17,8 +20,11 @@ const routes = [
   { path: '/', name: 'Home', component: Home, meta: { title: 'Accueil', requiresAuth: true } },
   { path: '/user', name: 'User', component: User, meta: { title: 'Utilisateurs', requiresAuth: true } },
   { path: '/about', name: 'About', component: About, meta: { title: 'À propos', requiresAuth: true } },
+
   { path: '/select2', name: 'Select2', component: Select2, meta: { title: 'Select2', requiresAuth: true } },
   { path: '/datatable', name: 'DataTable', component: DataTable, meta: { title: 'DataTable', requiresAuth: true } },
+  { path: '/code-qr', name: 'CodeQr', component: CodeQr, meta: { title: 'CodeQr', requiresAuth: true } },
+  { path: '/graphique', name: 'Graphique', component: Graphique, meta: { title: 'Graphique', requiresAuth: true } },
 
   { path: '/maintenance', name: 'Maintenance', component: Maintenance, meta: { title: 'Maintenance', requiresAuth: true } },
   // 🚨 Route 404 (toujours en dernier)

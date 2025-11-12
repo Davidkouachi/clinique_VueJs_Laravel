@@ -9,25 +9,25 @@
                   <!-- Champ de saisie -->
                   <div class="col-lg-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-sm input_name text-left" id="floatingName" v-model="name" placeholder="Entrer votre nom" />
+                        <input type="text" class="form-control form-control-sm input_name text-left rounded-3" id="floatingName" v-model="name" placeholder="Entrer votre nom" />
                         <label for="floatingName">Nom complet</label>
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="form-floating">
-                        <input type="email" class="form-control form-control-sm input_email text-left" id="floatingEamil" v-model="email" placeholder="Entrer votre Email" />
+                        <input type="email" class="form-control form-control-sm input_email text-left rounded-3" id="floatingEamil" v-model="email" placeholder="Entrer votre Email" />
                         <label for="floatingEamil">Email</label>
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-sm input_login text-left" id="floatingLogin" v-model="login" placeholder="Entrer votre Login" />
+                        <input type="text" class="form-control form-control-sm input_login text-left rounded-3" id="floatingLogin" v-model="login" placeholder="Entrer votre Login" />
                         <label for="floatingLogin">Login</label>
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="form-floating">
-                        <input type="password" class="form-control form-control-sm input_password text-left" id="floatingPassword" v-model="password" placeholder="Entrer votre mot de passe" value="password" />
+                        <input type="password" class="form-control form-control-sm input_password text-left rounded-3" id="floatingPassword" v-model="password" placeholder="Entrer votre mot de passe" value="password" />
                         <label for="floatingPassword">Mot de passe</label>
                     </div>
                   </div>

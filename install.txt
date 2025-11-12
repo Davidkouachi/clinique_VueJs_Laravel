@@ -21,6 +21,9 @@
 	npm install -D tailwindcss postcss autoprefixer
 	npx tailwindcss-cli@latest init -p
 	npm install bootstrap
+	npm install qrcode.vue
+	npm install chart.js vue-chartjs
+	npm install chartjs-plugin-datalabels
 
 - lancer : 
 	npm run dev

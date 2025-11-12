@@ -227,6 +227,8 @@ const menuItems = [
     children: [
       { id: 'submenu-select2', label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
       { id: 'submenu-datatable', label: 'DataTable', to: '/datatable', permissions: ['admin', 'user'] },
+      { id: 'submenu-codeqr', label: 'CodeQr', to: '/code-qr', permissions: ['admin', 'user'] },
+      { id: 'submenu-graphique', label: 'Graphique', to: '/graphique', permissions: ['admin', 'user'] },
     ],
   },
   {
