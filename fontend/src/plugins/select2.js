@@ -20,16 +20,15 @@ export function initSelect2(selector) {
   }
 
   // 🔹 Réinitialiser et appliquer Select2 proprement
-  setTimeout(() => {
-    $select.select2({
-      placeholder: 'Sélectionner',
-      allowClear: true,
-      width: '100%',
-      language: {
-        noResults: () => 'Aucun résultat trouvé',
-      },
-    })
+  $select.select2({
+    placeholder: 'Sélectionner',
+    allowClear: false,
+    width: '100%',
+    language: {
+      noResults: () => 'Aucun résultat trouvé',
+    },
+  })
 
-    console.log('✅ Select2 initialisé sur', selector)
-  }, 0)
+  console.log('✅ Select2 initialisé sur', selector)
+
 }

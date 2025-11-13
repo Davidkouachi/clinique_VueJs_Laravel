@@ -18,7 +18,7 @@
             <div class="spinner-border text-primary" role="status"></div>
             <p class="mt-2 mb-0">Chargement des données...</p>
           </div>
-          <div v-else>
+          <div v-else-if="donnees.length > 0">
             <div class="card-modern rounded-3 shadow-sm">
                 <!-- === DataTable === -->
                 <DataTable
@@ -97,12 +97,12 @@
                           :model="[
                             {
                               label: 'Mise à jour',
-                              icon: 'ti ti-edit text-info fs-20 me-2',
+                              icon: 'ti ti-edit fs-20 me-2',
                               command: () => editUser(slotProps.data)
                             },
                             {
                               label: 'Détails',
-                              icon: 'ti ti-eye text-warning fs-20 me-2',
+                              icon: 'ti ti-eye fs-20 me-2',
                               command: () => openModal(slotProps.data)
                             }
                           ]"
@@ -111,7 +111,7 @@
                         <!-- Bouton d’ouverture -->
                         <a
                           href="javascript:void(0);"
-                          class="action-icon shadow-sm fs-14 border rounded-2 p-1"
+                          class="action-icon shadow-sm fs-16 border rounded-2 p-1"
                           @click="toggleMenu(slotProps.data.id, $event)"
                         >
                           <i class="ti ti-dots-vertical"></i>
@@ -124,26 +124,29 @@
 
             </div>
           </div>
+          <div v-else class="text-center text-danger py-4">
+            <i class="ti ti-database-off fs-2"></i>
+            <p class="mt-1 mb-0">Aucune donnée disponible</p>
+          </div>
         </div>
       </div>
 
-      <!-- Modal détails -->
       <div v-if="showModal">
         <div class="modal fade show d-block" tabindex="-1">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header bg-warning">
-                <h5 class="modal-title text-white">Détails de l'utilisateur</h5>
-                <button type="button" class="btn-close text-white" @click="closeModal"></button>
+                <div class="modal-header bg-warning">
+                  <h5 class="modal-title text-white">Détails de l'utilisateur</h5>
+                  <button type="button" class="btn-close text-white" @click="closeModal"></button>
+                </div>
+                <div class="modal-body">
+                  <ul class="list-group">
+                    <li class="list-group-item"><strong>Nom :</strong> {{ userSelected.name || 'N/A' }}</li>
+                    <li class="list-group-item"><strong>Email :</strong> {{ userSelected.email || 'N/A' }}</li>
+                    <li class="list-group-item"><strong>Login :</strong> {{ userSelected.login || 'N/A' }}</li>
+                  </ul>
+                </div>
               </div>
-              <div class="modal-body">
-                <ul class="list-group">
-                  <li class="list-group-item"><strong>Nom :</strong> {{ userSelected.name || 'N/A' }}</li>
-                  <li class="list-group-item"><strong>Email :</strong> {{ userSelected.email || 'N/A' }}</li>
-                  <li class="list-group-item"><strong>Login :</strong> {{ userSelected.login || 'N/A' }}</li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
         <div class="modal-backdrop fade show"></div>
@@ -267,6 +270,7 @@ onMounted(async () => {
 
   await fetchUsers()
 })
+
 </script>
 
 

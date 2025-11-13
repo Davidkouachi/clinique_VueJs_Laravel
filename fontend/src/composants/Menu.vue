@@ -225,7 +225,15 @@ const menuItems = [
     icon: 'ti ti-apps',
     permissions: ['admin', 'user'],
     children: [
-      { id: 'submenu-select2', label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
+      {
+        id: 'submenu-select2',
+        label: 'select',
+        permissions: ['admin', 'user'],
+        children: [
+          { id: 'submenu-select', label: 'Select2', to: '/select2', permissions: ['admin', 'user'] },
+          { id: 'submenu-primeVueSelect', label: 'PrimeVueSelect', to: '/primeVueSelect', permissions: ['admin', 'user'] },
+        ],
+      },
       {
         id: 'submenu-Table',
         label: 'Table',
@@ -259,6 +267,11 @@ const menuItems = [
 
 // 🌟 Navigation + preloader + effet "active"
 function navigateWithPreloader(to) {
+
+  // 🔸 Bloque le clic si on est déjà sur la page
+  const currentPath = router.currentRoute.value.path
+  if (currentPath === to) return
+
   closeSidebar();
 
   // Active visuellement tout de suite

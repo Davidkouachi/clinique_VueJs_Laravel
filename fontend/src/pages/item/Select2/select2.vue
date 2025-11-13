@@ -15,12 +15,12 @@
             data-toggle="select2"
             data-placeholder="Sélectionner"
           >
-            <option value="">
-              <!-- Affiche le texte de chargement -->
-              {{ selectLoading ? 'Chargement en cours...' : 'Sélectionner' }}
+            <option v-if="selectLoading" value="">
+              Chargement en cours...
             </option>
-
-            <!-- Afficher les options uniquement si elles sont chargées -->
+            <option v-else value="">
+              Sélectionner
+            </option>
             <option
               v-for="item in options"
               :key="item.id"
@@ -100,7 +100,7 @@ async function chargerOptions() {
 
     selectLoading.value = false
     await nextTick()
-    initSelect2('#mySelect')
+    // initSelect2('#mySelect')
   } catch (error) {
     console.error(error)
     showToast('error', 'Erreur', "Impossible de charger les données.")
@@ -162,11 +162,9 @@ async function verifierMatricule() {
 onMounted(async () => {
   
   preloader.hide()
-  await nextTick()
-
-  // ✅ 3️⃣ Maintenant on initialise et charge les données
   initSelect2('#mySelect')
-  await chargerOptions()
+  await nextTick()
+  // await chargerOptions()
 })
 
 onBeforeUnmount(() => {

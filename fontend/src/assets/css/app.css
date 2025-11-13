@@ -224,6 +224,7 @@ table.dataTable thead th {
 /* Pour rendre le header personnalisé transparent */
 .datatable-header {
   background-color: transparent !important;
+  border: none !important;
 }
 
 /* 🌈 Hover + striped */
@@ -231,6 +232,7 @@ table.dataTable thead th {
   transition: background-color 0.25s ease;
   cursor: pointer;
   border-bottom: 1px solid #e3e7ea;
+  font-size: 0.9rem;
 }
 .datatable-striped-hover .p-datatable-tbody > tr:hover {
   background-color: #f1f5f9 !important;
@@ -273,6 +275,7 @@ table.dataTable thead th {
   margin: 0;        /* enlever margin si présent */
   color: #333;
   transition: 0.2s;
+  font-size: 0.9rem;
 }
 
 /* Hover */

@@ -8,11 +8,13 @@ import User from '@/pages/User.vue';
 import Home from '@/pages/Home.vue';
 import About from '@/pages/About.vue';
 
-import Select2 from '@/pages/item/select2.vue';
-import DataTable from '@/pages/item/datatable.vue';
+import Select2 from '@/pages/item/Select2/select2.vue';
+import PrimeVueSelect from '@/pages/item/Select2/PrimeVueSelect.vue';
+import DataTable from '@/pages/item/DataTable/datatable.vue';
+import PrimeVueTable from '@/pages/item/DataTable/PrimeVueTable.vue';
 import CodeQr from '@/pages/item/CodeQr.vue';
 import Graphique from '@/pages/item/Graphique.vue';
-import PrimeVueTable from '@/pages/item/PrimeVueTable.vue';
+
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -23,10 +25,11 @@ const routes = [
   { path: '/about', name: 'About', component: About, meta: { title: 'À propos', requiresAuth: true } },
 
   { path: '/select2', name: 'Select2', component: Select2, meta: { title: 'Select2', requiresAuth: true } },
+  { path: '/primeVueSelect', name: 'PrimeVueSelect', component: PrimeVueSelect, meta: { title: 'PrimeVueSelect', requiresAuth: true } },
   { path: '/datatable', name: 'DataTable', component: DataTable, meta: { title: 'DataTable', requiresAuth: true } },
+  { path: '/primeVueTable', name: 'PrimeVueTable', component: PrimeVueTable, meta: { title: 'PrimeVueTable', requiresAuth: true } },
   { path: '/code-qr', name: 'CodeQr', component: CodeQr, meta: { title: 'CodeQr', requiresAuth: true } },
   { path: '/graphique', name: 'Graphique', component: Graphique, meta: { title: 'Graphique', requiresAuth: true } },
-  { path: '/primeVueTable', name: 'PrimeVueTable', component: PrimeVueTable, meta: { title: 'PrimeVueTable', requiresAuth: true } },
 
   { path: '/maintenance', name: 'Maintenance', component: Maintenance, meta: { title: 'Maintenance', requiresAuth: true } },
   // 🚨 Route 404 (toujours en dernier)

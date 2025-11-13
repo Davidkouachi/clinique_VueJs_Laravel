@@ -211,7 +211,7 @@ public function user_list(Request $request)
     // Si moins de 100 utilisateurs, compléter avec des fake
     $count = $data->count();
     if ($count < 100) {
-        for ($i = $count + 1; $i <= 100; $i++) {
+        for ($i = $count + 1; $i <= 10000; $i++) {
             $data->push((object)[
                 'id' => $i,
                 'name' => "User $i",

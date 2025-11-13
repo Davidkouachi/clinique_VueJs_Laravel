@@ -14,7 +14,6 @@
 	cd my-app
 
 - installer packages : 
-	npm install primevue primeicons @primeuix/themes
 	npm install pinia-plugin-persistedstate
 	npm install axios
 	npm install sweetalert2 crypto-js
@@ -28,6 +27,8 @@
 	npm install @primevue/themes
 	npm install primevue@^3
 	npm install primevue primeicons
+	npm install primevue @primeuix/themes primeicons
+	npm install @primeuix/themes --save
 
 
 - lancer : 
