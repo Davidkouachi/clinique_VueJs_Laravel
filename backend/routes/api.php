@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParametreController;
 
 // Routes publiques
 Route::post('/login', [AuthController::class, 'traitement_login']);
@@ -22,6 +24,29 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/list', [AuthController::class, 'user_list']);
     Route::get('/users/count', [AuthController::class, 'user_count']);
 
+    Route::delete('/deleteUser/{id}', [AuthController::class, 'deleteUser']);
+
     // Déconnexion
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+$prefix = "v1";
+
+Route::prefix($prefix)->middleware('auth:api')->group(function () {
+
+    //----------- Insert -------------------//
+    Route::post('/api_update_parametre', [ParametreController::class, 'update']);
+
+    //----------- Get -------------------//
+    Route::get('/api_get_parametre', [ParametreController::class, 'getAll']);
+
+
+    //----------- Update -------------------//
+    
+
+    //----------- Delete -------------------//
+
+
+    //----------- Select -------------------//
+
 });

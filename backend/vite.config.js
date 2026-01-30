@@ -11,25 +11,8 @@ export default defineConfig({
         vue(),
     ],
     // server: {
-    //     host: 'localhost',
+    //     host: true, // rend Vite accessible depuis le réseau
     //     port: 5173,
-    //     proxy: {
-    //         '/api': {
-    //             target: 'http://127.0.0.1:8000',
-    //             changeOrigin: true,
-    //             secure: false,
-    //         },
-    //         '/sanctum': {
-    //             target: 'http://127.0.0.1:8000',
-    //             changeOrigin: true,
-    //             secure: false,
-    //         },
-    //         '/refresh-csrf': {
-    //             target: 'http://127.0.0.1:8000',
-    //             changeOrigin: true,
-    //             secure: false,
-    //         }
-    //     }
-    // }
+    // },
     // necessaire quand le fontend et le backend sont different
 });

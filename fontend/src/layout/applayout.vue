@@ -1,127 +1,429 @@
 <template>
-    <Topbar />
-    <Menu />
-    <div class="page-wrapper">
-
-      <div
-        :style="{ display: preloader.loading ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center' }"
-        class="content"
-      >
-        <div id="pageLoader active">
-          <div class="loader-overlay"></div>
-          <div class="facebook-spinner">
-            <div class="spinner-block block-1"></div>
-            <div class="spinner-block block-2"></div>
-            <div class="spinner-block block-3"></div>
-          </div>
+    <div class="layout-wrapper" :class="containerClass">
+        <div v-if="preloaderSpinner.loadingSpiner" 
+             class="preloaderS-overlay" 
+             :style="{ backgroundColor: preloaderSpinner.backgroundColor }">
+            <ProgressSpinner
+                style="width: 30px; height: 30px"
+                strokeWidth="8"
+                fill="transparent"
+                animationDuration=".5s"
+            />
+            <p class="preloaderS-message">{{ preloaderSpinner.messageSpiner }}</p>
         </div>
-      </div>
-
-      <div :style="{ display: preloader.loading ? 'none' : 'block' }">
-        <slot />
-      </div>
-
-      <Footer />
+        <!-- confimrpopup pour le tableau sur les bouttons -->
+        <ConfirmPopup></ConfirmPopup>
+        <!-- ConfirmDialog pour la position -->
+        <ConfirmDialog group="positioned"></ConfirmDialog>
+        <!-- ConfirmDialog avec le point d'interrogation -->
+        <ConfirmDialog group="headless" :style="{ width: '25rem' }" :dismissableMask="false">
+            <template #container="{ message, acceptCallback, rejectCallback }">
+                <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+                    <div class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
+                        <i class="pi pi-question !text-4xl"></i>
+                    </div>
+                    <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+                    <p class="mb-0">{{ message.message }}</p>
+                    <div class="flex items-center gap-2 mt-6">
+                        <Button severity="success" label="Oui" @click="acceptCallback"></Button>
+                        <Button severity="danger" label="Non" variant="outlined" @click="rejectCallback"></Button>
+                    </div>
+                </div>
+            </template>
+        </ConfirmDialog>
+        <Dialog :dismissableMask="false" :visible="visibleAuth" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
+            <template #container="{ closeCallback }">
+                <div style="border-radius: 10px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color), rgba(33, 150, 243, 0) 30%)" >
+                    <div class="w-[25rem] bg-surface-0 dark:bg-surface-900 py-10 px-2 sm:px-5" style="border-radius: 7px">
+                        <form autocomplete="off" @submit.prevent="verifLoginForm">
+                            <div class="text-center">
+                                <Avatar icon="pi pi-user" class="block mx-auto mb-4 bg-primary" size="xlarge" shape="circle" style="background-image: radial-gradient(circle at left top, var(--p-primary-400), var(--p-primary-700)); color:white;"/>
+                                <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">{{auth.user.name}}</div>
+                                <span class="text-muted-color font-medium">Votre session a expiré. Veuillez saisir votre mot de passe pour continuer votre travail</span>
+                            </div>
+                            <div class="flex flex-col px-8 py-8 gap-6 rounded-2xl">
+                                <div class="inline-flex flex-col gap-2">
+                                    <FloatLabel variant="on">
+                                        <Password inputId="password1" v-model="passwordAuth" :toggleMask="true" fluid :feedback="false" size="large"/>
+                                        <label for="password1" class="text-surface-900 dark:text-surface-0 font-medium text-xl">Mot de passe</label>
+                                    </FloatLabel>
+                                </div>
+                                <div class="inline-flex flex-col gap-2">
+                                    <Button
+                                        size="large"
+                                        type="submit"
+                                        class="w-full"
+                                        :loading="loadingAuth"
+                                        severity="success"
+                                        :disabled="loadingAuth"
+                                        :label="loadingAuth ? 'Vérification en cours...' : 'Verfier'"
+                                    />
+                                    <Button
+                                        size="large"
+                                        class="w-full"
+                                        severity="primary"
+                                        :disabled="loadingAuth"
+                                        label="Authentification"
+                                        @click="goToLogin"
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </template>
+        </Dialog>
+        <Drawer
+            v-model:visible="drawerUse.loading"
+            :position="drawerUse.position"
+            :dismissableMask="false"
+            :style="{ width: drawerUse.width }"
+        >
+            <template #header>
+                <div class="flex items-center gap-2">
+                    <Avatar v-if="drawerUse.icon" :icon="drawerUse.icon" class="mr-2" size="large" shape="circle" />
+                    <span class="font-bold">{{drawerUse.header}}</span>
+                </div>
+            </template>
+            <component
+                v-if="drawerUse.component"
+                :is="drawerUse.component"
+                v-bind="drawerUse.props"
+            />
+            <template #footer v-if="drawerUse.propsBtnFotter">
+                <div class="flex items-center gap-2">
+                    <Button v-for="item in drawerUse.propsBtnFotter.footerBtn" :id="item.id" :label="item.label" :icon="item.icon" class="flex-auto" :variant="item.variant" :severity="item.severity" @click="item.command"/>
+                </div>
+            </template>
+        </Drawer>
+        <app-topbar ></app-topbar>
+        <app-sidebar ></app-sidebar>
+        <div class="layout-main-container" >
+            <div class="layout-main">
+                <div v-if="preloader.loading" class="cardPreloader" style="position: relative; min-height: 70vh;">
+                    <!-- Preloader -->
+                    <div class="contentPreloader active" id="pageLoader">
+                        <div class="loader-overlay"></div>
+                        <div class="facebook-spinner">
+                            <div class="spinner-block block-1"></div>
+                            <div class="spinner-block block-2"></div>
+                            <div class="spinner-block block-3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <!-- <div class="py-2 mb-1">
+                        <nav class="breadcrumb">
+                            <span v-for="(item, i) in breadcrumbMenu.items" :key="i">
+                              <i :class="item.icon" v-if="item.icon"></i>
+                              {{ item.label }}
+                              <span class="mx-1" v-if="i < breadcrumbMenu.items.length - 1 ">
+                                >
+                                </span>
+                            </span>
+                        </nav>
+                    </div> -->
+                    <router-view></router-view>
+                </div>
+            </div>
+            <app-footer></app-footer>
+        </div>
+        <div class="layout-mask animate-fadein"></div>
     </div>
 </template>
 
 <script setup>
-import Menu from '@/composants/Menu.vue';
-import Topbar from '@/composants/Topbar.vue';
-import Footer from '@/composants/Footer.vue';
-import { useAuthStore } from '@/stores/auth';
-import { usePreloaderStore } from '@/stores/preloader';
-import { useToastAlert } from '@/function/ToastAlert';
-import { useSwalAlert } from '@/function/SwalAlert';
-import { onMounted, watch, nextTick } from 'vue';
-import router from "@/route/index";
-import { showPreloader } from '@/function/showPreloader';
+import { getSecureItem } from "@/function/stores/secureStorage";
+import { usePreloaderSpinner } from '@/function/function/showPreloader';
+import { useLayout } from '@/layout/composables/layout';
+import AppFooter from './AppFooter.vue';
+import AppSidebar from './AppSidebar.vue';
+import AppTopbar from './AppTopbar.vue';
+import { computed, ref, watch, onMounted, nextTick } from 'vue';
+import { useAuthStore } from '@/function/stores/auth';
+import { useSwalAlert } from '@/function/function/SwalAlert';
+import { usePreloaderStore } from '@/function/stores/preloader';
+import { useDrawerStore } from '@/function/stores/drawer';
+import { useToastAlert } from '@/function/function/ToastAlert';
+import { useRoute, useRouter } from 'vue-router';
+import axios from '@/function/services/axios';
+import { useBreadcrumbMenuStore } from '@/function/stores/breadcrumbMenu';
+import { model, findBreadcrumb } from '@/layout/composables/menuUtils';
+
+const { layoutConfig, layoutState, isSidebarActive } = useLayout();
+const route = useRoute();   // route active
+const router = useRouter(); // pour naviguer si besoin
+const outsideClickListener = ref(null);
+const breadcrumbMenu = useBreadcrumbMenuStore();
 
 const auth = useAuthStore();
-const preloader = usePreloaderStore();
-const { removeAllExcept } = useToastAlert();
 const { showSwal } = useSwalAlert();
+const { showToast, removeAllToasts, removeAllExcept } = useToastAlert();
+const preloader = usePreloaderStore();
+const preloaderSpinner = usePreloaderSpinner();
+const drawerUse = useDrawerStore();
+
+const visibleAuth = ref(false);
+
+const passwordAuth = ref('')
+const loadingAuth = ref(false);
 
 let swalShown = false;
+let submitting = false;
 
-onMounted( () => {
-  // preloader.show();
-  // removeAllExcept("1");
+const goToLogin = () => {
+    preloaderSpinner.showSpiner('Rédirection en cours...', () => {
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    });
+};
 
-  // 🔸 Si la session est déjà expirée dans le localStorage
-  if (localStorage.getItem("session_expired") === "true") {
-    auth.setExpired();
-  }
+const verifLoginForm = async () => {
+    if (submitting) return;   // 🔥 empêche 100% des doubles appels
+    submitting = true;
 
-  // preloader.hide();
-  // await nextTick();
+    if (!passwordAuth.value) {
+        showToast('warn', 'Alerte', 'Mot de passe obligatoire');
+        submitting = false;
+        return;
+    }
 
-  // setTimeout(async () => {
-  //   preloader.hide()
-  //   // await nextTick()
+    loadingAuth.value = true;
 
-  // }, 800)
+    try {
 
+        const deviceId = getSecureItem("device_id");
+        const login = getSecureItem("aL");
+
+        const res = await axios.post('/api/login', {
+            login: login,
+            password: passwordAuth.value,
+            device_id: deviceId,
+        });
+
+        if (res.data.success) {
+
+            const { access_token, refresh_token, user, expires_in } = res.data;
+
+            auth.setUserSession(user, expires_in, access_token, refresh_token, deviceId);
+
+            const mainId = showToast(
+                'success',
+                'Vérification éffectuée',
+                `${user.name}, nous sommes heureux de vous revoir 🤝!`,
+                3000,
+                '1'
+            );
+
+            visibleAuth.value = false
+
+        } else if (res.data.info) {
+            showToast('info', 'Informations', res.data.message);
+        } else if (res.data.warn) {
+            showToast('warn', 'Alerte', 'Mot de passe incorrect');
+        } else {
+            showToast('error', 'Erreur', res.data.message || 'Erreur inconnue');
+        }
+
+        loadingAuth.value = false;
+        submitting = false;
+    } 
+    catch (err) {
+        showToast('error', 'Erreur', err.message);
+        auth.logoutLocal(false)
+        loadingAuth.value = false;
+        submitting = false;
+    } 
+    finally {
+        loadingAuth.value = false;
+        submitting = false;   // 🔥 permet à nouveau un clic, mais jamais double
+        passwordAuth.value = '';
+    }
+};
+
+// Préloader global sur navigation
+router.beforeEach((to, from, next) => {
+    if (!auth.expired) preloader.show(); // afficher loader
+    next();
 });
 
-// 🕑 Surveille expiration du token
+router.afterEach(() => {
+    // Ici on peut attendre un délai pour le loader
+    if (!auth.expired) {
+        setTimeout(() => {
+            preloader.hide();
+        }, 1); // 0.5s ou 2s selon ton besoin
+    }
+});
+
+onMounted(() => {
+
+})
+
+watch(isSidebarActive, (newVal) => {
+    if (newVal) {
+        bindOutsideClickListener();
+    } else {
+        unbindOutsideClickListener();
+    }
+});
+
 watch(
   () => auth.expired,
   async (val) => {
-    if (!val || swalShown || auth.manualLogout) return;
+    if (!val || swalShown || auth.manualLogout || auth.isLoggingOut) return;
     swalShown = true;
 
-    auth.logoutServer(false)
+    auth.logoutServer(false);
 
-    const result = await showSwal({
-      icon: 'warning',
-      title: 'Session expirée',
-      text: 'Votre session a expiré. Veuillez vous reconnecter.',
-      confirmButtonText: 'Ok',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    });
+    const souvenir = getSecureItem('me');
 
-    if (result.isConfirmed) {
-      showPreloader('Rédirection en cours...', () => {
-        auth.logoutLocal(true);
-      }, 1000);
+    if (souvenir) {
+        visibleAuth.value = true;
+    } else {
+        const result = await showSwal({
+            icon: 'warning',
+            title: 'Session expirée',
+            text: 'Votre session a expiré. Veuillez vous reconnecter.',
+            confirmButtonText: 'Ok',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        });
+
+        if (result.isConfirmed) {
+            preloaderSpinner.showSpiner('Rédirection en cours...', () => {
+                setTimeout(() => {
+                    auth.logoutLocal(true);
+                }, 1000);
+            });
+        }
     }
 
     swalShown = false;
   }
 );
+
+watch(() => drawerUse.loading, (isOpen) => {
+    if (isOpen) {
+        document.body.style.overflow = 'hidden';        // Désactive le scroll global
+        document.documentElement.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';             // Réactive le scroll
+        document.documentElement.style.overflow = '';
+    }
+});
+
+watch(() => visibleAuth.value, (isOpen) => {
+    console.log(isOpen)
+
+    if (isOpen) {
+        document.body.style.overflow = 'hidden';        // Désactive le scroll global
+        document.documentElement.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';             // Réactive le scroll
+        document.documentElement.style.overflow = '';
+    }
+});
+
+// 🔥 Watcher sur la route
+watch(
+    () => route.path,
+    (newPath) => {
+        console.log('Route changée :', newPath);
+
+        const pathItems = findBreadcrumb(model.value, newPath);
+        if (pathItems) {
+            breadcrumbMenu.set([
+              ...pathItems
+                .filter(i => i && i.label) // ⬅️ enlève les labels vides
+                .map(i => ({
+                  label: i.label,
+                  // icon: i.icon,
+                  // to: i.to,
+                }))
+            ]);
+        }
+    },
+    { immediate: true }
+);
+
+const containerClass = computed(() => {
+    return {
+        'layout-overlay': layoutConfig.menuMode === 'overlay',
+        'layout-static': layoutConfig.menuMode === 'static',
+        'layout-static-inactive': layoutState.staticMenuDesktopInactive && layoutConfig.menuMode === 'static',
+        'layout-overlay-active': layoutState.overlayMenuActive,
+        'layout-mobile-active': layoutState.staticMenuMobileActive
+    };
+});
+
+function bindOutsideClickListener() {
+    if (!outsideClickListener.value) {
+        outsideClickListener.value = (event) => {
+            if (isOutsideClicked(event)) {
+                layoutState.overlayMenuActive = false;
+                layoutState.staticMenuMobileActive = false;
+                layoutState.menuHoverActive = false;
+            }
+        };
+        document.addEventListener('click', outsideClickListener.value);
+    }
+}
+
+function unbindOutsideClickListener() {
+    if (outsideClickListener.value) {
+        document.removeEventListener('click', outsideClickListener);
+        outsideClickListener.value = null;
+    }
+}
+
+function isOutsideClicked(event) {
+    const sidebarEl = document.querySelector('.layout-sidebar');
+    const topbarEl = document.querySelector('.layout-menu-button');
+
+    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+}
 </script>
 
 <style scoped>
+.cardPreloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Important pour que le loader soit centré dedans */
+}
+
 #pageLoader {
-  position: fixed;
+  position: absolute;
   inset: 0;
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 #pageLoader.active {
   opacity: 1;
   transform: scale(1);
   pointer-events: all;
 }
+
 .loader-overlay {
   position: absolute;
   inset: 0;
-  /*background: rgba(0, 0, 0, 0.15);*/
-  backdrop-filter: blur(2px);
+  /* background: rgba(255, 255, 255, 0.5); optionnel pour mieux voir le loader */
 }
+
 .facebook-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centrage parfait */
   display: flex;
   gap: 8px;
 }
+
 .spinner-block {
   width: 8px;
   height: 32px;
@@ -131,11 +433,37 @@ watch(
   animation: fb-bounce 1s infinite ease-in-out;
   transform-origin: center bottom;
 }
+
 .block-1 { animation-delay: 0s; }
 .block-2 { animation-delay: 0.15s; }
 .block-3 { animation-delay: 0.3s; }
+
 @keyframes fb-bounce {
   0%, 100% { transform: scaleY(1); opacity: 1; }
   50%      { transform: scaleY(0.5); opacity: 0.5; }
+}
+
+
+
+
+
+
+
+.preloaderS-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  flex-direction: column;
+}
+.preloaderS-message {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 </style>
