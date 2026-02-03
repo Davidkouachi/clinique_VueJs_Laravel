@@ -25,10 +25,22 @@ const customPages = [
 
 const pgsPages = [
     { 
-        path: '/configurations/parametre', 
-        name: 'parametre', 
+        path: '/configurations/utilisateurs', 
+        name: 'configuration_users', 
+        component: () => import('@/views/pages/pgs/configurations/users/index.vue'), 
+        meta: { title: 'Utilisateurs', requiresAuth: true } 
+    },
+    { 
+        path: '/configurations/roles', 
+        name: 'configuration_roles', 
+        component: () => import('@/views/pages/pgs/configurations/roles/index.vue'), 
+        meta: { title: 'Rôles', requiresAuth: true } 
+    },
+    { 
+        path: '/configurations/parametres', 
+        name: 'configuration_parametre', 
         component: () => import('@/views/pages/pgs/configurations/parametre/index.vue'), 
-        meta: { title: 'parametre', requiresAuth: true } 
+        meta: { title: 'Parametres', requiresAuth: true } 
     },
 ];
 

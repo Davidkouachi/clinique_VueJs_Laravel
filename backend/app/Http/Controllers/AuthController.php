@@ -230,6 +230,8 @@ public function traitement_login(Request $request)
         ]
     );
 
+    $roles = DB::table('roles')->where('id', $user->role_id)->select('nom')->first();
+
     return response()->json([
         'success' => true,
         'message' => 'Connexion réussie',
@@ -237,7 +239,7 @@ public function traitement_login(Request $request)
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'role' => $user->roles,
+            'role' => $roles->nom,
             'login' => $user->login,
         ],
         'access_token'  => $token,

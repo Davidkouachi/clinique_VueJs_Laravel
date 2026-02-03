@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 use Carbon\Carbon;
 
@@ -22,22 +24,27 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 use App\Services\ParametreService;
+use App\Services\HistoriqueService;
 
 class ParametreController extends Controller
 {
     protected $parametreService;
 
-    public function __construct(ParametreService $parametreService)
+    public function __construct(
+        ParametreService $parametreService, 
+        HistoriqueService $historiqueService
+    )
     {
         $this->parametreService = $parametreService;
+        $this->historiqueService = $historiqueService;
     }
 
-    // ------------------------------------------------------------
+    // parametre ------------------------------------------------------------
 
-    public function update(Request $request)
+    public function insertParametre(Request $request)
     {   
-        Log::info($request->all());
-        // 1️⃣ Validation
+        // Log::info($request->all());
+
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'type_structure' => 'required|string',
@@ -72,9 +79,17 @@ class ParametreController extends Controller
 
         try {
             // 2️⃣ Enregistrement via le service
-            $parametre = $this->parametreService->update(
+            $parametreId = $this->parametreService->insertParametreService(
                 $validated,
                 $request->file('logo')
+            );
+
+            // Historique (non bloquant)
+            $this->historiqueService->log(
+                'update',
+                'parametres',
+                $parametreId,
+                "Mise à jour des informations de paramétrage"
             );
 
             $getAll = DB::table('parametres')->first();
@@ -93,7 +108,7 @@ class ParametreController extends Controller
         }
     }
 
-    public function getAll()
+    public function getAllParametre()
     {
         $parametre = DB::table('parametres')->first();
 
@@ -110,4 +125,167 @@ class ParametreController extends Controller
         ], 201);
     }
 
+    // roles ------------------------------------------------------------
+    public function insertRoles(Request $request)
+    {
+        Log::info($request->all());
+        
+        $validator = Validator::make($request->all(), [
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'required|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        try {
+
+            $result = $this->parametreService->insertRolesService(
+                $validator->validated()['roles']
+            );
+
+            // 🧾 Historique uniquement si au moins un rôle créé
+            if (count($result['inserted_ids']) > 0) {
+                foreach ($result['inserted_ids'] as $id) {
+                    $this->historiqueService->log(
+                        'insert',
+                        'roles',
+                        $id,
+                        "Enregistrement d'un nouveau rôle"
+                    );
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès',
+                'inserted' => $result['inserted'],
+                'duplicates' => $result['duplicates'],
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Erreur serveur',
+            ], 500);
+        }
+    }
+
+    public function getAllroles()
+    {
+        $data = DB::table('roles')
+            ->leftJoin('users', 'roles.id', '=', 'users.role_id')
+            ->select(
+                'roles.id',
+                'roles.nom',
+                'roles.created_at',
+                DB::raw('COUNT(users.id) as nbreUser')
+            )
+            ->groupBy('roles.id', 'roles.nom', 'created_at')
+            ->get();
+
+        if ($data) {
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'msg' => 'Aucune donnée trouver'
+        ], 201);
+    }
+
+    public function updateroles(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'nom' => 'required|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        try {
+
+            $this->parametreService->updateRolesService(
+                $validator->validated(),
+                $id
+            );
+
+            // 🧾 Historique (non bloquant)
+            $this->historiqueService->log(
+                'update',
+                'roles',
+                $id,
+                "Mise à jour d'un rôle"
+            );
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éfectuée avec succès',
+            ], 200);
+
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage(),
+            ], 202);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Erreur serveur',
+            ], 500);
+        }
+    }
+
+    public function deleteRoles($id)
+    {
+        try {
+
+            $role = $this->parametreService->deleteRolesService($id);
+
+            // Historique (non bloquant)
+            $this->historiqueService->log(
+                'delete',
+                'roles',
+                $id,
+                "Suppression du rôle {$role}"
+            );
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Rôle supprimé avec succès',
+            ], 200);
+
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage(),
+            ], 202);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Erreur serveur',
+            ], 500);
+        }
+    }
 }

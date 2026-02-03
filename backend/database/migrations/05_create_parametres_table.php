@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('parametres', function (Blueprint $table) {
+        Schema::create('parametres', function (Blueprint $table) {
             $table->id();
 
             // 🏥 Identité de la clinique
@@ -45,6 +45,7 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
     }
 
     /**

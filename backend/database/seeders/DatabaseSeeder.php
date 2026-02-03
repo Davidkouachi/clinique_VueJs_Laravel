@@ -24,11 +24,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('roles')->insertGetId([
+            'nom' => 'administrateur',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         DB::table('users')->insertGetId([
             'name' => 'Administrateur',
             'login' => 'admin',
             'email' => 'admin@gmail.com',
-            'roles' => 'admin',
+            'role_id' => 1,
             'password' => password_hash('password', PASSWORD_BCRYPT),
             'created_at' => now(),
             'updated_at' => now(),

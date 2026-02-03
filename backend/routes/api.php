@@ -35,16 +35,20 @@ $prefix = "v1";
 Route::prefix($prefix)->middleware('auth:api')->group(function () {
 
     //----------- Insert -------------------//
-    Route::post('/api_update_parametre', [ParametreController::class, 'update']);
+    Route::post('/api_insert_parametre', [ParametreController::class, 'insertParametre']);
+    Route::post('/api_insert_roles', [ParametreController::class, 'insertRoles']);
+
 
     //----------- Get -------------------//
-    Route::get('/api_get_parametre', [ParametreController::class, 'getAll']);
+    Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
+    Route::get('/api_get_roles', [ParametreController::class, 'getAllroles']);
 
 
     //----------- Update -------------------//
-    
+    Route::put('/api_update_roles/{id}', [ParametreController::class, 'updateroles']);
 
     //----------- Delete -------------------//
+    Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);
 
 
     //----------- Select -------------------//

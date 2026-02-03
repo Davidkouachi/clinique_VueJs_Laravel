@@ -389,7 +389,7 @@ const submitForm = async () => {
         }
 
         const response = await axios.post(
-            '/api/v1/api_update_parametre',
+            '/api/v1/api_insert_parametre',
             payload,
             { headers: { 'Content-Type': 'multipart/form-data' } }
         );

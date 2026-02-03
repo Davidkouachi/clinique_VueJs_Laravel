@@ -12,12 +12,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('nom');
+            $table->boolean('statut')->default(true);
+
+            $table->timestamps();
+        });
+        
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('login')->unique();
-            $table->enum('roles', ['admin'])->default('admin');
+            $table->foreignId('role_id')
+                ->nullable()
+                ->references('id')
+                ->on('roles')
+                ->nullOnDelete();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -39,16 +52,6 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-        // Schema::create('refresh_tokens', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('device_id ', 255)->index();
-        //     $table->unsignedBigInteger('user_id');
-        //     $table->string('token', 255)->unique();
-        //     $table->timestamp('expires_at');
-        //     $table->timestamps();
-
-        //     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        // });
         Schema::create('refresh_tokens', function (Blueprint $table) {
             $table->id();
             $table->string('device_id', 255)->index();
@@ -58,6 +61,34 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('activity_logs', function (Blueprint $table) {
+            $table->id();
+
+            // Utilisateur connecté
+            $table->foreignId('user_id')
+                ->nullable()
+                ->references('id')
+                ->on('users')
+                ->nullOnDelete();
+
+            // Action (create, update, delete, login, logout...)
+            $table->string('action');
+
+            // Entité concernée (parametre, patient, facture...)
+            $table->string('model')->nullable();
+
+            // ID de l’entité
+            $table->unsignedBigInteger('model_id')->nullable();
+
+            // Description lisible
+            $table->string('description')->nullable();
+
+            // Infos techniques
+            $table->string('ip_address', 45)->nullable();
+            $table->string('user_agent')->nullable();
+
+            $table->timestamps();
+        });
 
     }
 

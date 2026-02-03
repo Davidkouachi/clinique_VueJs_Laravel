@@ -151,7 +151,7 @@ onMounted(() => {
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
-                <img src="@/assets/img/logo.png" class="w-[8rem] shrink-0" alt="Logo">
+                <img src="@/assets/img/logo.jpg" class="w-[3rem] shrink-0" alt="Logo">
             </router-link>
         </div>
 
