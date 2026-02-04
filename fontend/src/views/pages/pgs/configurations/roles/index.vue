@@ -381,4 +381,3 @@ onMounted(() => {
     background-color: #fee2e2 !important;
 }
 </style>
-    

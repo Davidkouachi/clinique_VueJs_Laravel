@@ -29,6 +29,7 @@ use App\Services\HistoriqueService;
 class ParametreController extends Controller
 {
     protected $parametreService;
+    protected $historiqueService;
 
     public function __construct(
         ParametreService $parametreService, 
@@ -126,10 +127,9 @@ class ParametreController extends Controller
     }
 
     // roles ------------------------------------------------------------
-    public function insertRoles(Request $request)
+    public function insertroles(Request $request)
     {
-        Log::info($request->all());
-        
+
         $validator = Validator::make($request->all(), [
             'roles' => 'required|array|min:1',
             'roles.*' => 'required|string|max:50',

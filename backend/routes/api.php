@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParametreController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SelectController;
 
 // Routes publiques
 Route::post('/login', [AuthController::class, 'traitement_login']);
@@ -36,21 +38,24 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
 
     //----------- Insert -------------------//
     Route::post('/api_insert_parametre', [ParametreController::class, 'insertParametre']);
-    Route::post('/api_insert_roles', [ParametreController::class, 'insertRoles']);
-
+    Route::post('/api_insert_roles', [ParametreController::class, 'insertroles']);
+    Route::post('/api_insert_users', [UserController::class, 'insertUpdateusers']);
 
     //----------- Get -------------------//
     Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
     Route::get('/api_get_roles', [ParametreController::class, 'getAllroles']);
+    Route::get('/api_get_users', [UserController::class, 'getAllusers']);
 
 
     //----------- Update -------------------//
     Route::put('/api_update_roles/{id}', [ParametreController::class, 'updateroles']);
+    Route::put('/api_update_users/{id}', [UserController::class, 'insertUpdateusers']);
 
     //----------- Delete -------------------//
     Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);
-
+    Route::delete('/api_delete_users/{id}', [UserController::class, 'disableUsers']);
 
     //----------- Select -------------------//
+    Route::get('/select_roles', [SelectController::class, 'select_roles']);
 
 });

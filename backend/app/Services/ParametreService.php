@@ -95,7 +95,6 @@ class ParametreService
         });
     }
 
-
     public function updateRolesService(array $data, int $id): bool
     {
         return DB::transaction(function () use ($data, $id) {
