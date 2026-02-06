@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectController;
+use App\Http\Controllers\MedecinController;
 
 // Routes publiques
 Route::post('/login', [AuthController::class, 'traitement_login']);
@@ -40,20 +41,25 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::post('/api_insert_parametre', [ParametreController::class, 'insertParametre']);
     Route::post('/api_insert_roles', [ParametreController::class, 'insertroles']);
     Route::post('/api_insert_users', [UserController::class, 'insertUpdateusers']);
+    Route::post('/api_insert_specialite', [MedecinController::class, 'insertUpdatespecialite']);
 
     //----------- Get -------------------//
     Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
     Route::get('/api_get_roles', [ParametreController::class, 'getAllroles']);
     Route::get('/api_get_users', [UserController::class, 'getAllusers']);
+    Route::get('/api_get_activity', [ParametreController::class, 'getAllactivity']);
+    Route::get('/api_get_specialite', [MedecinController::class, 'getAllspecialite']);
 
 
     //----------- Update -------------------//
     Route::put('/api_update_roles/{id}', [ParametreController::class, 'updateroles']);
     Route::put('/api_update_users/{id}', [UserController::class, 'insertUpdateusers']);
+    Route::put('/api_statut_specialite/{id}/{mode}', [MedecinController::class, 'updatSpecialiteStatut']);
+    Route::put('/api_update_specialite/{id}', [MedecinController::class, 'insertUpdatespecialite']);
 
     //----------- Delete -------------------//
     Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);
-    Route::delete('/api_delete_users/{id}', [UserController::class, 'disableUsers']);
+    Route::delete('/api_delete_users', [UserController::class, 'disableUsers']);
 
     //----------- Select -------------------//
     Route::get('/select_roles', [SelectController::class, 'select_roles']);

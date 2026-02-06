@@ -31,10 +31,7 @@ export function useScript() {
 
 	    filters.value = {
 	        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	        name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        login: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        role: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+	        nom: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 	    };
 	}
 
@@ -46,7 +43,7 @@ export function useScript() {
 	    lists.value = new Array(10).fill({});
 
 	    try {
-	        const res = await axios.get('/api/v1/api_get_users');
+	        const res = await axios.get('/api/v1/api_get_specialite');
 
 	        // Vérifie si la réponse est vide ou status 204
 	        const data = res.data?.data ?? [];
@@ -78,23 +75,6 @@ export function useScript() {
 	        initFilters(false);
 	    }
 	};
-
-	const fetchRoles = async () => {
-
-		loadingSelectRoles.value = true
-
-	    try {
-	        const res = await axios.get('/api/v1/select_roles')
-	        rolesOptions.value = res.data.data.map(r => ({
-	            label: r.nom,
-	            value: r.id
-	        }))
-	    } catch (e) {
-	        showToast('error', 'Erreur', 'Impossible de charger les rôles')
-	    } finally {
-	    	loadingSelectRoles.value = false
-	    }
-	}
 
 	// ------------------------ boutton pour imprimer-----------------------------
 
@@ -130,14 +110,7 @@ export function useScript() {
 	};
 
 	const actionItems = (data) => {
-	    const items = [
-	        {
-	            label: 'Détails',
-	            icon: 'pi pi-eye',
-	            command: () => showToast('info', 'Détails', `Détails de ${data.name}`)
-	        },
-	        { separator: true },
-	    ];
+		const items = [];
 
 	    // 👉 Actions UNIQUEMENT si compte actif
 	    if (data.statut === 1) {
@@ -150,7 +123,7 @@ export function useScript() {
 	            {
 	                label: 'Désactiver',
 	                icon: 'pi pi-lock',
-	                command: () => showToast('warn', 'Désactiver', `Désactiver ${data.name}`)
+	                command: () => showToast('warn', 'Désactiver', `Désactiver ${data.nom}`)
 	            },
 	        );
 	    }
@@ -160,7 +133,7 @@ export function useScript() {
 	        items.push({
 	            label: 'Activer',
 	            icon: 'pi pi-unlock',
-	            command: () => showToast('success', 'Activer', `Activer ${data.name}`)
+	            command: () => showToast('success', 'Activer', `Activer ${data.nom}`)
 	        });
 	    }
 
@@ -175,66 +148,31 @@ export function useScript() {
 	    editId.value = null;
 
 	    name.value = '';
-	    login.value = '';
-	    email.value = '';
-	    password.value = '';
-	    cpassword.value = '';
-	    role_id.value = '';
-	    rolesOptions.value = [];
 
 	    checked.value = false;
 
 	    showEditModal.value = true;
-
-	    fetchRoles();
 	};
 
 	const updateTable = (data) => {
 	    editMode.value = true;
 	    editId.value = data.id;
 
-	    name.value = data.name;
-	    login.value = data.login;
-	    email.value = data.email;
-	    password.value = '';
-	    cpassword.value = '';
-	    role_id.value = data.role_id;
-	    rolesOptions.value = [];
+	    name.value = data.nom;
 
 	    checked.value = false;
 
 	    showEditModal.value = true;
-
-	    fetchRoles();
 	};
 
 	// ------------------------ ajouter & supprimer une ligne -----------------------------
 
 	const formSubmit = async () => {
 
-	    if (!name.value || !login.value || !email.value || !role_id.value) {
+	    if (!name.value) {
 	        showToast('warn', 'Alerte', 'Formulaire incomplet')
 	        return
 	    }
-
-	    if (!editMode.value && !isPasswordValid(password.value) || 
-	    	!isPasswordValid(cpassword.value)) {
-		    showToast(
-		        'warn',
-		        'Mot de passe invalide',
-		        'Min 8 caractères, majuscule, minuscule et chiffre'
-		    )
-		    return
-		}
-
-		if (password.value !== cpassword.value) {
-		    showToast(
-		        'warn',
-		        'Mot de passe incorrect',
-		        'Veuillez bien vérifier le mot de passe'
-		    )
-		    return
-		}
 
 	    if (!checked.value) {
 	        showToast('warn', 'Alerte', 'Veuillez confirmer les informations');
@@ -245,11 +183,7 @@ export function useScript() {
 
 	    try {
 	        const payload = {
-	            name: name.value,
-	            login: login.value,
-	            email: email.value,
-	            role_id: role_id.value,
-	            password: password.value || null,
+	            nom: name.value,
 	        };
 
 	        let res;
@@ -257,13 +191,13 @@ export function useScript() {
 	        if (editMode.value) {
 	            // UPDATE
 	            res = await axios.put(
-	                `/api/v1/api_update_users/${editId.value}`,
+	                `/api/v1/api_update_specialite/${editId.value}`,
 	                payload
 	            );
 	        } else {
 	            // INSERT
 	            res = await axios.post(
-	                `/api/v1/api_insert_users`,
+	                `/api/v1/api_insert_specialite`,
 	                payload
 	            );
 	        }
@@ -287,19 +221,7 @@ export function useScript() {
 
 	// ------------------------ supprimer une ligne -----------------------------
 
-	const deleteTable = (event, data) => {
-	    confirmDelete(event, [data.id])
-	}
-
-	const deleteSelected = (event) => {
-	    const ids = selectedLists.value.map(u => u.id)
-
-	    if (!ids.length) return
-
-	    confirmDelete(event, ids)
-	}
-
-	const confirmDelete = (event, ids = []) => {
+	const confirmStatut = (event, id, mode) => {
 	    confirm.require({
 	        target: event?.currentTarget,
 	        message: `Voulez-vous vraiment continuer ?`,
@@ -318,7 +240,7 @@ export function useScript() {
 	                'Suppression en cours...',
 	                async () => {
 	                    try {
-	                        await deleteList(ids)
+	                        await statutList(id, mode)
 	                    } finally {
 	                        preloaderSpinner.hideSpiner()
 	                    }
@@ -329,24 +251,24 @@ export function useScript() {
 	    })
 	}
 
-	async function deleteList(ids) {
+	async function statutList(id, mode) {
 
 	    try {
-	        const res = await axios.delete('/api/v1/api_delete_users', {
-	            data: {
-	                ids: ids
-	            }
-	        })
+	    	console.log(id)
+	    	console.log(mode)
+	        const res = await axios.put(`/api/v1/api_statut_specialite/${id}/${mode}`)
 
 	        if (res.status === 200) {
-	            showToast(
-	                'success',
-	                'Succès',
-	                `Opération éffectuée`
-	            )
-
+	      
 	            selectedLists.value = []
-	            await fetchLists()
+	            await fetchLists(
+	            	false,
+	            	showToast(
+		                'success',
+		                'Succès',
+		                `Opération éffectuée`
+		            )
+		        )
 	        } else {
 	            showToast('warn', 'Attention', res.data.msg)
 	        }
@@ -406,9 +328,7 @@ export function useScript() {
 
 	const selectableRows = computed(() =>
 	    lists.value.filter(u =>
-	        (auth.user &&
-	        auth.user.id !== u.id) &&
-	        (u.statut === 1)
+	        u.statut === 1
 	    )
 	);
 
@@ -419,29 +339,8 @@ export function useScript() {
 	const editId = ref(null);
 
 	const name = ref('')
-	const login = ref('')
-	const email = ref('')
-	const cpassword = ref('')
-	const password = ref('')
-	const role_id = ref(null)
-	const rolesOptions = ref([])
 	const checked = ref(false);
 	const loadingForm = ref(false);
-	const loadingSelectRoles = ref(false);
-	const selectPlaceholder = computed(() =>
-	    loadingSelectRoles.value && editMode.value
-	        ? 'Chargement des rôles...'
-	        : ''
-	)
-
-	const isPasswordValid = (pw = '') => {
-	    return (
-	        pw.length >= 8 &&
-	        /[a-z]/.test(pw) &&
-	        /[A-Z]/.test(pw) &&
-	        /\d/.test(pw)
-	    )
-	}
 
 	return {
 		auth,
@@ -473,12 +372,9 @@ export function useScript() {
 	    editId,
 	    checked,
 	    loadingForm,
-	    loadingSelectRoles,
-	    selectPlaceholder,
 
 	    // ------------------ Méthodes API
 	    fetchLists,
-	    fetchRoles,
 
 	    // ------------------ Filtres & table
 	    initFilters,
@@ -492,10 +388,7 @@ export function useScript() {
 	    // ------------------ Actions UI
 	    insertTable,
 	    updateTable,
-	    deleteTable,
-	    deleteSelected,
-	    confirmDelete,
-	    deleteList,
+	    confirmStatut,
 
 	    // ------------------ Modal
 	    showEditModal,
@@ -505,12 +398,6 @@ export function useScript() {
 
 	    // ------------------ Formulaire champ
 	    name,
-	    login,
-	    email,
-	    password,
-	    cpassword,
-	    role_id,
-	    rolesOptions,
 
 	    // ------------------ Utils
 	    formaDateHeure

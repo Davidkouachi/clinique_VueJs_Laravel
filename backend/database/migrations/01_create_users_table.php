@@ -33,6 +33,7 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('statut')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

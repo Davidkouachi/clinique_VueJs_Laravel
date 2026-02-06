@@ -127,6 +127,7 @@ class ParametreController extends Controller
     }
 
     // roles ------------------------------------------------------------
+
     public function insertroles(Request $request)
     {
 
@@ -190,17 +191,10 @@ class ParametreController extends Controller
             ->groupBy('roles.id', 'roles.nom', 'created_at')
             ->get();
 
-        if ($data) {
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ], 200);
-        }
-
         return response()->json([
-            'success' => false,
-            'msg' => 'Aucune donnée trouver'
-        ], 201);
+            'success' => true,
+            'data' => $data ?? []
+        ], 200);
     }
 
     public function updateroles(Request $request, $id)
@@ -288,4 +282,44 @@ class ParametreController extends Controller
             ], 500);
         }
     }
+
+    // historique activité ------------------------------------------------------------
+
+    public function getAllactivity()
+    {
+        $data = DB::table('activity_logs')
+            ->leftJoin('users', 'activity_logs.user_id', '=', 'users.id')
+            ->select(
+                'activity_logs.id',
+                'activity_logs.action',
+                'activity_logs.model',
+                'activity_logs.model_id',
+                'activity_logs.description',
+                'activity_logs.ip_address',
+                'activity_logs.user_agent',
+                'activity_logs.created_at',
+                'users.login',
+            )
+            // Ordre décroissant (le plus récent en premier) — le plus courant
+            // ->orderBy('activity_logs.created_at', 'desc')
+            // Ordre croissant (du plus ancien au plus récent)
+            // ->orderBy('activity_logs.created_at', 'asc')
+            // Utilise aussi l’ID (utile si plusieurs logs ont la même date) :
+            ->orderBy('activity_logs.created_at', 'desc')
+            ->orderBy('activity_logs.id', 'desc')
+            ->get();
+
+        if ($data) {
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'msg' => 'Aucune donnée trouver'
+        ], 201);
+    }
+
 }

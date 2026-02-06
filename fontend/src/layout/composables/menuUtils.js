@@ -24,7 +24,7 @@ export const model = ref([
         ]
     },
     {
-        label: 'administrateuristration',
+        label: 'administration',
         icon: 'pi pi-fw pi-building',
         items: [
             /* ===================== PATIENTS ===================== */
@@ -300,7 +300,7 @@ export const model = ref([
                     { label: 'Rôles', icon: 'pi pi-id-card', to: '/configurations/roles', permissions: ['administrateur']},
                 ]
             },
-            { label: 'Historiques activitées', icon: 'pi pi-history', to: '/configurations/activites', permissions: ['administrateur'] },
+            { label: 'Historiques activitées', icon: 'pi pi-history', to: '/configurations/historiques/activites', permissions: ['administrateur'] },
             { label: 'Parametre', icon: 'pi pi-sliders-h', to: '/configurations/parametres', permissions: ['administrateur'] },
         ]
     },

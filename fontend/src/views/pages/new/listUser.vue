@@ -357,9 +357,9 @@ const exportItemsExcel = [
     }
 ];
 
-const actionItems = (user) => [
-    { label: 'Détails', icon: 'pi pi-eye', command: () => openModal(user) },
-    { label: 'Modifier', icon: 'pi pi-pencil', command: () => showToast('info','Modifier',`Modifier ${user.name}`) },
+const actionItems = (data) => [
+    { label: 'Détails', icon: 'pi pi-eye', command: () => showToast('info','Modifier',`Modifier ${data.name}`) },
+    { label: 'Modifier', icon: 'pi pi-pencil', command: () => showToast('info','Modifier',`Modifier ${data.name}`) },
     // { separator: true }
 ];
 

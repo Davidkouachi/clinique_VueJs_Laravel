@@ -1,11 +1,13 @@
 <template>
+    <TitrePage />
+
     <Card class="h-full" >
         <template #header>
-            <div class="flex justify-center items-center mt-5">
+            <!-- <div class="flex justify-center items-center mt-5">
                 <h3 class="font-semibold text-center">
                     Rôles
                 </h3>
-            </div>
+            </div> -->
         </template>
         <template #content>
             <DataTable
@@ -298,6 +300,7 @@ import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
+import TitrePage from '@/layout/elements/TitrePage.vue';
 
 import { useScript } from './script'
 

@@ -24,6 +24,14 @@ const customPages = [
 ];
 
 const pgsPages = [
+    // administration
+    { 
+        path: '/medecins/specialites', 
+        name: 'medecins_specialites', 
+        component: () => import('@/views/pages/pgs/administration/medecin/specialite/index.vue'), 
+        meta: { title: 'specialites', requiresAuth: true } 
+    },
+    // configurations
     { 
         path: '/configurations/utilisateurs', 
         name: 'configuration_users', 
@@ -35,6 +43,12 @@ const pgsPages = [
         name: 'configuration_roles', 
         component: () => import('@/views/pages/pgs/configurations/roles/index.vue'), 
         meta: { title: 'Rôles', requiresAuth: true } 
+    },
+    { 
+        path: '/configurations/historiques/activites', 
+        name: 'configuration_historiques', 
+        component: () => import('@/views/pages/pgs/configurations/historique/index.vue'), 
+        meta: { title: 'Historiques', requiresAuth: true } 
     },
     { 
         path: '/configurations/parametres', 

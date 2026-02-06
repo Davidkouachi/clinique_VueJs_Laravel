@@ -111,34 +111,55 @@ class UserController extends Controller
 
     public function getAllusers()
     {
+        $now = now();
+
         $data = DB::table('users')
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->leftJoinSub(
+                DB::table('refresh_tokens')
+                    ->select(
+                        'user_id',
+                        DB::raw('MAX(updated_at) as last_activity'),
+                        DB::raw('MAX(expires_at) as expires_at')
+                    )
+                    ->where('expires_at', '>', $now)
+                    ->groupBy('user_id'),
+                'sessions',
+                'users.id',
+                '=',
+                'sessions.user_id'
+            )
             ->select(
                 'users.id',
                 'users.name',
                 'users.email',
                 'users.login',
                 'users.role_id',
+                'users.statut',
                 'roles.nom as role',
-                'users.created_at'
+                'users.created_at',
+
+                // 🔥 timestamp exact
+                DB::raw('sessions.last_activity as connected_since_at')
             )
+            ->selectRaw("
+                CASE 
+                    WHEN sessions.expires_at IS NOT NULL THEN 1 
+                    ELSE 0 
+                END as is_online
+            ")
             ->get();
 
-        if ($data) {
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ], 200);
-        }
-
         return response()->json([
-            'success' => false,
-            'msg' => 'Aucune donnée trouver'
-        ], 201);
+            'success' => true,
+            'data' => $data
+        ], 200);
     }
 
     public function disableUsers(Request $request)
     {
+        Log::info($request->all());
+        
         $ids = $request->ids ?? [];
 
         if (!count($ids)) {

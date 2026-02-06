@@ -47,12 +47,6 @@
                         </FloatLabel>
                         <div class="flex flex-wrap gap-2 mt-2 md:mt-0">
                             <Button 
-                                v-if="selectedLists.length > 0"
-                                icon="pi pi-trash"
-                                severity="danger"
-                                @click="deleteSelected"
-                            />
-                            <Button 
                                 type="button" 
                                 icon="pi pi-filter-slash" 
                                 label="Filtre" 
@@ -86,25 +80,6 @@
                     </div>
                 </template>
 
-                <Column style="width:2rem" class="p-0">
-                     <template #header>
-                        <Checkbox
-                            binary
-                            :modelValue="isAllSelected"
-                            :disabled="selectableRows.length === 0"
-                            @update:modelValue="toggleAll"
-                        />
-                    </template>
-                    <template #body="{ data }">
-                        <Checkbox
-                            binary
-                            :modelValue="isSelected(data)"
-                            @update:modelValue="val => toggleRow(val, data)"
-                            :disabled="auth.user && (auth.user.id === data.id || data.statut === 0)"
-                        />
-                    </template>
-                </Column>
-
                 <Column field="id" header="N°" style="width:5%">
                     <template #body="{ index }">
                         <Skeleton v-if="loading" width="2rem" height="1rem"/>
@@ -112,74 +87,22 @@
                     </template>
                 </Column>
 
-                <Column field="name" header="Nom" style="min-width: 10rem">
+                <Column field="nom" header="Nom" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <span v-else>{{ data?.name ?? '-' }}</span>
+                        <span v-else>{{ data?.nom ?? '-' }}</span>
                     </template>
                 </Column>
 
-                <Column field="email" header="Email" style="min-width: 10rem">
+                <Column field="statut" header="Statut" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <span v-else>{{ data?.email ?? '-' }}</span>
-                    </template>
-                </Column>
-
-                <Column field="login" header="Login" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <span v-else>{{ data?.login ?? '-' }}</span>
-                    </template>
-                </Column>
-
-                <Column field="role" header="Rôle" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <span v-else>
-                            <Tag 
-                                v-if="data?.role"
-                                :value="data.role"
-                                severity="info"
-                            />
-                        </span>
-                    </template>
-                </Column>
-
-                <Column field="statut" header="Compte Vérouilé" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <Tag 
+                        <span
                             v-else
-                            :value="data.statut ? 'Non' : 'Oui'"
-                            :severity="data.statut ? 'success' : 'danger'"
-                        />
-                    </template>
-                </Column>
-
-                <Column header="Statut" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
-                        <Tag
-                            v-else
-                            :value="data.is_online ? 'En ligne' : 'Hors ligne'"
-                            :severity="data.is_online ? 'success' : 'secondary'"
-                        />
-                    </template>
-                </Column>
-
-                <Column header="Connecté depuis" style="min-width: 12rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
-
-                        <Tag
-                            v-else-if="data.is_online"
-                            :value="formatTime(getConnectedSeconds(data))"
-                            severity="info"
-                        />
-
-                        <span v-else class="text-gray-400">
-                            —
+                            :class="actionClass(data?.statut)"
+                            class="font-bold px-2 py-1 rounded text-sm"
+                        >
+                          {{ data?.statut === 1 ? 'Activé' : 'Désactivé' }}
                         </span>
                     </template>
                 </Column>
@@ -195,28 +118,29 @@
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="6rem" height="2rem" />
                         <div class="flex flex-row gap-2" v-else >
-                            <SplitButton
-                                :model="actionItems(data)" 
-                                icon="" 
-                                label="Actions" 
-                                dropdownIcon="pi pi-cog" 
-                                severity="warn" 
-                                size="small"
-                            />
-                            <!-- <Button
+                            <Button
                                 severity="info" 
                                 type="button" 
                                 icon="pi pi-pencil" 
                                 label="" 
                                 @click="updateTable(data)"
-                            /> -->
+                                v-if="data.statut === 1"
+                            />
                             <Button
                                 severity="danger" 
                                 type="button" 
-                                icon="pi pi-trash" 
+                                icon="pi pi-lock" 
                                 label="" 
-                                @click="deleteTable($event, data)"
-                                v-if="auth.user && auth.user.id !== data.id"
+                                @click="confirmStatut($event, data.id, 0)"
+                                v-if="data.statut === 1"
+                            />
+                            <Button
+                                severity="success" 
+                                type="button" 
+                                icon="pi pi-unlock" 
+                                label="" 
+                                @click="confirmStatut($event, data.id, 1)"
+                                v-if="data.statut === 0"
                             />
                         </div>
                     </template>
@@ -235,70 +159,15 @@
 
     <Drawer 
         v-model:visible="showEditModal" 
-        :header="editMode ? 'Mise à jour' : 'Nouvel utilisateur'" 
+        :header="editMode ? 'Mise à jour' : 'Nouvelle Spécialité'" 
         position="full">
         <Fluid>
             <div class="flex">
                 <form @submit.prevent="formSubmit" class="flex flex-col gap-4 w-full">
-                    <div class="flex justify-center my-4" v-if="editMode">
-                        <Chip 
-                            label="Lors d’une modification, le mot de passe est facultatif. Laissez le champ vide pour conserver l’ancien mot de passe."
-                            icon="pi pi-info-circle"
-                            severity="info"
-                        />
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="grid grid-cols-1 gap-4 mt-4">
                         <FloatLabel variant="on">
                             <InputText id="name" type="text" v-model="name" autocomplete="off" size="large"/>
                             <label for="name">Nom</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <InputText id="email" type="email" v-model="email" autocomplete="off" size="large"/>
-                            <label for="email">Email</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <Select v-model="role_id" id="role_id" :options="rolesOptions" optionLabel="label" optionValue="value" class="w-full" size="large" filter :loading="loadingSelectRoles" :placeholder="selectPlaceholder"/>
-                            <label for="role_id">Rôle</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <InputText id="login" type="text" v-model="login" autocomplete="off" size="large"/>
-                            <label for="login">Login</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <Password id="password" v-model="password" :toggleMask="true" class="" fluid :feedback="true" weakLabel="Petit" mediumLabel="Moyen" strongLabel="Bien" promptLabel="Entrez votre mot de passe" size="large"
-                             autocomplete="off">
-                                <template #header>
-                                    <div class="font-semibold text-xm mb-4">Conditions</div>
-                                </template>
-                                <template #footer>
-                                    <Divider />
-                                    <ul class="pl-2 my-0 leading-normal text-sm">
-                                        <li>✔ 1 minuscule</li>
-                                        <li>✔ 1 majuscule</li>
-                                        <li>✔ 1 chiffre</li>
-                                        <li>✔ 8 caractères minimum</li>
-                                    </ul>
-                                </template>
-                            </Password>
-                            <label for="password">Mot de passe</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <Password id="cpassword" v-model="cpassword" :toggleMask="true" class="" fluid :feedback="true" weakLabel="Petit" mediumLabel="Moyen" strongLabel="Bien" promptLabel="Confirmer le mot de passe" size="large"
-                             autocomplete="off">
-                                <template #header>
-                                    <div class="font-semibold text-xm mb-4">Conditions</div>
-                                </template>
-                                <template #footer>
-                                    <Divider />
-                                    <ul class="pl-2 my-0 leading-normal text-sm">
-                                        <li>✔ 1 minuscule</li>
-                                        <li>✔ 1 majuscule</li>
-                                        <li>✔ 1 chiffre</li>
-                                        <li>✔ 8 caractères minimum</li>
-                                    </ul>
-                                </template>
-                            </Password>
-                            <label for="cpassword">Confirmer le Mot de passe</label>
                         </FloatLabel>
                     </div>
                     <div class="flex items-center gap-2 mt-4">
@@ -347,6 +216,17 @@ import TitrePage from '@/layout/elements/TitrePage.vue';
 
 import { useScript } from './script'
 
+const actionClass = (action) => {
+    switch (action) {
+        case 1:
+            return 'bg-green-500 text-white'
+        case 0:
+            return 'bg-red-500 text-white'
+        default:
+            return 'bg-gray-500 text-white'
+    }
+}
+
 const {
         auth,
 
@@ -377,13 +257,9 @@ const {
         editId,
         checked,
         loadingForm,
-        loadingSelectRoles,
-        selectPlaceholder,
 
         // ------------------ Méthodes API
         fetchLists,
-        fetchRoles,
-        deletList,
 
         // ------------------ Filtres & table
         initFilters,
@@ -396,9 +272,8 @@ const {
 
         // ------------------ Actions UI
         insertTable,
-        // updateTable,
-        deleteTable,
-        deleteSelected,
+        updateTable,
+        confirmStatut,
 
         // ------------------ Modal
         showEditModal,
@@ -408,54 +283,15 @@ const {
 
         // ------------------ Formulaire champ
         name,
-        login,
-        email,
-        password,
-        cpassword,
-        role_id,
-        rolesOptions,
 
         // ------------------ Utils
         formaDateHeure
 } = useScript();
 
-const now = ref(Date.now());
-let interval = null;
-
-/* ⏱ formatage du temps */
-const formatTime = (seconds) => {
-    if (seconds === null || seconds === undefined) return "";
-
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-
-    if (h > 0) return `${h}h ${m}min`;
-    if (m > 0) return `${m}min ${s}s`;
-    return `${s}s`;
-};
-
-const getConnectedSeconds = (user) => {
-    if (!user.is_online || !user.connected_since_at) return null;
-
-    return Math.floor(
-        (now.value - new Date(user.connected_since_at)) / 1000
-    );
-};
-
-onMounted(async () => {
-    await fetchLists();
-
-    interval = setInterval(() => {
-        now.value = Date.now(); // 1 seule variable réactive
-    }, 1000);
+onMounted( () => {
+    fetchLists();
 });
 
-onUnmounted(() => {
-    if (interval) {
-        clearInterval(interval);
-    }
-});
 </script>
 
 <style scoped lang="scss">
