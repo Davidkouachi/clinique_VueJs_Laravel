@@ -36,7 +36,6 @@ class ParametreService
             // Mise à jour ou création
             if ($parametre) {
 
-
                 DB::table('parametres')
                     ->where('id', $parametre->id)
                     ->update(array_merge($data, ['updated_at' => now()]));

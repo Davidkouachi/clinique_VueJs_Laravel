@@ -30,7 +30,7 @@ class UserService
             // ---------------- Doublons (login / email)
             $duplicate = DB::table('users')
                 ->where(function ($q) use ($data) {
-                    $q->where('login', $data['login'])
+                    $q->where('login', $data['login']);
                       ->orWhere('email', $data['email']);
                 })
                 ->when($isUpdate, fn ($q) => $q->where('id', '!=', $id))

@@ -25,19 +25,131 @@ use PHPMailer\PHPMailer\Exception;
 
 use App\Services\MedecinService;
 use App\Services\HistoriqueService;
+use App\Services\CodeService;
 
 class MedecinController extends Controller
 {
     protected $medecinService;
     protected $historiqueService;
+    protected $codeService;
 
     public function __construct(
         MedecinService $medecinService, 
-        HistoriqueService $historiqueService
+        HistoriqueService $historiqueService,
+        CodeService $codeService,
     )
     {
         $this->medecinService = $medecinService;
         $this->historiqueService = $historiqueService;
+        $this->codeService = $codeService;
+    }
+
+    // ------------------------------------------------------------
+
+    public function insertUpdateMedecin(Request $request, $uid = null)
+    {
+        Log::info($request->all());
+        Log::info($uid);
+
+        $rules = [
+            'nom'            => 'required|string|max:100',
+            'prenom'         => 'required|string|max:100',
+            'email'          => 'required|email',
+            'telephone'      => 'required|string|max:10',
+            'titre_id'       => 'required|exists:medecintitres,id',
+            'specialite_id'  => 'required|exists:specialites,id',
+            'numero_ordre'   => 'nullable|string|max:50',
+            'ajouterAcces'   => 'required|boolean',
+        ];
+
+        // 🔐 règles conditionnelles accès
+        if ($request->boolean('ajouterAcces')) {
+            $rules['login'] = 'required|string|max:50';
+            $rules['password'] = $uid
+                ? 'nullable|min:8'
+                : 'required|min:8';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        $code = null;
+        $uid_new = null;
+
+        if ($uid === null || $uid === '') {
+            $code = $this->codeService->generateCode(
+                table: 'medecins',
+                column: 'code',
+                prefix: 'Med'
+            );
+            $uid_new = $this->codeService->generateUid(
+                table: 'medecins',
+            );
+        }
+
+        Log::info($uid_new);
+        Log::info($code);
+
+        try {
+            $result = $this->medecinService->insertUpdateMedecinService(
+                $validator->validated(),
+                $uid,
+                $uid_new,
+                $code,
+            );
+
+            if (!$result['success'] && $result['type'] === 'duplicate_access') {
+                return response()->json([
+                    'info' => true,
+                    'msg' => $result['msg'],
+                ], 202);
+            }
+
+            if (!$result['success'] && $result['type'] === 'duplicate_medecin') {
+                return response()->json([
+                    'info' => true,
+                    'msg' => $result['msg']
+                ], 202);
+            }
+
+            // 🧾 Historique
+            $this->historiqueService->log(
+                $result['action'],
+                'medecins',
+                $result['id'],
+                $result['action'] === 'insert'
+                    ? "Création d'un médecin"
+                    : "Mise à jour d'un médecin"
+            );
+
+            return response()->json([
+                'success' => true,
+                'msg' => $result['action'] === 'insert'
+                    ? 'Médecin créé avec succès'
+                    : 'Médecin mis à jour avec succès'
+            ], 200);
+
+        } catch (ModelNotFoundException $e) {
+            // 🔹 Ici on récupère le message exact
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage()
+            ], 202);
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'error' => true,
+                'msg' => $e->getMessage() // renvoie le message exact
+            ], 500);
+        }
     }
 
     // ------------------------------------------------------------

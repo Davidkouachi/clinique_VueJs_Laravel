@@ -42,6 +42,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::post('/api_insert_roles', [ParametreController::class, 'insertroles']);
     Route::post('/api_insert_users', [UserController::class, 'insertUpdateusers']);
     Route::post('/api_insert_specialite', [MedecinController::class, 'insertUpdatespecialite']);
+    Route::post('/api_insert_medecins', [MedecinController::class, 'insertUpdateMedecin']);
 
     //----------- Get -------------------//
     Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
@@ -56,6 +57,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::put('/api_update_users/{id}', [UserController::class, 'insertUpdateusers']);
     Route::put('/api_statut_specialite/{id}/{mode}', [MedecinController::class, 'updatSpecialiteStatut']);
     Route::put('/api_update_specialite/{id}', [MedecinController::class, 'insertUpdatespecialite']);
+    Route::put('/api_update_medecins/{uid}', [MedecinController::class, 'insertUpdateMedecin']);
 
     //----------- Delete -------------------//
     Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);
@@ -63,5 +65,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
 
     //----------- Select -------------------//
     Route::get('/select_roles', [SelectController::class, 'select_roles']);
+    Route::get('/select_tritremedecin', [SelectController::class, 'select_tritremedecin']);
+    Route::get('/select_specialite', [SelectController::class, 'select_specialite']);
 
 });

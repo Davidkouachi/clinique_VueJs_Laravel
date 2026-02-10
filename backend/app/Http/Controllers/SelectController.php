@@ -47,4 +47,25 @@ class SelectController extends Controller
             'data' => $data
         ], 200);
     }
+
+    public function select_specialite()
+    {
+        $data = DB::table('specialites')->select('id', 'nom')->where('statut', true)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
+    public function select_tritremedecin()
+    {
+        $data = DB::table('medecintitres')->select('id', 'nom')->where('statut', true)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
 }

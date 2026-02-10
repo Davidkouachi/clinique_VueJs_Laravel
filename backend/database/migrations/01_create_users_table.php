@@ -34,6 +34,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('statut')->default(true);
+            $table->string('uid')->nullable()->unique()->index();
             $table->rememberToken();
             $table->timestamps();
         });
