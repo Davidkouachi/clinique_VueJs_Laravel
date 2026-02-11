@@ -18,7 +18,9 @@ class ParametreService
 
     public function insertParametreService(array $data, ?UploadedFile $logo = null): int
     {
-        return DB::transaction(function () use ($data, $logo) {
+        DB::beginTransaction();
+
+        try {
 
             $parametre = DB::table('parametres')->first();
 
@@ -49,15 +51,23 @@ class ParametreService
                 ]));
             }
 
+            DB::commit(); // ✅ Commit manuel ici
+
             return $id;
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
     // Roles -----------------------------------------------------------
 
     public function insertRolesService(array $roles): array
     {
-        return DB::transaction(function () use ($roles) {
+        DB::beginTransaction();
+
+        try {
 
             $inserted = [];
             $insertedIds = [];
@@ -86,17 +96,25 @@ class ParametreService
                 $insertedIds[] = $id;
             }
 
+            DB::commit(); // ✅ Commit manuel ici
+
             return [
                 'inserted' => $inserted,
                 'inserted_ids' => $insertedIds,
                 'duplicates' => $duplicates,
             ];
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
     public function updateRolesService(array $data, int $id): bool
     {
-        return DB::transaction(function () use ($data, $id) {
+        DB::beginTransaction();
+
+        try {
 
             // 🔍 Vérifier que le rôle existe
             $role = DB::table('roles')->where('id', $id)->first();
@@ -122,13 +140,21 @@ class ParametreService
                     'updated_at' => now(),
                 ]);
 
+            DB::commit(); // ✅ Commit manuel ici
+
             return true;
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
     public function deleteRolesService(int $id): string
     {
-        return DB::transaction(function () use ($id) {
+        DB::beginTransaction();
+
+        try {
 
             $role = DB::table('roles')
                 ->select('nom')
@@ -143,9 +169,15 @@ class ParametreService
                 ->where('id', $id)
                 ->delete();
 
+            DB::commit(); // ✅ Commit manuel ici
+            
             // 🔥 on retourne le nom AVANT suppression
             return $role->nom;
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
 }

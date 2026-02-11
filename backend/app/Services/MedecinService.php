@@ -131,12 +131,13 @@ class MedecinService
         }
     }
 
-
     // ------------------------------------------------------------
 
     public function insertSpecialiteService(array $data, ?int $id = null): array
     {
-        return DB::transaction(function () use ($data, $id) {
+        DB::beginTransaction();
+
+        try {
 
             $isUpdate = !is_null($id);
 
@@ -158,6 +159,7 @@ class MedecinService
                 ->first();
 
             if ($duplicate) {
+                DB::rollBack();
                 return [
                     'success' => false,
                     'type' => 'duplicate',
@@ -178,29 +180,37 @@ class MedecinService
                     ->where('id', $id)
                     ->update($payload);
 
-                return [
-                    'success' => true,
-                    'action' => 'update',
-                    'id' => $id,
-                ];
-            }
+                $resultID = $id;
 
-            // ---------------- INSERT
-            $payload['created_at'] = now();
+            } else {
+                // ---------------- INSERT
 
-            $newId = DB::table('specialites')->insertGetId($payload);
+                $payload['created_at'] = now();
+
+                $newId = DB::table('specialites')->insertGetId($payload);
+
+                $resultID = $newId;
+            }            
+
+            DB::commit(); // ✅ Commit manuel ici
 
             return [
                 'success' => true,
-                'action' => 'insert',
-                'id' => $newId,
+                'action' => $isUpdate ? 'update' :'insert',
+                'id' => $resultID,
             ];
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
     public function updatSpecialiteStatutService(int $id = null, int $mode = null): bool
     {
-        return DB::transaction(function () use ($id, $mode) {
+        DB::beginTransaction();
+
+        try {
 
             // ✅ Vérification des paramètres
             if ($id === null || $mode === null) {
@@ -225,8 +235,14 @@ class MedecinService
                 ->where('id', $id)
                 ->update($payload);
 
+            DB::commit(); // ✅ Commit manuel ici
+
             return true;
-        });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
 }

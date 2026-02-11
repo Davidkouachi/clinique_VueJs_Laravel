@@ -152,6 +152,40 @@ class MedecinController extends Controller
         }
     }
 
+    public function getAllmedecin()
+    {
+        $data = DB::table('medecins')
+            ->leftJoin('users', 'medecins.uid', '=', 'users.uid')
+            ->leftJoin('specialites', 'medecins.specialite_id', '=', 'specialites.id')
+            ->leftJoin('medecintitres', 'medecins.titre_id', '=', 'medecintitres.id')
+            ->where('medecins.statut', true)
+            ->select(
+                'medecins.id',
+                'medecins.uid',
+                'medecins.code',
+                'medecins.nom',
+                'medecins.prenom',
+                'medecins.email',
+                'medecins.telephone',
+                'medecins.numero_ordre',
+                'medecins.specialite_id',
+                'medecins.titre_id',
+                'specialites.nom as specialite',
+                'medecintitres.signe',
+                'users.id as userID',
+                'medecins.created_at',
+                'medecins.created_at',
+            )
+            ->orderBy('medecins.created_at', 'desc')
+            ->orderBy('medecins.id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data ?? []
+        ], 200);
+    }
+
     // ------------------------------------------------------------
 
     public function insertUpdatespecialite(Request $request, $id = null)

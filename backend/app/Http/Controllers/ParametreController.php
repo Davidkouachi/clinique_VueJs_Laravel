@@ -101,6 +101,13 @@ class ParametreController extends Controller
                 'data' => $getAll
             ], 200);
 
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage(),
+            ], 202);
+
         } catch (Exception $e) {
             return response()->json([
                 'error' => true,
@@ -168,6 +175,13 @@ class ParametreController extends Controller
                 'inserted' => $result['inserted'],
                 'duplicates' => $result['duplicates'],
             ], 200);
+
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage(),
+            ], 202);
 
         } catch (\Exception $e) {
 

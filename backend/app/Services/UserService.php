@@ -14,7 +14,9 @@ class UserService
 
     public function insertUserService(array $data, ?int $id = null): array
     {
-        return DB::transaction(function () use ($data, $id) {
+        DB::beginTransaction();
+
+        try {
 
             $isUpdate = !is_null($id);
 
@@ -30,13 +32,14 @@ class UserService
             // ---------------- Doublons (login / email)
             $duplicate = DB::table('users')
                 ->where(function ($q) use ($data) {
-                    $q->where('login', $data['login']);
+                    $q->where('login', $data['login'])
                       ->orWhere('email', $data['email']);
                 })
                 ->when($isUpdate, fn ($q) => $q->where('id', '!=', $id))
                 ->first();
 
             if ($duplicate) {
+                DB::rollBack();
                 return [
                     'success' => false,
                     'type' => 'duplicate',
@@ -65,34 +68,43 @@ class UserService
                     ->where('id', $id)
                     ->update($payload);
 
-                return [
-                    'success' => true,
-                    'action' => 'update',
-                    'id' => $id,
-                ];
+                $resultID = $id;
+            } else {
+                // ---------------- INSERT
+
+                $payload['created_at'] = now();
+
+                $newId = DB::table('users')->insertGetId($payload);
+
+                $resultID = $newId;
             }
 
-            // ---------------- INSERT
-            $payload['created_at'] = now();
-
-            $newId = DB::table('users')->insertGetId($payload);
+            DB::commit(); // ✅ Commit manuel ici
 
             return [
                 'success' => true,
-                'action' => 'insert',
-                'id' => $newId,
+                'action' => $isUpdate ? 'update' : 'insert',
+                'id' => $resultID,
             ];
-        });
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
     public function disableUsersService(array $ids): array
     {
-        return DB::transaction(function () use ($ids) {
+        DB::beginTransaction();
+
+        try {
 
             // 🔐 sécurité : ne jamais se désactiver soi-même
             $ids = array_values(array_diff($ids, [auth()->id()]));
 
             if (!count($ids)) {
+                DB::rollBack();
                 return [];
             }
 
@@ -104,6 +116,7 @@ class UserService
                 ->toArray();
 
             if (!count($users)) {
+                DB::rollBack();
                 return [];
             }
 
@@ -114,8 +127,15 @@ class UserService
                     'updated_at' => now(),
                 ]);
 
+            DB::commit(); // ✅ Commit manuel ici
+
             return $users; // 👈 ids réellement désactivés
-        });
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e; // relance l'exception
+        }
     }
 
 

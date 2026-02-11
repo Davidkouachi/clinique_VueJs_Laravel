@@ -208,6 +208,13 @@ class UserController extends Controller
                 ], 202);
             }
 
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                'info' => true,
+                'msg' => $e->getMessage(),
+            ], 202);
+
         } catch (\Exception $e) {
 
             return response()->json([

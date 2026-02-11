@@ -50,6 +50,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::get('/api_get_users', [UserController::class, 'getAllusers']);
     Route::get('/api_get_activity', [ParametreController::class, 'getAllactivity']);
     Route::get('/api_get_specialite', [MedecinController::class, 'getAllspecialite']);
+    Route::get('/api_get_medecin', [MedecinController::class, 'getAllmedecin']);
 
 
     //----------- Update -------------------//

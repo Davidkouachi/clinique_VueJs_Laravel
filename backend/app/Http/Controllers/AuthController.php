@@ -85,25 +85,71 @@ class AuthController extends Controller
         }
     }
 
+    // public function traitement_login(Request $request)
+    // {
+    //     $credentials = $request->only('login', 'password');
+    //     $deviceId = $request->input('device_id');
+
+    //     if (!$token = Auth::guard('api')->attempt($credentials)) {
+    //         return response()->json(['warn' => true, 'message' => 'Login ou mot de passe incorrect'], 201);
+    //     }
+
+    //     $user = Auth::guard('api')->user();
+
+    //     // Génère un refresh token pour CET appareil
+    //     $refreshToken = base64_encode(Str::random(64));
+
+    //     DB::table('refresh_tokens')->updateOrInsert(
+    //         [
+    //             'user_id' => $user->id,
+    //             'device_id' => $deviceId
+    //         ],
+    //         [
+    //             'token' => $refreshToken,
+    //             'expires_at' => now()->addMinutes((int) config('jwt.refresh_ttl')),
+    //             'updated_at' => now(),
+    //             'created_at' => now()
+    //         ]
+    //     );
+
+    //     $roles = DB::table('roles')->where('id', $user->role_id)->select('nom')->first();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Connexion réussie',
+    //         'user' => [
+    //             'id' => $user->id,
+    //             'name' => $user->name,
+    //             'email' => $user->email,
+    //             'role' => $roles->nom,
+    //             'login' => $user->login,
+    //         ],
+    //         'access_token'  => $token,
+    //         'refresh_token' => $refreshToken,
+    //         'device_id'     => $deviceId,
+    //         'expires_in'    => Auth::guard('api')->factory()->getTTL() * 60,
+    //     ]);
+    // }
+
     public function traitement_login(Request $request)
     {
         $credentials = $request->only('login', 'password');
-        $deviceId = $request->input('device_id');
 
         if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json(['warn' => true, 'message' => 'Login ou mot de passe incorrect'], 201);
+            return response()->json([
+                'warn' => true, 
+                'message' => 'Login ou mot de passe incorrect'
+            ], 201);
         }
 
         $user = Auth::guard('api')->user();
 
-        // Génère un refresh token pour CET appareil
+        // Génère un refresh token UNIQUE pour l'utilisateur
         $refreshToken = base64_encode(Str::random(64));
 
+        // Une seule ligne par user
         DB::table('refresh_tokens')->updateOrInsert(
-            [
-                'user_id' => $user->id,
-                'device_id' => $deviceId
-            ],
+            ['user_id' => $user->id],
             [
                 'token' => $refreshToken,
                 'expires_at' => now()->addMinutes((int) config('jwt.refresh_ttl')),
@@ -126,10 +172,10 @@ class AuthController extends Controller
             ],
             'access_token'  => $token,
             'refresh_token' => $refreshToken,
-            'device_id'     => $deviceId,
             'expires_in'    => Auth::guard('api')->factory()->getTTL() * 60,
         ]);
     }
+
 
     public function user_list(Request $request)
     {
@@ -211,13 +257,57 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function refreshToken(Request $request)
+    // {
+    //     $deviceId = $request->input('device_id');
+    //     $refreshToken = $request->input('refresh_token');
+
+    //     $tokenData = DB::table('refresh_tokens')
+    //         ->where('device_id', $deviceId)
+    //         ->where('token', $refreshToken)
+    //         ->first();
+
+    //     if (!$tokenData || $tokenData->expires_at < now()) {
+    //         return response()->json(['error' => 'Refresh token expiré ou invalide'], 401);
+    //     }
+
+    //     $userData = DB::table('users')->where('id', $tokenData->user_id)->first();
+    //     if (!$userData) {
+    //         return response()->json(['error' => 'Utilisateur introuvable'], 401);
+    //     }
+
+    //     // Crée un modèle User et définit manuellement l'id
+    //     $user = new User();
+    //     $user->forceFill((array) $userData); // forceFill remplit tous les champs mass assignable
+    //     $user->setAttribute('id', $userData->id); // Assure que l'id est défini
+    //     $user->exists = true; // Indique à Eloquent que l'utilisateur existe dans la base
+
+    //     // nouveau access token
+    //     $newAccessToken = Auth::guard('api')->login($user);
+
+    //     // rotation refresh
+    //     $newRefresh = base64_encode(Str::random(64));
+
+    //     DB::table('refresh_tokens')
+    //         ->where('device_id', $deviceId)
+    //         ->update([
+    //             'token' => $newRefresh,
+    //             'expires_at' => now()->addMinutes((int) config('jwt.refresh_ttl')),
+    //             'updated_at' => now()
+    //         ]);
+
+    //     return response()->json([
+    //         'access_token'  => $newAccessToken,
+    //         'refresh_token' => $newRefresh,
+    //         'expires_in'    => Auth::guard('api')->factory()->getTTL() * 60
+    //     ]);
+    // }
+
     public function refreshToken(Request $request)
     {
-        $deviceId = $request->input('device_id');
         $refreshToken = $request->input('refresh_token');
 
         $tokenData = DB::table('refresh_tokens')
-            ->where('device_id', $deviceId)
             ->where('token', $refreshToken)
             ->first();
 
@@ -232,18 +322,18 @@ class AuthController extends Controller
 
         // Crée un modèle User et définit manuellement l'id
         $user = new User();
-        $user->forceFill((array) $userData); // forceFill remplit tous les champs mass assignable
-        $user->setAttribute('id', $userData->id); // Assure que l'id est défini
-        $user->exists = true; // Indique à Eloquent que l'utilisateur existe dans la base
+        $user->forceFill((array) $userData);
+        $user->setAttribute('id', $userData->id);
+        $user->exists = true;
 
-        // nouveau access token
+        // Nouveau access token
         $newAccessToken = Auth::guard('api')->login($user);
 
-        // rotation refresh
+        // Rotation refresh token
         $newRefresh = base64_encode(Str::random(64));
 
         DB::table('refresh_tokens')
-            ->where('device_id', $deviceId)
+            ->where('user_id', $user->id) // mise à jour par user_id
             ->update([
                 'token' => $newRefresh,
                 'expires_at' => now()->addMinutes((int) config('jwt.refresh_ttl')),
@@ -256,6 +346,7 @@ class AuthController extends Controller
             'expires_in'    => Auth::guard('api')->factory()->getTTL() * 60
         ]);
     }
+
 
     public function checkAuth()
     {
@@ -313,16 +404,32 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    // public function logout(Request $request)
+    // {
+    //     Log::info($request->all());
+
+    //     DB::table('refresh_tokens')
+    //         ->where('device_id', $request->input('device_id'))
+    //         ->where('token', $request->input('refresh_token'))
+    //         ->delete();
+
+    //     Auth::guard('api')->logout();
+
+    //     return response()->json(['message' => 'Déconnexion réussie']);
+    // }
+
+    public function logout(Request $request) // 1 user = 1 refresh token
     {
         DB::table('refresh_tokens')
-            ->where('device_id', $request->input('device_id'))
-            ->where('token', $request->input('refresh_token'))
+            ->where('user_id', auth()->id())
             ->delete();
 
         Auth::guard('api')->logout();
 
-        return response()->json(['message' => 'Déconnexion réussie']);
+        return response()->json([
+            'message' => 'Déconnexion réussie'
+        ]);
     }
+
 
 }
