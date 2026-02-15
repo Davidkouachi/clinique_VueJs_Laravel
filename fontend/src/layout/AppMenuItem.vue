@@ -43,14 +43,6 @@ const props = defineProps({
 const isActiveMenu = ref(false);
 const itemKey = ref(null);
 
-// onBeforeMount(() => {
-//     itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
-
-//     const activeItem = layoutState.activeMenuItem;
-
-//     isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
-// });
-
 onBeforeMount(() => {
     
     itemKey.value = props.parentItemKey
@@ -95,9 +87,6 @@ function itemClick(event, item) {
         event.preventDefault();
         return;
     }
-    
-    // preloader.show();
-    // console.log(preloader.loading)
 
     if ((item.to || item.url) && (layoutState.staticMenuMobileActive || layoutState.overlayMenuActive)) {
         toggleMenu();
@@ -110,18 +99,6 @@ function itemClick(event, item) {
     const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey) : itemKey.value;
 
     setActiveMenuItem(foundItemKey);
-
-    // 🔥 Mise à jour du breadcrumb
-    // if (item.to) {
-    //     const path = findBreadcrumb(model.value, item.to);
-    //     console.log(item.to)
-    //     if (path) {
-    //         breadcrumbMenu.set([
-    //             { icon: 'pi pi-home', to: '/' },
-    //             ...path.map(i => ({ label: i.label, to: i.to, icon: i.icon }))
-    //         ]);
-    //     }
-    // }
 }
 
 function checkActiveRoute(item) {
@@ -150,58 +127,8 @@ function checkActiveRoute(item) {
     </li>
 </template>
 
-// <style lang="scss">
-// // /* Texte des items */
-// .layout-menuitem-root-text,
-// .layout-menuitem-text,
-// .layout-submenu-toggler,
-// .layout-menuitem-icon {
-//     color: #fff !important;
-// }
+<style lang="scss">
 
-// // /* Hover sur tous les liens et router-links */
-// .layout-menuitem-root > a:hover,
-// .layout-menuitem-root > router-link:hover,
-// .layout-submenu > li > a:hover,
-// .layout-submenu > li > router-link:hover{
-//     background-color: #fff !important;
-//     color: #6366f1 !important;
-//     border: 1px solid #6366f1 !important;
-
-//     .layout-menuitem-icon {
-//         color: #6366f1 !important;
-//     }
-// }
-
-// .layout-menuitem-root > a:hover .layout-menuitem-text,
-// .layout-menuitem-root > router-link:hover .layout-menuitem-text,
-// .layout-submenu > li > a:hover .layout-menuitem-text,
-// .layout-submenu > li > router-link:hover .layout-menuitem-text {
-//     color: #6366f1 !important;
-// }
-
-// // /* Active uniquement sur le lien exact (pas le parent) */
-// .active-route {
-//     background-color: #fff !important;
-//     color: #6366f1 !important;
-//     border: 1px solid #6366f1 !important;
-// }
-
-//  // Sous-menu texte 
-// .layout-submenu .layout-menuitem-text {
-//     color: #fff;
-// }
-
-//  // Pour les icônes si tu veux changer aussi 
-// /* Activer couleur pour icône ET texte quand le route-link est actif */
-// .active-route {
-//     color: #6366f1 !important;
-
-//     i,
-//     .layout-menuitem-text {
-//         color: #6366f1 !important;
-//     }
-// }
-// </style>
+</style>
 
 

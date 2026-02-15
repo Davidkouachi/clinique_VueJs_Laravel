@@ -41,7 +41,7 @@
     <div class="grid grid-cols-12 gap-6 mb-5">
         <div class="col-span-12 xl:col-span-3 lg:col-span-6 md:col-span-6 sm:col-span-6" v-for="item in stats" :key="item.key">
             <div class="card mb-0 h-full" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }">
-                <div class="flex justify-between mb-4">
+                <div class="flex justify-between mb-2">
                     <!-- Texte -->
                     <div>
                         <span class="block text-muted-color font-medium mb-4">
@@ -56,25 +56,25 @@
                         <div class="flex items-center justify-center rounded-border" :class="`bg-${item.color}-100 dark:bg-${item.color}-400/10`" style="width: 2.5rem; height: 2.5rem">
                             <i :class="['pi', item.icon, `text-${item.color}-500`, '!text-xl']"></i>
                         </div>
-                        <div class="w-24 h-10 flex items-center">
-                          <Chart
-                            v-show="item.sparkData"
-                            :key="item.key + '-spark'"
-                            type="line"
-                            :data="item.sparkData"
-                            :options="sparkOptions"
-                            class="w-full h-full"
-                          />
+                        <div class="flex items-center gap-2" >
+                            <span class="text-primary font-medium">
+                                {{ item.subtitleValue }}
+                            </span>
+                            <!-- <span class="text-muted-color">
+                                {{ item.subtitleText }}
+                            </span> -->
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2" >
-                    <span class="text-primary font-medium">
-                        {{ item.subtitleValue }}
-                    </span>
-                    <span class="text-muted-color">
-                        {{ item.subtitleText }}
-                    </span>
+                <div class="w-full h-10 flex items-center">
+                    <Chart
+                        v-show="item.sparkData"
+                        :key="item.key + '-spark'"
+                        type="line"
+                        :data="item.sparkData"
+                        :options="sparkOptions"
+                        class="w-full h-full"
+                    />
                 </div>
             </div>
         </div>

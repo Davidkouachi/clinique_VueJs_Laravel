@@ -87,7 +87,7 @@
                     </template>
                 </Column>
 
-                <Column field="nom" header="Nom" style="min-width: 10rem">
+                <Column field="nom" header="pécialité" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
                         <span v-else>{{ data?.nom ?? '-' }}</span>

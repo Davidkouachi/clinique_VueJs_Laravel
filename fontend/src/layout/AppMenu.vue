@@ -1,14 +1,27 @@
 <script setup>
 import { ref } from 'vue';
 
+import { computed } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
-import { model } from '@/layout/composables/menuUtils';
+import { model, filterMenuByRole } from '@/layout/composables/menuUtils';
+import { useAuthStore } from '@/function/stores/auth';
+
+const auth = useAuthStore();
+
+const userRole = computed(() => auth.user?.role);
+
+console.log(userRole.value);
+
+const menuModel = computed(() => {
+    if (!auth.user || !auth.user.role || !userRole) return []; // ou menu vide par défaut
+    return filterMenuByRole(model.value, userRole.value);
+});
 
 </script>
 
 <template>
     <ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="i">
+        <template v-for="(item, i) in menuModel" :key="i">
             <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>

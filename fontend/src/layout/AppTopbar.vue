@@ -222,14 +222,4 @@ onMounted(() => {
 
 <style scoped>
 
-#logout {
-  color: red;
-  margin: 0.5rem 0.1rem;
-}
-#logout:hover {
-  background-color: #ff0028;
-  color: white;
-  border-radius:0.5rem;
-}
-
 </style>

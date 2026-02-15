@@ -59,14 +59,14 @@
                         <div class="flex flex-col md:flex-row gap-4">
                             <div class="flex flex-col grow gap-2">
                                 <label>Nom de la clinique *</label>
-                                <InputText v-model="form.nom" />
+                                <InputText v-model="form.nom" variant="filled"/>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-4  mt-4">
                             <div class="flex flex-col grow gap-2">
                                 <label>Sigle / Abréviation</label>
-                                <InputText v-model="form.sigle" />
+                                <InputText v-model="form.sigle" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
@@ -77,12 +77,13 @@
                                     optionLabel="label"
                                     optionValue="value"
                                     placeholder="Sélectionner"
+                                    variant="filled"
                                 />
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Numéro d’agrément</label>
-                                <InputText v-model="form.numero_agrement" />
+                                <InputText v-model="form.numero_agrement" variant="filled"/>
                             </div>
                         </div>
 
@@ -95,17 +96,17 @@
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Pays *</label>
-                                <InputText v-model="form.pays" />
+                                <InputText v-model="form.pays" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Ville *</label>
-                                <InputText v-model="form.ville" />
+                                <InputText v-model="form.ville" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Commune / Quartier</label>
-                                <InputText v-model="form.commune" />
+                                <InputText v-model="form.commune" variant="filled"/>
                             </div>
 
                         </div>
@@ -113,24 +114,24 @@
                         <div class="flex flex-col md:flex-row gap-4 mt-4">
                             <div class="flex flex-col grow gap-2">
                                 <label>Adresse complète</label>
-                                <InputText v-model="form.adresse" />
+                                <InputText v-model="form.adresse" variant="filled"/>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-4 mt-4">
                             <div class="flex flex-col grow gap-2">
                                 <label>Téléphone principal *</label>
-                                <InputText v-model="form.telephone1" id="telephone1" />
+                                <InputText v-model="form.telephone1" id="telephone1" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Téléphone secondaire</label>
-                                <InputText v-model="form.telephone2" id="telephone2" />
+                                <InputText v-model="form.telephone2" id="telephone2" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Email officiel</label>
-                                <InputText v-model="form.email" type="email" />
+                                <InputText v-model="form.email" type="email" variant="filled"/>
                             </div>
                         </div>
                     </Fieldset>
@@ -149,17 +150,18 @@
                                     optionValue="value"
                                     placeholder="Sélectionner"
                                     size="large"
+                                    variant="filled"
                                 />
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Heure d’ouverture</label>
-                                <InputText type="time" v-model="form.heure_ouverture" />
+                                <InputText type="time" v-model="form.heure_ouverture" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Heure de fermeture</label>
-                                <InputText type="time" v-model="form.heure_fermeture" />
+                                <InputText type="time" v-model="form.heure_fermeture" variant="filled"/>
                             </div>
 
                         </div>

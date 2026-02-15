@@ -86,15 +86,15 @@
                 </div>
             </template>
             <component
-                v-if="drawerUse.component"
-                :is="drawerUse.component"
-                v-bind="drawerUse.props"
+              v-if="drawerUse.component"
+              :is="drawerUse.component"
+              v-bind="drawerUse.props"
             />
-            <template #footer v-if="drawerUse.propsBtnFotter">
+            <!-- <template #footer v-if="drawerUse.propsBtnFotter">
                 <div class="flex items-center gap-2">
                     <Button v-for="item in drawerUse.propsBtnFotter.footerBtn" :id="item.id" :label="item.label" :icon="item.icon" class="flex-auto" :variant="item.variant" :severity="item.severity" @click="item.command"/>
                 </div>
-            </template>
+            </template> -->
         </Drawer>
         <app-topbar ></app-topbar>
         <app-sidebar ></app-sidebar>
@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+
 import { getSecureItem } from "@/function/stores/secureStorage";
 import { usePreloaderSpinner } from '@/function/function/showPreloader';
 import { useLayout } from '@/layout/composables/layout';
@@ -269,9 +270,7 @@ watch(isSidebarActive, (newVal) => {
     }
 });
 
-watch(
-  () => auth.expired,
-  async (val) => {
+watch( () => auth.expired, async (val) => {
     if (!val || swalShown || auth.manualLogout || auth.isLoggingOut) return;
     swalShown = true;
 
@@ -301,8 +300,7 @@ watch(
     }
 
     swalShown = false;
-  }
-);
+});
 
 watch(() => drawerUse.loading, (isOpen) => {
     if (isOpen) {
@@ -327,9 +325,7 @@ watch(() => visibleAuth.value, (isOpen) => {
 });
 
 // 🔥 Watcher sur la route
-watch(
-    () => route.path,
-    (newPath) => {
+watch( () => route.path, (newPath) => {
         console.log('Route changée :', newPath);
 
         const pathItems = findBreadcrumb(model.value, newPath);
@@ -384,6 +380,7 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
+
 </script>
 
 <style scoped>
@@ -442,12 +439,6 @@ function isOutsideClicked(event) {
   0%, 100% { transform: scaleY(1); opacity: 1; }
   50%      { transform: scaleY(0.5); opacity: 0.5; }
 }
-
-
-
-
-
-
 
 .preloaderS-overlay {
   position: fixed;

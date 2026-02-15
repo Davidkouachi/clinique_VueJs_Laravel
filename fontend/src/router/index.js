@@ -26,6 +26,18 @@ const customPages = [
 const pgsPages = [
     // administration
     { 
+        path: '/medecins/formulaire', 
+        name: 'medecins_nouveau', 
+        component: () => import('@/views/pages/pgs/administration/medecin/nouveau/index.vue'), 
+        meta: { title: 'nouveau medecin', requiresAuth: true } 
+    },
+    { 
+        path: '/medecins', 
+        name: 'medecins_liste', 
+        component: () => import('@/views/pages/pgs/administration/medecin/liste/index.vue'), 
+        meta: { title: 'liste medecin', requiresAuth: true } 
+    },
+    { 
         path: '/medecins/specialites', 
         name: 'medecins_specialites', 
         component: () => import('@/views/pages/pgs/administration/medecin/specialite/index.vue'), 

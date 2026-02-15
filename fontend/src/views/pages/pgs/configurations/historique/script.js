@@ -1,4 +1,4 @@
-import { ref, onMounted, computed,nextTick, watch } from 'vue';
+import { ref, onMounted, computed,nextTick, watch, markRaw } from 'vue';
 import axios from 'axios';
 import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
 import { useToastAlert } from '@/function/function/ToastAlert';
@@ -6,6 +6,8 @@ import { usePreloaderSpinner } from '@/function/function/showPreloader';
 import { useConfirm } from "primevue/useconfirm";
 import { useAuthStore } from '@/function/stores/auth';
 import { formaDateHeure } from '@/function/services/format';
+import viewOption from './viewOption.vue'
+import { useDrawerStore } from '@/function/stores/drawer'
 
 export function useScript() {
 
@@ -13,6 +15,7 @@ export function useScript() {
 	const { showToast } = useToastAlert();
 	const preloaderSpinner = usePreloaderSpinner();
 	const confirm = useConfirm();
+	const drawerUse = useDrawerStore();
 
 	const lists = ref([]);
 	const loading = ref(true);
@@ -31,11 +34,6 @@ export function useScript() {
 
 	    filters.value = {
 	        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	        action: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        model: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        description: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        ip_address: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-	        created_at: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 	    };
 	}
 
@@ -80,10 +78,16 @@ export function useScript() {
 	    }
 	};
 
-	function viewTable (data) {
-	    listSelected.value = data;
-	    showModal.value = true;
-	};
+	function viewTable(data) {
+	  drawerUse.show(
+	    "Détails du activité",
+	    "",
+	    "right",
+	    "30rem",
+	    markRaw(viewOption),
+	    { data: data },
+	  );
+	}
 
 	// ------------------------ boutton pour imprimer-----------------------------
 
