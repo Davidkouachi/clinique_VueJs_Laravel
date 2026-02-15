@@ -59,6 +59,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::put('/api_statut_specialite/{id}/{mode}', [MedecinController::class, 'updatSpecialiteStatut']);
     Route::put('/api_update_specialite/{id}', [MedecinController::class, 'insertUpdatespecialite']);
     Route::put('/api_update_medecins/{uid}', [MedecinController::class, 'insertUpdateMedecin']);
+    Route::put('/api_statut_medecins/{uid}/{statut}', [MedecinController::class, 'updateMedecinStatut']);
 
     //----------- Delete -------------------//
     Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);

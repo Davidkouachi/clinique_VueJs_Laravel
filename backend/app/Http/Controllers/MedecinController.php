@@ -60,6 +60,7 @@ class MedecinController extends Controller
             'specialite_id'  => 'required|exists:specialites,id',
             'numero_ordre'   => 'nullable|string|max:50',
             'ajouterAcces'   => 'required|boolean',
+            'statut'         => 'nullable|boolean',
         ];
 
         // 🔐 règles conditionnelles accès
@@ -152,13 +153,66 @@ class MedecinController extends Controller
         }
     }
 
+    public function updateMedecinStatut($uid = null, $statut = null)
+    {
+
+        Log::info($uid);
+        Log::info($statut);
+
+        if ($uid === null || $statut === null) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Impossible de recuprer l\'identifiant. réessayer plus tard',
+            ], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $Inserted = DB::table('medecins')->where('uid', $uid)->update([
+                'statut' => $statut,
+                'updated_at' => now(),
+            ]);
+
+            if ($Inserted == 0) {
+                throw new Exception('Erreur lors de l\'insertion dans la table medecins');
+            }
+
+            $id = DB::table('medecins')->where('uid', $uid)->value('id');
+
+            // 🧾 Historique
+            $this->historiqueService->log(
+                'update',
+                'medecins',
+                $id,
+                'mise du satut',
+            );
+
+            // Valider la transaction
+            DB::commit();
+
+            return response()->json([
+                'success' => true, 
+                'msg' => 'Opération éffectuée'
+            ], 200);
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json([
+                'error' => true, 
+                'msg' => $e->getMessage()
+            ], 202);
+        }
+    }
+
     public function getAllmedecin()
     {
         $data = DB::table('medecins')
             ->leftJoin('users', 'medecins.uid', '=', 'users.uid')
             ->leftJoin('specialites', 'medecins.specialite_id', '=', 'specialites.id')
             ->leftJoin('medecintitres', 'medecins.titre_id', '=', 'medecintitres.id')
-            ->where('medecins.statut', true)
             ->select(
                 'medecins.id',
                 'medecins.uid',
@@ -168,9 +222,11 @@ class MedecinController extends Controller
                 'medecins.email',
                 'medecins.telephone',
                 'medecins.numero_ordre',
+                'medecins.statut',
                 'medecins.specialite_id',
                 'medecins.titre_id',
                 'specialites.nom as specialite',
+                'medecintitres.nom as titre',
                 'medecintitres.signe',
                 'users.id as userID',
                 'medecins.created_at',
