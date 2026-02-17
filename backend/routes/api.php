@@ -7,6 +7,7 @@ use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectController;
 use App\Http\Controllers\MedecinController;
+use App\Http\Controllers\AssuranceController;
 
 // Routes publiques
 Route::post('/login', [AuthController::class, 'traitement_login']);
@@ -43,6 +44,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::post('/api_insert_users', [UserController::class, 'insertUpdateusers']);
     Route::post('/api_insert_specialite', [MedecinController::class, 'insertUpdatespecialite']);
     Route::post('/api_insert_medecins', [MedecinController::class, 'insertUpdateMedecin']);
+    Route::post('/api_insert_assurances', [AssuranceController::class, 'insertUpdateAssurance']);
 
     //----------- Get -------------------//
     Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
@@ -51,7 +53,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::get('/api_get_activity', [ParametreController::class, 'getAllactivity']);
     Route::get('/api_get_specialite', [MedecinController::class, 'getAllspecialite']);
     Route::get('/api_get_medecin', [MedecinController::class, 'getAllmedecin']);
-
+    Route::get('/api_get_assurances', [AssuranceController::class, 'getAllAssurance']);
 
     //----------- Update -------------------//
     Route::put('/api_update_roles/{id}', [ParametreController::class, 'updateroles']);
@@ -60,6 +62,8 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::put('/api_update_specialite/{id}', [MedecinController::class, 'insertUpdatespecialite']);
     Route::put('/api_update_medecins/{uid}', [MedecinController::class, 'insertUpdateMedecin']);
     Route::put('/api_statut_medecins/{uid}/{statut}', [MedecinController::class, 'updateMedecinStatut']);
+    Route::put('/api_update_assurances/{uid}', [AssuranceController::class, 'insertUpdateAssurance']);
+    Route::put('/api_statut_assurances/{uid}/{statut}', [AssuranceController::class, 'updatAssuranceStatut']);
 
     //----------- Delete -------------------//
     Route::delete('/api_delete_roles/{id}', [ParametreController::class, 'deleteroles']);

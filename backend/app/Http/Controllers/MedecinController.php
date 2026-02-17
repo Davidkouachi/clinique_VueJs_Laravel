@@ -48,8 +48,6 @@ class MedecinController extends Controller
 
     public function insertUpdateMedecin(Request $request, $uid = null)
     {
-        Log::info($request->all());
-        Log::info($uid);
 
         $rules = [
             'nom'            => 'required|string|max:100',
@@ -156,9 +154,6 @@ class MedecinController extends Controller
     public function updateMedecinStatut($uid = null, $statut = null)
     {
 
-        Log::info($uid);
-        Log::info($statut);
-
         if ($uid === null || $statut === null) {
             return response()->json([
                 'info' => true,
@@ -228,9 +223,15 @@ class MedecinController extends Controller
                 'specialites.nom as specialite',
                 'medecintitres.nom as titre',
                 'medecintitres.signe',
-                'users.id as userID',
+                'users.login',
                 'medecins.created_at',
-                'medecins.created_at',
+                DB::raw("
+                    CASE medecins.statut
+                        WHEN 1 THEN 'Actif'
+                        WHEN 0 THEN 'Inactif'
+                        ELSE 'Inconnu'
+                    END as statut_label
+                "),
             )
             ->orderBy('medecins.created_at', 'desc')
             ->orderBy('medecins.id', 'desc')
@@ -246,8 +247,6 @@ class MedecinController extends Controller
 
     public function insertUpdatespecialite(Request $request, $id = null)
     {
-        Log::info($request->all());
-        Log::info($id);
 
         $rules = [
             'nom' => 'required|string|max:100',
@@ -287,9 +286,37 @@ class MedecinController extends Controller
                     : "Mise à jour d'une spécialité"
             );
 
+            $data = DB::table('specialites')
+                ->leftJoin('medecins', 'specialites.id', '=', 'medecins.specialite_id')
+                ->where('specialites.id', $result['id'])
+                ->select(
+                    'specialites.id',
+                    'specialites.nom',
+                    'specialites.statut',
+                    DB::raw("
+                        CASE specialites.statut
+                            WHEN 1 THEN 'Actif'
+                            WHEN 0 THEN 'Inactif'
+                            ELSE 'Inconnu'
+                        END as statut_label
+                    "),
+                    'specialites.created_at',
+                    DB::raw('COUNT(medecins.id) as nbreMed')
+                )
+                ->orderBy('specialites.created_at', 'desc')
+                ->orderBy('specialites.id', 'desc')
+                ->groupBy(
+                    'specialites.id',
+                    'specialites.nom',
+                    'specialites.statut',
+                    'specialites.created_at',
+                )
+                ->first();
+
             return response()->json([
                 'success' => true,
-                'msg' => 'Opération éffectuée'
+                'msg' => 'Opération éffectuée',
+                'data' => $data
             ], 200);
 
         } catch (ModelNotFoundException $e) {
@@ -311,15 +338,29 @@ class MedecinController extends Controller
     public function getAllspecialite()
     {
         $data = DB::table('specialites')
-            // ->leftJoin('users', 'roles.id', '=', 'users.role_id')
+            ->leftJoin('medecins', 'specialites.id', '=', 'medecins.specialite_id')
             ->select(
                 'specialites.id',
                 'specialites.nom',
                 'specialites.statut',
+                DB::raw("
+                    CASE specialites.statut
+                        WHEN 1 THEN 'Actif'
+                        WHEN 0 THEN 'Inactif'
+                        ELSE 'Inconnu'
+                    END as statut_label
+                "),
                 'specialites.created_at',
-                // DB::raw('COUNT(users.id) as nbreUser')
+                DB::raw('COUNT(medecins.id) as nbreMed')
             )
-            // ->groupBy('roles.id', 'roles.nom', 'created_at')
+            ->orderBy('specialites.created_at', 'desc')
+            ->orderBy('specialites.id', 'desc')
+            ->groupBy(
+                'specialites.id',
+                'specialites.nom',
+                'specialites.statut',
+                'specialites.created_at',
+            )
             ->get();
 
         return response()->json([
