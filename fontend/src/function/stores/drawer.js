@@ -10,6 +10,9 @@ export const useDrawerStore = defineStore('drawer', () => {
   const component = ref(null); // 🔥 Le composant à afficher
   const props = ref({});       // 🔥 Les props du composant
   const propsBtnFotter = ref({}); 
+  const componentRef = ref(null);
+  const footerLoading = ref(false);
+  const footerLoadingId = ref(null)
 
   function show(
     title = null , 
@@ -41,6 +44,25 @@ export const useDrawerStore = defineStore('drawer', () => {
     propsBtnFotter.value = {};
   }
 
+  function setFooterLoading(id) {
+    footerLoadingId.value = id
+  }
+
+  function clearFooterLoading() {
+    footerLoadingId.value = null
+  }
+
+  function setComponentRef(el) {
+    componentRef.value = el;
+  }
+
+  function callComponentMethod(method) {
+
+    if (componentRef.value && componentRef.value[method]) {
+      componentRef.value[method]()
+    }
+  }
+
   return {
     loading,
     icon,
@@ -52,5 +74,11 @@ export const useDrawerStore = defineStore('drawer', () => {
     propsBtnFotter,
     show,
     hide,
+    setComponentRef,
+    callComponentMethod,
+    setFooterLoading,
+    clearFooterLoading,
+    footerLoadingId,
   };
+
 });

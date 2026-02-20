@@ -41,7 +41,7 @@
             <div class="flex flex-col gap-2">
                 <span class="font-bold text-gray-900">Accès :</span>
                 <span class="text-gray-700">
-                    {{ data?.userID ? 'Oui' : 'Non' }}
+                    {{ data?.login ? 'Oui' : 'Non' }}
                 </span>
             </div>
             <div class="flex flex-col gap-2">

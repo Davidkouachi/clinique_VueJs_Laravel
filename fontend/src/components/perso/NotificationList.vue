@@ -71,67 +71,44 @@ const getIconBgColor = (badge) => {
 </script>
 
 <template>
-  <div class="relative">
-    <div class="flex flex-col justify-center gap-3 w-full pb-[6rem]">
+  <div class="flex flex-col justify-center gap-3 w-full">
 
-      <!-- Si notifications non vides -->
-      <template v-if="data.length > 0">
-        <div
-          v-for="n in data"
-          :key="n.id + '-' + n.time"
-          class="p-3 rounded-xl shadow-sm border flex gap-3 items-start bg-transparent"
-        >
-          <!-- Icône avec couleur dynamique -->
-          <div :class="['w-10 h-10 flex items-center justify-center rounded-full', getIconBgColor(n.badge)]">
-            <i :class="[n.icon, getIconColor(n.badge), 'text-xl']"></i>
+    <!-- Si notifications non vides -->
+    <template v-if="data.length > 0">
+      <div
+        v-for="n in data"
+        :key="n.id + '-' + n.time"
+        class="p-3 rounded-xl shadow-sm border flex gap-3 items-start bg-transparent"
+      >
+        <!-- Icône avec couleur dynamique -->
+        <div :class="['w-10 h-10 flex items-center justify-center rounded-full', getIconBgColor(n.badge)]">
+          <i :class="[n.icon, getIconColor(n.badge), 'text-xl']"></i>
+        </div>
+
+        <div class="flex-1">
+          <div class="font-semibold flex justify-between items-center">
+            <span>{{ n.title }}</span>
+
+            <span
+              v-if="n.badge"
+              :class="['px-2 py-0.5 text-xs rounded-md text-white', getBadgeColor(n.badge)]">
+              {{ n.badgeName }}
+            </span>
           </div>
 
-          <div class="flex-1">
-            <div class="font-semibold flex justify-between items-center">
-              <span>{{ n.title }}</span>
-
-              <span
-                v-if="n.badge"
-                :class="['px-2 py-0.5 text-xs rounded-md text-white', getBadgeColor(n.badge)]">
-                {{ n.badgeName }}
-              </span>
-            </div>
-
-            <div class="text-sm text-gray-600 mt-1">{{ n.message }}</div>
-            <div class="text-xs text-gray-400 mt-1">{{ n.time }}</div>
-          </div>
+          <div class="text-sm text-gray-600 mt-1">{{ n.message }}</div>
+          <div class="text-xs text-gray-400 mt-1">{{ n.time }}</div>
         </div>
-      </template>
-
-      <!-- Si notifications vides -->
-      <template v-else>
-        <div class="flex flex-col items-center justify-center py-20 text-center text-red-600 gap-3">
-          <i class="fa-solid fa-bell-slash text-4xl"></i>
-          <p>Aucune notification disponible</p>
-        </div>
-      </template>
-
-    </div>
-
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg z-50">
-      <div class="flex items-center gap-2">
-        <Button
-          icon="pi pi-times"
-          severity="danger"
-          label="Fermer"
-          size="large"
-          class="w-full"
-        />
-        <Button
-          type="submit"
-          form="medecinForm"
-          icon="pi pi-check"
-          severity="success"
-          size="large"
-          class="w-full"
-        />
       </div>
-    </div>
+    </template>
+
+    <!-- Si notifications vides -->
+    <template v-else>
+      <div class="flex flex-col items-center justify-center py-20 text-center text-red-600 gap-3">
+        <i class="fa-solid fa-bell-slash text-4xl"></i>
+        <p>Aucune notification disponible</p>
+      </div>
+    </template>
 
   </div>
 </template>

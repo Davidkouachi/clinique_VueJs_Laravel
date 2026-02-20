@@ -5,7 +5,7 @@
         <template #header>
             <!-- <div class="flex justify-center items-center mt-5">
                 <h3 class="font-semibold text-center">
-                    Rôles
+                    Utilisateurs
                 </h3>
             </div> -->
         </template>
@@ -36,18 +36,32 @@
 
                 <template #header>
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-                        <FloatLabel variant="in" class="flex-1">
-                            <InputText 
-                                id="in_label" 
+                        <FloatLabel variant="on" class="flex-1">
+                            <InputText
+                                id="on_label"
                                 v-if="filters.global" 
                                 v-model="filters.global.value" 
-                                autocomplete="off" 
+                                autocomplete="off"
                             />
-                            <label for="in_label">Recherche...</label>
+                            <label for="on_label">Recherche...</label>
                         </FloatLabel>
                         <div class="flex flex-wrap gap-2 mt-2 md:mt-0">
-                            <!-- <Button type="button" icon="pi pi-filter-slash" label="Filtre" @click="initFilters" severity="primary"/> -->
-                            <Button type="button" icon="pi pi-refresh" @click="fetchLists(true)" severity="warn" :disabled="loadingBtn" :loading="loadingBtn" :label="loadingBtn ? 'en cours...' : 'Actualiser'"/>
+                            <Button 
+                                type="button" 
+                                icon="pi pi-plus" 
+                                label="Ajouter" 
+                                @click="insertTable()" 
+                                severity="success"
+                            />
+                            <Button 
+                                type="button" 
+                                icon="pi pi-refresh" 
+                                @click="fetchLists(true)" 
+                                severity="warn" 
+                                :disabled="loadingBtn" 
+                                :loading="loadingBtn" 
+                                :label="loadingBtn ? 'en cours...' : 'Actualiser'"
+                            />
                         </div>
                     </div>
                 </template>
@@ -59,7 +73,7 @@
                     </div>
                 </template>
 
-                <Column sortable field="id" header="N°" style="width:5%">
+                <Column field="id" header="N°" style="width:5%">
                     <template #body="{ index }">
                         <Skeleton v-if="loading" width="2rem" height="1rem"/>
                         <span v-else>{{ (currentPage - 1) * rowsPerPage + index + 1 }}</span>
@@ -68,42 +82,15 @@
 
                 <Column sortable field="code" header="Code" style="min-width: 10rem">
                     <template #body="{ data }">
-                        <Skeleton v-if="loading" width="12rem" height="1rem"/>
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
                         <span v-else>{{ data?.code ?? '-' }}</span>
                     </template>
                 </Column>
 
-                <Column sortable field="nom" header="Nom complet" style="min-width: 12rem">
+                <Column sortable field="nom" header="Assurance" style="min-width: 10rem">
                     <template #body="{ data }">
-                        <Skeleton v-if="loading" width="10rem" height="1rem"/>
-                        <span v-else>
-                            {{ data.signe }}.
-                            {{ data.nom?.toUpperCase() }}
-                            {{ data.prenom
-                                ? data.prenom.charAt(0).toUpperCase() + data.prenom.slice(1).toLowerCase()
-                                : '' }}
-                        </span>
-                    </template>
-                </Column>
-
-                <Column sortable field="email" header="Email" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="12rem" height="1rem"/>
-                        <span v-else>{{ data?.email ?? '-' }}</span>
-                    </template>
-                </Column>
-
-                <Column sortable field="numero_ordre" header="Numéro d'ordre" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="12rem" height="1rem"/>
-                        <span v-else>{{ data?.numero_ordre ?? '-' }}</span>
-                    </template>
-                </Column>
-
-                <Column sortable field="specialite" header="Spécialité" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="12rem" height="1rem"/>
-                        <span v-else>{{ data?.specialite ?? '-' }}</span>
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
+                        <span v-else>{{ data?.nom ?? '-' }}</span>
                     </template>
                 </Column>
 
@@ -130,23 +117,22 @@
                 <Column header="Actions" style="width:10%">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="6rem" height="2rem" />
-                        <div class="flex flex-row gap-2" v-else >
+                        <div class="flex flex-row gap-1" v-else >
                             <Button
-                                severity="warn" 
-                                type="button" 
-                                icon="pi pi-eye" 
-                                label=""
-                                @click="viewTable(data)"
-                            />
-                            <Button
-                                v-if="data.statut === 1"
+                                rounded
+                                variant=""
+                                size="normal"
                                 severity="info" 
                                 type="button" 
                                 icon="pi pi-pencil" 
                                 label="" 
                                 @click="updateTable(data)"
+                                v-if="data.statut === 1"
                             />
                             <Button
+                                rounded
+                                variant=""
+                                size="normal"
                                 type="button" 
                                 :severity="data.statut === 1 ? 'danger' : 'success'"
                                 :icon="data.statut === 1 ? 'pi pi-lock' : 'pi pi-unlock'"
@@ -171,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed,nextTick, watch } from 'vue';
+import { ref, onMounted, onUnmounted, computed,nextTick, watch } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -212,11 +198,6 @@ const {
         selectedLists,
         isSelected,
         isAllSelected,
-        listSelected,
-
-        // ------------------ Formulaire édition
-        dynamicComponent,
-        drawerUse,
 
         // ------------------ Méthodes API
         fetchLists,
@@ -231,21 +212,15 @@ const {
         selectableRows,
 
         // ------------------ Actions UI
+        insertTable,
         updateTable,
-        viewTable,
-
-        // ------------------ Submit
         changeStatut,
 
         // ------------------ Utils
-        formaDateHeure,
-
-        // ------------------------- format
-        onlyUppercase,
-        onlyNumbers,
+        formaDateHeure
 } = useScript();
 
-onMounted(() => {
+onMounted( () => {
     fetchLists();
 });
 

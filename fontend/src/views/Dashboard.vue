@@ -6,10 +6,10 @@
                     <div class="flex items-start">
                         <div class="flex flex-col p-6 text-white gap-2">
                             <span class="text-white font-semibold text-[2rem]">
-                                TITRE
+                                TABLEAU DE BORD
                             </span>
                             <span class="text-white font-semibold text-[1rem]">
-                                TITRE
+                                Statistiques
                             </span>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 mt-5 w-full items-stretch">
                                 <div v-for="(item, i) in statsTb" :key="i" class="w-full">
@@ -17,7 +17,7 @@
                                         <!-- Icône -->
                                         <div class="flex-shrink-0 flex items-center justify-center
                                                    w-14 h-14 rounded-full bg-blue-700">
-                                            <i :class="['pi', item.icon, 'text-white text-lg']"></i>
+                                            <i :class="['pi', item.icon, 'text-white !text-[1.5rem]']"></i>
                                         </div>
                                         <!-- Texte -->
                                         <div class="flex flex-col min-w-0 w-full">
@@ -223,7 +223,6 @@ const sparkOptions = {
     }
 }
 
-// Couleurs Tailwind
 const getColor = (color) => ({
   blue: '#3b82f6',
   orange: '#f97316',
@@ -231,7 +230,6 @@ const getColor = (color) => ({
   purple: '#a855f7'
 }[color])
 
-// Transforme un tableau en sparkline chart
 const makeSparkData = (values, color) => ({
   labels: values.map((_, i) => i), // important !
   datasets: [
@@ -259,75 +257,75 @@ const generateIncreasingSpark = (length = 7, start = 5, maxStep = 5) => {
 
 onMounted(() => {
     setTimeout(() => {
-    const fakeData = [
-        {
-          key: 'orders',
-          label: 'Orders',
-          value: 152,
-          icon: 'pi-shopping-cart',
-          color: 'blue',
-          subtitleValue: '+10%',
-          subtitleText: 'since last visit',
-          spark: [3,7,5,8,6,9,13,15]
-        },
-        {
-          key: 'revenue',
-          label: 'Revenue',
-          value: '$2.100',
-          icon: 'pi-dollar',
-          color: 'orange',
-          subtitleValue: '+7%',
-          subtitleText: 'since last week',
-          spark: [30,25,27,23,14,10,5,3]
-        },
-        {
-          key: 'customers',
-          label: 'Customers',
-          value: 28441,
-          icon: 'pi-users',
-          color: 'cyan',
-          subtitleValue: '+18%',
-          subtitleText: 'newly registered',
-          spark: Array.from({ length: 7 }, () => Math.floor(Math.random() * 15) + 5)
-        },
-        {
-          key: 'comments',
-          label: 'Comments',
-          value: '152 Unread',
-          icon: 'pi-comment',
-          color: 'purple',
-          subtitleValue: '+19%',
-          subtitleText: 'responded',
-          spark: Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 5) // 7 
-        }
-    ]
-
-      // Transforme chaque item pour Chart.js (sparkline)
-      stats.value = fakeData.map(item => ({
-        ...item,
-        sparkData: item.spark ? {
-          labels: item.spark.map((_, i) => i), // Chart.js a besoin de labels
-          datasets: [
+        const fakeData = [
             {
-              data: item.spark,
-              borderColor: getColor(item.color),
-              backgroundColor: getColor(item.color) + '33',
-              fill: true,
-              tension: 0.4,
-              borderWidth: 2,
-              pointRadius: 0
+              key: 'orders',
+              label: 'Orders',
+              value: 152,
+              icon: 'pi-shopping-cart',
+              color: 'blue',
+              subtitleValue: '+10%',
+              subtitleText: 'since last visit',
+              spark: [3,7,5,8,6,9,13,15]
+            },
+            {
+              key: 'revenue',
+              label: 'Revenue',
+              value: '$2.100',
+              icon: 'pi-dollar',
+              color: 'orange',
+              subtitleValue: '+7%',
+              subtitleText: 'since last week',
+              spark: [30,25,27,23,14,10,5,3]
+            },
+            {
+              key: 'customers',
+              label: 'Customers',
+              value: 28441,
+              icon: 'pi-users',
+              color: 'cyan',
+              subtitleValue: '+18%',
+              subtitleText: 'newly registered',
+              spark: Array.from({ length: 7 }, () => Math.floor(Math.random() * 15) + 5)
+            },
+            {
+              key: 'comments',
+              label: 'Comments',
+              value: '152 Unread',
+              icon: 'pi-comment',
+              color: 'purple',
+              subtitleValue: '+19%',
+              subtitleText: 'responded',
+              spark: Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 5) // 7 
             }
-          ]
-        } : null
-      }))
+        ]
+
+          // Transforme chaque item pour Chart.js (sparkline)
+          stats.value = fakeData.map(item => ({
+            ...item,
+            sparkData: item.spark ? {
+              labels: item.spark.map((_, i) => i), // Chart.js a besoin de labels
+              datasets: [
+                {
+                  data: item.spark,
+                  borderColor: getColor(item.color),
+                  backgroundColor: getColor(item.color) + '33',
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 2,
+                  pointRadius: 0
+                }
+              ]
+            } : null
+          }))
 
       // Pour vérifier chaque sparkData individuellement
-      stats.value.forEach(item => {
-        console.log(item.key, item.sparkData)
-      })
+      // stats.value.forEach(item => {
+      //   console.log(item.key, item.sparkData)
+      // })
     }, 500)
-
 })
+
 </script>
 
 

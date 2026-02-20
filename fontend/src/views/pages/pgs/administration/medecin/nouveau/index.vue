@@ -16,13 +16,13 @@
 
                         <!-- Nom -->
                         <FloatLabel variant="on">
-                            <InputText id="nom" v-model="nom" size="large" class="w-full" variant="filled" :invalid="submitted && !nom"/>
+                            <InputText id="nom" v-model="nom" size="large" class="w-full" variant="filled" :invalid="submitted && !nom" @input="nom = nom.toUpperCase()"/>
                             <label for="nom">Nom</label>
                         </FloatLabel>
 
                         <!-- Prénom -->
                         <FloatLabel variant="on">
-                            <InputText id="prenom" v-model="prenom" size="large" class="w-full" :invalid="submitted && !prenom" variant="filled"/>
+                            <InputText id="prenom" v-model="prenom" size="large" class="w-full" :invalid="submitted && !prenom" variant="filled" @input="prenom = prenom.toUpperCase()"/>
                             <label for="prenom">Prénom</label>
                         </FloatLabel>
 
@@ -131,6 +131,7 @@
                                     class="w-full"
                                     :invalid="submitted && ajouterAcces && !login"
                                     variant="filled"
+                                    @input="login = login.toUpperCase()"
                                 />
                                 <label>Login</label>
                             </FloatLabel>

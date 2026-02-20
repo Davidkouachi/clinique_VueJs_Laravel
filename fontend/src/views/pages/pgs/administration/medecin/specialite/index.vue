@@ -87,14 +87,21 @@
                     </template>
                 </Column>
 
-                <Column field="nom" header="pécialité" style="min-width: 10rem">
+                <Column sortable field="nom" header="Spécialité" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
                         <span v-else>{{ data?.nom ?? '-' }}</span>
                     </template>
                 </Column>
 
-                <Column field="statut" header="Statut" style="min-width: 10rem">
+                <Column sortable field="nbreMed" header="Nbre Médécin" style="min-width: 10rem">
+                    <template #body="{ data }">
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
+                        <span v-else>{{ data?.nbreMed ?? '-' }}</span>
+                    </template>
+                </Column>
+
+                <Column sortable field="statut" header="Statut" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
                         <span
@@ -102,12 +109,12 @@
                             :class="actionClass(data?.statut)"
                             class="font-bold px-2 py-1 rounded text-sm"
                         >
-                          {{ data?.statut === 1 ? 'Activé' : 'Désactivé' }}
+                          {{ data?.statut_label ?? '-' }}
                         </span>
                     </template>
                 </Column>
 
-                <Column field="created_at" header="Date de création" style="min-width: 10rem">
+                <Column sortable field="created_at" header="Date de création" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="12rem" height="1rem"/>
                         <span v-else>{{ formaDateHeure(data.created_at) }}</span>
@@ -127,20 +134,12 @@
                                 v-if="data.statut === 1"
                             />
                             <Button
-                                severity="danger" 
+                                v-if="data.nbreMed === 0"
                                 type="button" 
-                                icon="pi pi-lock" 
-                                label="" 
-                                @click="confirmStatut($event, data.id, 0)"
-                                v-if="data.statut === 1"
-                            />
-                            <Button
-                                severity="success" 
-                                type="button" 
-                                icon="pi pi-unlock" 
-                                label="" 
-                                @click="confirmStatut($event, data.id, 1)"
-                                v-if="data.statut === 0"
+                                :severity="data.statut === 1 ? 'danger' : 'success'"
+                                :icon="data.statut === 1 ? 'pi pi-lock' : 'pi pi-unlock'"
+                                label=""
+                                @click="changeStatut(data.id, data.statut === 1 ? 0 : 1)"
                             />
                         </div>
                     </template>
@@ -156,52 +155,6 @@
             </DataTable>
         </template>
     </Card>
-
-    <Drawer 
-        v-model:visible="showEditModal" 
-        :header="editMode ? 'Mise à jour' : 'Nouvelle Spécialité'" 
-        position="full">
-        <Fluid>
-            <div class="flex">
-                <form @submit.prevent="formSubmit" class="flex flex-col gap-4 w-full">
-                    <div class="grid grid-cols-1 gap-4 mt-4">
-                        <FloatLabel variant="on">
-                            <InputText id="name" type="text" v-model="name" autocomplete="off" size="large"/>
-                            <label for="name">Nom</label>
-                        </FloatLabel>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4">
-                        <Checkbox v-model="checked" binary />
-                        <span>Je confirme les informations</span>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mt-4">
-                        <div class="col-6">
-                            <Button 
-                                label="Annuler" 
-                                severity="secondary" 
-                                @click="showEditModal = false"
-                                size="large"
-                                class="w-full"
-                                :fluid="false" 
-                            />
-                        </div>
-                        <div class="col-6">
-                            <Button
-                                type="submit"
-                                icon="pi pi-check"
-                                severity="success"
-                                :loading="loadingForm"
-                                :label="loadingForm ? 'Opération en cours...' : editMode ? 'Mettre à jour' : 'Enregistrer'"
-                                size="large"
-                                class="w-full"
-                                :fluid="false"
-                            />
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </Fluid>
-    </Drawer>
 
 </template>
 
@@ -228,10 +181,6 @@ const actionClass = (action) => {
 }
 
 const {
-        auth,
-
-        actionItems,
-
         // ------------------ STATE (tableau & filtres)
         lists,
         loading,
@@ -252,12 +201,6 @@ const {
         isSelected,
         isAllSelected,
 
-        // ------------------ Formulaire édition
-        editMode,
-        editId,
-        checked,
-        loadingForm,
-
         // ------------------ Méthodes API
         fetchLists,
 
@@ -273,16 +216,7 @@ const {
         // ------------------ Actions UI
         insertTable,
         updateTable,
-        confirmStatut,
-
-        // ------------------ Modal
-        showEditModal,
-
-        // ------------------ Submit
-        formSubmit,
-
-        // ------------------ Formulaire champ
-        name,
+        changeStatut,
 
         // ------------------ Utils
         formaDateHeure

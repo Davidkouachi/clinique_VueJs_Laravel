@@ -13,8 +13,6 @@ import { useDrawerStore } from '@/function/stores/drawer'
 
 export function useScript() {
 
-	const drawerComponent = ref(null)
-
 	const auth = useAuthStore();
 	const { showToast } = useToastAlert();
 	const preloaderSpinner = usePreloaderSpinner();
@@ -61,7 +59,6 @@ export function useScript() {
 	            // Mappe chaque processus pour cloner l'objet et conserver la structure
 	            lists.value = data.map(item => ({
 	                ...item,
-	                statut_label: item.statut === 1 ? 'Actif' : 'Inactif'
 	            }));
 	        }
 
@@ -82,6 +79,12 @@ export function useScript() {
 	        initFilters(false);
 	    }
 	};
+
+	const updateRowByUid = (uid, newData) => {
+	  	lists.value = lists.value.map(item =>
+	    	item.uid === uid ? { ...item, ...newData } : item
+	  	)
+	}
 
 	// ------------------------ boutton pour imprimer-----------------------------
 
@@ -117,189 +120,49 @@ export function useScript() {
 	};
 
 	// ------------------------ ajouter & modifier une ligne -----------------------------
-	const BtnfoterView = [
-	    {   
-	        id: 'logout',
-	        label: 'Fermer',
-	        icon: 'pi pi-times',
-	        variant: 'outlined',
-	        severity: 'danger',
-	        command: () => {
-	            drawerUse.hide();
-	        }
-	    }
-	];
+	const getFooterButtons = (isUpdate = false) => [
+	  {
+	    id: 'logout',
+	    label: 'Fermer',
+	    icon: 'pi pi-times',
+	    variant: 'outlined',
+	    severity: 'danger',
+	    command: () => drawerUse.hide()
+	  },
+	  ...(isUpdate
+	    ? [{
+	        id: 'DrawerBtn',
+	        label: 'Mise à jour',
+	        loadingLabel: 'Opération en cours...',
+	        icon: 'pi pi-check',
+	        severity: 'primary',
+	        command: () => drawerUse.callComponentMethod('submit')
+	      }]
+	    : [])
+	]
 
-	function viewTable(data) {
+	const openDrawer = (mode, data = null) => {
+
+	  const isUpdate = mode === 'update'
+
 	  drawerUse.show(
-	    "Détails du médecin",
-	    "",
+	    isUpdate ? "Mise à jour" : "Détails du médecin",
+	    isUpdate ? "pi pi-pencil" : "",
 	    "right",
-	    "30rem",
-	    markRaw(viewOption),
-	    { data: data },
-    	{ footerBtn: BtnfoterView }
-	  );
+	    isUpdate ? "50rem" : "30rem",
+	    markRaw(isUpdate ? updateOption : viewOption),
+	    isUpdate
+	      ? { data, updateRowByUid }
+	      : { data },
+	    { footerBtn: getFooterButtons(isUpdate) }
+	  )
 	}
 
-	const updateTable = (data) => {
+	const viewTable = (data) => openDrawer('view', data)
 
-	  	drawerUse.show(
-	    	"Mise à jour",
-	    	"pi pi-pencil",
-	    	"right",
-	    	"50rem",
-	    	markRaw(updateOption),
-	    	{ 
-	    		data: data,
-	    		fetchLists
-    		},
-	  	)
-	}
+	const updateTable = (data) => openDrawer('update', data)
 
 	// ------------------------ ajouter & supprimer une ligne -----------------------------
-
-	// const formSubmit = async () => {
-
-	//     submitted.value = true
-
-	//     if (
-	//         !nom.value ||
-	//         !prenom.value ||
-	//         !email.value ||
-	//         !telephone.value ||
-	//         !titre_id.value ||
-	//         !specialite_id.value
-	//     ) {
-	//         showToast('warn', 'Alerte', 'Veuillez remplir tous les champs obligatoires')
-	//         return
-	//     }
-
-	//     if (!checked.value) {
-	//         showToast('warn', 'Alerte', 'Veuillez confirmer les informations')
-	//         return
-	//     }
-
-	//     const payload = {
-	//         nom: nom.value,
-	//         prenom: prenom.value,
-	//         email: email.value,
-	//         telephone: telephone.value,
-	//         titre_id: titre_id.value,
-	//         specialite_id: specialite_id.value,
-	//         numero_ordre: numero_ordre.value || null,
-	//         ajouterAcces: ajouterAcces.value
-	//     }
-
-	//     if (ajouterAcces.value) {
-	//         payload.login = login.value
-	//         payload.password = password.value
-	//     }
-
-	//     loadingForm.value = true
-
-	//     try {
-
-	//         const url = `/api/v1/api_update_medecins/${editUid.value}`
-
-	//         const res = await axios.put(url, payload)
-
-	//         if (res.status === 200) {
-	//             fetchLists()
-	//             showToast('success', 'Succès', res.data.msg)
-	//             showModal.value = false
-	//             resetForm()
-	//         } else {
-	//         	showToast('warn', 'Attention', res.data.msg)
-	//         }
-
-	//     } catch (err) {
-	//         showToast(
-	//             'error',
-	//             'Erreur',
-	//             err.response?.data?.msg || 'Erreur serveur'
-	//         )
-	//     } finally {
-	//         loadingForm.value = false
-	//     }
-	// }
-
-	const formSubmit = async (payload) => {
-
-	    if (
-	        !payload.nom ||
-	        !payload.prenom ||
-	        !payload.email ||
-	        !payload.telephone ||
-	        !payload.titre_id ||
-	        !payload.specialite_id
-	    ) {
-	        showToast('warn', 'Alerte', 'Veuillez remplir tous les champs obligatoires')
-	        return
-	    }
-
-	    if (ajouterAcces.value) {
-
-		    if (!payload.login) {
-		        showToast('warn', 'Alerte', 'Le login est obligatoire') 
-		        return
-		    } 
-
-		    if (!payload.cpassword || payload.password) { 
-
-		    	if ( !isPasswordValid(payload.password) || !isPasswordValid(payload.cpassword) ) { 
-
-		    		showToast( 
-		    			'warn', 
-		    			'Mot de passe invalide', 
-		    			'Min 8 caractères, majuscule, minuscule et chiffre' 
-		    		) 
-		    		return 
-		    	} 
-
-		    	if (payload.password !== payload.cpassword) { 
-
-		    		showToast( 
-		    			'warn', 
-		    			'Mot de passe incorrect', 
-		    			'Les mots de passe ne correspondent pas' 
-		    		) 
-		    		return 
-		    	} 
-		    } 
-		}
-
-	    if (!payload.checked) {
-	        showToast('warn', 'Alerte', 'Veuillez confirmer les informations')
-	        return
-	    }
-
-	    loadingForm.value = true
-
-	    try {
-
-	        const url = `/api/v1/api_update_medecins/${editUid.value}`
-
-	        const res = await axios.put(url, payload)
-
-	        if (res.status === 200) {
-	            fetchLists()
-	            showToast('success', 'Succès', res.data.msg)
-	            drawerUse.hide()
-	        } else {
-	            showToast('warn', 'Attention', res.data.msg)
-	        }
-
-	    } catch (err) {
-	        showToast(
-	            'error',
-	            'Erreur',
-	            err.response?.data?.msg || 'Erreur serveur'
-	        )
-	    } finally {
-	        loadingForm.value = false
-	    }
-	}
 
 	const changeStatut = async (uid, statut) => {
 
@@ -315,7 +178,11 @@ export function useScript() {
 
 			        if (res.status === 200) {
 
-			            fetchLists()
+			            updateRowByUid(uid, {
+						  	statut,
+						  	statut_label: statut === 1 ? 'Actif' : 'Inactif'
+						})
+
 			            showToast('success', 'Succès', res.data.msg)
 
 			        } else {
@@ -337,85 +204,6 @@ export function useScript() {
             }, 
             'rgba(255,255,255,0.9)'
         );
-	}
-
-	// ------------------------ supprimer une ligne -----------------------------
-
-	const deleteTable = (event, data) => {
-	    confirm.require({
-	        target: event.currentTarget,
-	        message: 'Voulez-vous continuer ?',
-	        icon: 'pi pi-info-circle',
-	        rejectProps: {
-	            label: 'Non',
-	            severity: 'danger',
-	            outlined: true
-	        },
-	        acceptProps: {
-	            label: 'Oui',
-	            severity: 'success'
-	        },
-	        accept: async () => {
-
-	            preloaderSpinner.showSpiner(
-	                'Opération en cours...', 
-	                async () => { 
-	                    try {
-                      		await deletList(data.id);
-	                    } catch (error) {
-	                      	console.error(error);
-	                    } finally {
-	                      	preloaderSpinner.hideSpiner();
-	                    }
-	                }
-	                , 
-	                'rgba(255,255,255,0.9)'
-	            );
-	        },
-	        reject: () => {
-	            // showToast('info', 'Alerte', 'Opération non éffectuée.');
-	        }
-	    });
-	};
-
-	async function deletList(id) {
-	    try {
-	        const response = await axios.delete('/api/v1/api_delete_roles/' + id);
-	        const data = response.data;
-
-	        preloaderSpinner.hideSpiner();
-
-	        if (response.status === 200) {
-
-	            preloaderSpinner.showSpiner(
-	                'Opération terminée, actualisation des données...', 
-	                async () => { 
-	                    
-	                    try {
-                      		await fetchLists(
-		                        false, 
-		                        () => {
-		                            preloaderSpinner.hideSpiner();
-		                            showToast('success', 'Succès', 'Opération éffectuée');
-		                        }
-		                    );
-	                    } catch (error) {
-	                      	console.error(error);
-	                    } finally {
-	                      	preloaderSpinner.hideSpiner();
-	                    }
-	                }, 
-	                'rgba(255,255,255,0.9)'
-	            );
-
-	        } else if (response.status === 201) {
-	            showToast('info', 'Informations', data.msg);
-	        } else {
-	            showToast('warn', 'Attention', data.msg);
-	        }
-	    } catch (err) {
-	        showToast('error', 'Erreur', err.msg || 'Erreur inattendue');
-	    }
 	}
 
 	// ------------------------ selection des lignes du tableau -----------------------------
@@ -504,10 +292,10 @@ export function useScript() {
 	    listSelected,
 
 	    // ------------------ Formulaire édition
+        drawerUse,
 
 	    // ------------------ Méthodes API
 	    fetchLists,
-	    deletList,
 
 	    // ------------------ Filtres & table
 	    initFilters,
@@ -520,7 +308,6 @@ export function useScript() {
 
 	    // ------------------ Actions UI
 	    updateTable,
-	    deleteTable,
 	    viewTable,
 
 	    // ------------------ Submit

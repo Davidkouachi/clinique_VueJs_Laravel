@@ -45,7 +45,7 @@ export function useScript() {
 	    lists.value = new Array(10).fill({});
 
 	    try {
-	        const res = await axios.get('/api/v1/api_get_specialite');
+	        const res = await axios.get('/api/v1/api_get_assurances');
 
 	        // Vérifie si la réponse est vide ou status 204
 	        const data = res.data?.data ?? [];
@@ -78,9 +78,9 @@ export function useScript() {
 	    }
 	};
 
-	const updateRowById = (id, newData) => {
+	const updateRowById = (uid, newData) => {
 	  	lists.value = lists.value.map(item =>
-	    	item.id === id ? { ...item, ...newData } : item
+	    	item.uid === uid ? { ...item, ...newData } : item
 	  	)
 	}
 
@@ -136,7 +136,7 @@ export function useScript() {
 	    label: isEdit ? 'Mise à jour' : 'Enregistrer',
 	    loadingLabel: 'Opération en cours...',
 	    icon: 'pi pi-check',
-	    severity: 'primary',
+	    severity: isEdit ? 'primary' : 'success',
 	    command: () => drawerUse.callComponentMethod('submit')
 	  }
 	]
@@ -146,7 +146,7 @@ export function useScript() {
 	  const isEdit = !!data
 
 	  drawerUse.show(
-	    isEdit ? "Mise à jour" : "Nouvelle spécialité",
+	    isEdit ? "Mise à jour" : "Nouvelle assurance",
 	    isEdit ? "pi pi-pencil" : "pi pi-plus",
 	    "right",
 	    "30rem",
@@ -157,7 +157,7 @@ export function useScript() {
 	      updateRowById,
 	      addRow,
 	      editMode: isEdit,
-	      editId: data?.id ?? null
+	      editUid: data?.uid ?? null
 	    },
 	    { footerBtn: getFooterButtons(isEdit) }
 	  )
@@ -169,7 +169,7 @@ export function useScript() {
 
 	// ------------------------ supprimer une ligne -----------------------------
 
-	const changeStatut = async (id, mode) => {
+	const changeStatut = async (uid, mode) => {
 
 		preloaderSpinner.showSpiner(
             'Opération en cours ...', 
@@ -178,12 +178,12 @@ export function useScript() {
                 try {
 
 			        const res = await axios.put(
-			            `/api/v1/api_statut_specialite/${id}/${mode}`
+			            `/api/v1/api_statut_assurances/${uid}/${mode}`
 			        )
 
 			        if (res.status === 200) {
 
-			            updateRowById(id, {
+			            updateRowById(uid, {
 						  	statut: mode,
 						  	statut_label: mode === 1 ? 'Actif' : 'Inactif'
 						})

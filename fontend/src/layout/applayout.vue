@@ -77,8 +77,7 @@
             v-model:visible="drawerUse.loading"
             :position="drawerUse.position"
             :dismissableMask="false"
-            :style="{ width: drawerUse.width }"
-        >
+            :style="{ width: drawerUse.width }">
             <template #header>
                 <div class="flex items-center gap-2">
                     <Avatar v-if="drawerUse.icon" :icon="drawerUse.icon" class="mr-2" size="large" shape="circle" />
@@ -89,12 +88,27 @@
               v-if="drawerUse.component"
               :is="drawerUse.component"
               v-bind="drawerUse.props"
+              :ref="el => drawerUse.setComponentRef(el)"
             />
-            <!-- <template #footer v-if="drawerUse.propsBtnFotter">
+            <!-- <template #footer v-if="drawerUse.propsBtnFotter"> -->
+            <template #footer v-if="drawerUse.propsBtnFotter.footerBtn?.length">
                 <div class="flex items-center gap-2">
-                    <Button v-for="item in drawerUse.propsBtnFotter.footerBtn" :id="item.id" :label="item.label" :icon="item.icon" class="flex-auto" :variant="item.variant" :severity="item.severity" @click="item.command"/>
+                    <Button
+                        v-for="item in drawerUse.propsBtnFotter.footerBtn"
+                        :key="item.id"
+                        :id="item.id"
+                        :label="drawerUse.footerLoadingId === item.id && item.loadingLabel
+                                ? item.loadingLabel
+                                : item.label"
+                        :icon="item.icon"
+                        :loading ="drawerUse.footerLoadingId === item.id"
+                        class="flex-auto"
+                        :variant="item.variant"
+                        :severity="item.severity"
+                        @click="item.command"
+                    />
                 </div>
-            </template> -->
+            </template>
         </Drawer>
         <app-topbar ></app-topbar>
         <app-sidebar ></app-sidebar>
@@ -243,7 +257,6 @@ const verifLoginForm = async () => {
     }
 };
 
-// Préloader global sur navigation
 router.beforeEach((to, from, next) => {
     if (!auth.expired) preloader.show(); // afficher loader
     next();
@@ -252,14 +265,13 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     // Ici on peut attendre un délai pour le loader
     if (!auth.expired) {
-        setTimeout(() => {
+        // setTimeout(() => {
             preloader.hide();
-        }, 1); // 0.5s ou 2s selon ton besoin
+        // }, 0.5); // 0.5s ou 2s selon ton besoin
     }
 });
 
 onMounted(() => {
-
 })
 
 watch(isSidebarActive, (newVal) => {
@@ -324,7 +336,6 @@ watch(() => visibleAuth.value, (isOpen) => {
     }
 });
 
-// 🔥 Watcher sur la route
 watch( () => route.path, (newPath) => {
         console.log('Route changée :', newPath);
 

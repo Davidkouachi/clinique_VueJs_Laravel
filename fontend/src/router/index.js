@@ -23,8 +23,16 @@ const customPages = [
     { path: '/element_produit', name: 'element_produit', component: () => import('@/views/pages/new/produit.vue'), meta: { title: 'Produit', requiresAuth: true } },
 ];
 
-const pgsPages = [
-    // administration
+const pgsPagesAdministration = [
+    // assurance
+    { 
+        path: '/assurances', 
+        name: 'assurances', 
+        component: () => import('@/views/pages/pgs/administration/assurance/index.vue'), 
+        meta: { title: 'assurances', requiresAuth: true } 
+    },
+
+    // medecin
     { 
         path: '/medecins/formulaire', 
         name: 'medecins_nouveau', 
@@ -43,7 +51,9 @@ const pgsPages = [
         component: () => import('@/views/pages/pgs/administration/medecin/specialite/index.vue'), 
         meta: { title: 'specialites', requiresAuth: true } 
     },
+];
     // configurations
+const pgsPagesConfiguration = [
     { 
         path: '/configurations/utilisateurs', 
         name: 'configuration_users', 
@@ -78,7 +88,9 @@ const routes = [
         children: [
             ...corePages,
             ...customPages,
-            ...pgsPages,
+
+            ...pgsPagesAdministration,
+            ...pgsPagesConfiguration,
         ]
     },
 

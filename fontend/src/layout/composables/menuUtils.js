@@ -53,15 +53,7 @@ export const model = ref([
             },
 
             // ===== ASSURANCES =====
-            {
-                label: 'Assurances',
-                icon: 'pi pi-fw pi-address-book',
-                permissions: ['administrateur','user'],
-                items: [
-                    { label: 'Nouvelle assurance', icon: 'pi pi-file-plus', to: '/patients/create', permissions: ['administrateur','user'] },
-                    { label: 'Liste des assurances', icon: 'pi pi-list', to: '/patients', permissions: ['administrateur','user'] },
-                ]
-            },
+            { label: 'Assurance', icon: 'pi pi-fw pi-address-book', to: '/assurances', permissions: ['administrateur','user'] },
 
             // ===== MEDECINS =====
             {

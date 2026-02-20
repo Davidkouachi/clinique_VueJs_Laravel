@@ -70,20 +70,33 @@ const fakeNotifs = [
 const Btnfoter = [
     {   
         id: 'logout',
+        label: '',
+        icon: 'pi pi-trash',
+        variant: 'outlined',
+        severity: 'warn',
+        command: () => {
+            drawerUse.hide();
+        }
+    },
+    {   
+        id: 'drawerBtn',
         label: 'Voir plus',
         icon: 'pi pi-eye',
         variant: '',
         severity: 'warn',
+        command: () => {
+            drawerUse.hide();
+        }
     },
     {   
-        id: 'logout',
-        label: 'Tout effacer',
-        icon: 'pi pi-times',
-        variant: 'outlined',
-        severity: 'danger',
+        id: 'drawerBtn',
+        label: 'Valider',
+        icon: 'pi pi-check',
+        variant: '',
+        severity: 'success',
         command: () => {
             drawerUse.hide(); 
-            showToast('success','Succès',`Notification supprimé`)
+            showToast('success','Succès',`Commande validée`)
         }
     }
 ];
@@ -170,12 +183,10 @@ onMounted(() => {
             </div>
 
             <div class="relative">
-                <button
-                    class="layout-topbar-action"
-                    @click="showNotifications"
-                    badge="2"
-                >
-                    <i class="pi pi-bell"></i>
+                <button class="btnBell" @click="showNotifications">
+                    <OverlayBadge value="12" severity="danger" size="small">
+                        <i class="pi pi-bell"></i>
+                    </OverlayBadge>
                 </button>
             </div>
 
@@ -221,5 +232,39 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.btnBell{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--text-color);
+    transition: background-color var(--element-transition-duration);
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--surface-hover);
+    }
+
+    &:focus-visible {
+        @include focused();
+    }
+
+    i {
+        font-size: 1.5rem;
+    }
+
+    span {
+        font-size: 1rem;
+        display: none;
+    }
+
+    &.layout-topbar-action-highlight {
+        background-color: var(--primary-color);
+        color: var(--primary-contrast-color);
+    }
+}
 
 </style>
