@@ -10,8 +10,11 @@ import { onlyNumbers, onlyUppercase } from '@/function/format';
 import viewOption from './viewOption.vue'
 import updateOption from './updateOption.vue'
 import { useDrawerStore } from '@/function/stores/drawer'
+import { useAbortController } from '@/function/services/useAbortController'
 
 export function useScript() {
+
+	const controller = useAbortController()
 
 	const auth = useAuthStore();
 	const { showToast } = useToastAlert();
@@ -47,7 +50,7 @@ export function useScript() {
 	    lists.value = new Array(10).fill({});
 
 	    try {
-	        const res = await axios.get('/api/v1/api_get_medecin');
+	        const res = await axios.get('/api/v1/api_get_medecin',{ signal: controller.signal });
 
 	        // Vérifie si la réponse est vide ou status 204
 	        const data = res.data?.data ?? [];
@@ -63,10 +66,19 @@ export function useScript() {
 	        }
 
 	    } catch (err) {
+	    	// 👇 Très important
+	        if (err.name === 'CanceledError' || err.name === 'AbortError') {
+	            // console.log('Requête annulée automatiquement')
+	            return
+	        }
+
 	        console.error('Erreur API:', err);
 	        lists.value = [];
 	        showToast('error', 'Erreur', 'Impossible de charger les processus.');
 	    } finally {
+	    	// 👇 Empêche d’exécuter si annulé
+        	if (controller.signal.aborted) return
+
 	        loading.value = false;
 	        loadingBtn.value = false;
 
@@ -270,6 +282,8 @@ export function useScript() {
 	}	
 
 	return {
+		controller,
+
 	    // ------------------ STATE (tableau & filtres)
 	    lists,
 	    loading,

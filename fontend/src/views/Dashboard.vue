@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-6 mb-5">
        <div class="col-span-12 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12">
             <div class="card mb-0 h-full">
                 <Tabs value="0">
@@ -182,7 +182,92 @@
                <span class="text-muted-color">responded</span>
            </div>
        </div>
-   </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12">
+            <div class="card mb-0">
+                <div class="grid grid-cols-12 gap-6">
+                    <div class="col-span-12 xl:col-span-9 lg:col-span-12 md:col-span-12 sm:col-span-12">
+                        <div class="mb-0 h-full">
+                            <Chart type="bar" :data="chartData8" :options="chartOptions8" class="h-full" />
+                        </div>
+                    </div>
+                    <div class="col-span-12 xl:col-span-3 lg:col-span-12 md:col-span-12 sm:col-span-12">
+                        <div class="grid grid-cols-12 gap-6">
+                           <div class="col-span-12 xl:col-span-12 lg:col-span-6 md:col-span-6 sm:col-span-12">
+                               <div class="h-full px-5 py-5 rounded-[0.5rem] !bg-red-500" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }">
+                                   <div class="flex justify-between">
+                                       <div>
+                                            <span class="block text-white font-medium mb-4">Dépenses</span>
+                                            <div class="text-white font-medium text-lg">
+                                                - 100.000.000.000 Fcfa
+                                            </div>
+                                       </div>
+                                       <div class="flex items-center justify-center bg-red-100 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                                           <i class="pi pi-arrow-down-right text-red-500 !text-xl"></i>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-span-12 xl:col-span-12 lg:col-span-6 md:col-span-6 sm:col-span-12">
+                               <div class="h-full px-5 py-5 rounded-[0.5rem] !bg-green-500" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }">
+                                   <div class="flex justify-between">
+                                       <div>
+                                            <span class="block text-white font-medium mb-4">
+                                                Bénéfices
+                                            </span>
+                                            <div class="text-white font-medium text-lg">
+                                                + 100.000.000.000 Fcfa
+                                            </div>
+                                       </div>
+                                       <div class="flex items-center justify-center bg-green-100 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                                           <i class="pi pi-arrow-up-right text-green-500 !text-xl"></i>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-span-12 xl:col-span-12 lg:col-span-6 md:col-span-6 sm:col-span-12">
+                               <div class="h-full px-5 py-5 rounded-[0.5rem] !bg-blue-500" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }">
+                                   <div class="flex justify-between">
+                                       <div>
+                                            <span class="block text-white font-medium mb-4">
+                                                Bilan
+                                            </span>
+                                            <div class="text-white font-medium text-lg">
+                                                100.000.000.000 Fcfa
+                                            </div>
+                                       </div>
+                                       <div class="flex items-center justify-center bg-blue-100 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                                           <i class="pi pi-chart-line text-blue-500 !text-xl"></i>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-span-12 xl:col-span-12 lg:col-span-6 md:col-span-6 sm:col-span-12">
+                               <div class="h-full px-5 py-5 rounded-[0.5rem] !bg-blue-500" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }">
+                                   <div class="flex justify-between">
+                                       <div>
+                                            <span class="block text-white font-medium mb-4">
+                                                Bilan
+                                            </span>
+                                            <div class="text-white font-medium text-lg">
+                                                100.000.000.000 Fcfa
+                                            </div>
+                                       </div>
+                                       <div class="flex items-center justify-center bg-blue-100 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                                           <i class="pi pi-chart-line text-blue-500 !text-xl"></i>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -255,6 +340,79 @@ const generateIncreasingSpark = (length = 7, start = 5, maxStep = 5) => {
   return spark
 }
 
+// --------------------------------------------------------------
+const chartData8 = ref();
+const chartOptions8 = ref();      
+const setChartData8 = () => {
+    const documentStyle = getComputedStyle(document.documentElement);
+
+    return {
+        labels: ['Janv', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Spet', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+            {
+                type: 'line',
+                label: 'Dataset 1',
+                borderColor: documentStyle.getPropertyValue('--p-orange-500'),
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                data: [50, 25, 12, 48, 56, 76, 42, 12, 48, 56, 76, 42]
+            },
+            {
+                type: 'bar',
+                label: 'Dataset 2',
+                backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
+                data: [21, 84, 24, 75, 37, 65, 34, 24, 75, 37, 65, 34],
+                borderColor: 'white',
+                borderWidth: 2
+            },
+            {
+                type: 'bar',
+                label: 'Dataset 3',
+                backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                data: [41, 52, 24, 74, 23, 21, 32, 24, 74, 23, 21, 32]
+            }
+        ]
+    };
+};
+const setChartOptions8 = () => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+    return {
+        maintainAspectRatio: false,
+        aspectRatio: 0.6,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            }
+        }
+    };
+}
+// --------------------------------------------------------------
+
 onMounted(() => {
     setTimeout(() => {
         const fakeData = [
@@ -323,7 +481,10 @@ onMounted(() => {
       // stats.value.forEach(item => {
       //   console.log(item.key, item.sparkData)
       // })
-    }, 500)
+    }, 1)
+
+    chartData8.value = setChartData8();
+    chartOptions8.value = setChartOptions8();
 })
 
 </script>

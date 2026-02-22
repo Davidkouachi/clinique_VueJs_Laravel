@@ -110,9 +110,9 @@
                 </div>
             </template>
         </Drawer>
-        <app-topbar ></app-topbar>
         <app-sidebar ></app-sidebar>
         <div class="layout-main-container" >
+            <app-topbar ></app-topbar>
             <div class="layout-main">
                 <div v-if="preloader.loading" class="cardPreloader" style="position: relative; min-height: 70vh;">
                     <!-- Preloader -->
@@ -257,8 +257,18 @@ const verifLoginForm = async () => {
     }
 };
 
+const containerClass = computed(() => {
+    return {
+        'layout-overlay': layoutConfig.menuMode === 'overlay',
+        'layout-static': layoutConfig.menuMode === 'static',
+        'layout-static-inactive': layoutState.staticMenuDesktopInactive && layoutConfig.menuMode === 'static',
+        'layout-overlay-active': layoutState.overlayMenuActive,
+        'layout-mobile-active': layoutState.staticMenuMobileActive
+    };
+});
+
 router.beforeEach((to, from, next) => {
-    if (!auth.expired) preloader.show(); // afficher loader
+    // if (!auth.expired) preloader.show(); // afficher loader
     next();
 });
 
@@ -316,10 +326,10 @@ watch( () => auth.expired, async (val) => {
 
 watch(() => drawerUse.loading, (isOpen) => {
     if (isOpen) {
-        document.body.style.overflow = 'hidden';        // Désactive le scroll global
+        document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
     } else {
-        document.body.style.overflow = '';             // Réactive le scroll
+        document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
     }
 });
@@ -336,7 +346,7 @@ watch(() => visibleAuth.value, (isOpen) => {
     }
 });
 
-watch( () => route.path, (newPath) => {
+watch(() => route.path, (newPath) => {
         console.log('Route changée :', newPath);
 
         const pathItems = findBreadcrumb(model.value, newPath);
@@ -355,15 +365,16 @@ watch( () => route.path, (newPath) => {
     { immediate: true }
 );
 
-const containerClass = computed(() => {
-    return {
-        'layout-overlay': layoutConfig.menuMode === 'overlay',
-        'layout-static': layoutConfig.menuMode === 'static',
-        'layout-static-inactive': layoutState.staticMenuDesktopInactive && layoutConfig.menuMode === 'static',
-        'layout-overlay-active': layoutState.overlayMenuActive,
-        'layout-mobile-active': layoutState.staticMenuMobileActive
-    };
-});
+watch(() => layoutState.staticMenuMobileActive, (isMobileActive) => {
+    if (isMobileActive) {
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+    }
+  }
+);
 
 function bindOutsideClickListener() {
     if (!outsideClickListener.value) {

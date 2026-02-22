@@ -7,7 +7,7 @@
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-10 px-8 sm:px-10" style="border-radius: 7px">
                     <form @submit.prevent="connectLoginForm" autocomplete="off">
                         <div class="text-center mb-8">
-                            <img height="130" width="130" src="@/assets/img/logo.jpg" class="mb-8 w-23 shrink-0 mx-auto" alt="Logo">
+                            <img height="130" width="130" src="@/assets/img/logo.png" class="mb-8 w-23 shrink-0 mx-auto" alt="Logo">
                             <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">Bienvenue ! 👋</div>
                             <span class="text-muted-color font-medium">Plateforme de gestion santé</span>
                         </div>

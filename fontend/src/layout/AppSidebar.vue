@@ -1,12 +1,32 @@
+<template>
+    <div class="layout-sidebar">
+        <div class="my-6 mx-5 flex items-center justify-left">
+            <router-link to="/" class="flex flex-col items-center gap-3 min-w-0 w-full">
+                <img src="@/assets/img/logo.png" class="w-[3rem] shrink-0" alt="Logo">
+                <span class="text-base font-bold break-words text-center">
+                    Centre Médical la Nouvelle Amitié de Yamoussoukro
+                </span>
+            </router-link>
+        </div>
+        <div class="layoutSidebar">
+            <app-menu></app-menu>
+            <div class="card mt-6 border border-3 border-primary !bg-primary mx-4" >
+                <div class="grid grid-cols-12 gap-2 -mb-3 -mt-3" >
+                    <div class="col-span-12 flex items-center justify-center" >
+                        <img src="@/assets/img/version.png" class="w-[5rem] shrink-0" alt="Logo">
+                    </div>
+                    <div class="col-span-12 flex items-center justify-center" >
+                        <Chip label="Version 1.0.0" icon="pi pi-cog" size="small"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
 <script setup>
 import AppMenu from './AppMenu.vue';
 </script>
-
-<template>
-    <div class="layout-sidebar">
-        <app-menu></app-menu>
-    </div>
-</template>
 
 // <style lang="scss">
 // .layout-sidebar {

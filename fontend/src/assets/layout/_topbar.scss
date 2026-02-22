@@ -1,7 +1,7 @@
 @use 'mixins' as *;
 
 .layout-topbar {
-    position: fixed;
+    position: sticky;
     height: 4rem;
     z-index: 997;
     left: 0;

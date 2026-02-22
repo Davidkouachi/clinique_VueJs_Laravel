@@ -163,9 +163,6 @@ onMounted(() => {
             <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
-                <img src="@/assets/img/logo.jpg" class="w-[3rem] shrink-0" alt="Logo">
-            </router-link>
         </div>
 
         <div class="layout-topbar-actions">
@@ -184,7 +181,7 @@ onMounted(() => {
 
             <div class="relative">
                 <button class="btnBell" @click="showNotifications">
-                    <OverlayBadge value="12" severity="danger" size="small">
+                    <OverlayBadge value="9+" severity="danger" size="small">
                         <i class="pi pi-bell"></i>
                     </OverlayBadge>
                 </button>

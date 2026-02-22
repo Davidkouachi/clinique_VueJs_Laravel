@@ -172,11 +172,6 @@
 
 <script setup>
 import { ref, onMounted, computed,nextTick, watch } from 'vue';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import Dialog from 'primevue/dialog';
 import TitrePage from '@/layout/elements/TitrePage.vue';
 
 import { useScript } from './script'
@@ -193,6 +188,8 @@ const actionClass = (action) => {
 }
 
 const {
+        controller,
+        
         // ------------------ STATE (tableau & filtres)
         lists,
         loading,
@@ -245,7 +242,8 @@ const {
         onlyNumbers,
 } = useScript();
 
-onMounted(() => {
+onMounted(async () => {
+    await nextTick();
     fetchLists();
 });
 
