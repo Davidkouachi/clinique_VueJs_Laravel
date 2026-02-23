@@ -2,7 +2,7 @@
     <Fluid>
         <div class="flex flex-col gap-2">
             <div class="flex flex-col justify-center items-center">
-                <img height="100" width="100" src="@/assets/img/specialite.webp" />
+                <img height="100" width="100" src="@/assets/img/specialite.png" />
             </div>
         </div>
         <form id="medecinForm" @submit.prevent="formSubmit" class="flex flex-col gap-4 w-full mt-6">

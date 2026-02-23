@@ -7,7 +7,7 @@ export const model = ref([
         label: 'Menu',
         permissions: ['administrateur','user'],
         items: [
-            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/', permissions: ['administrateur','user'], }
+            { label: 'Tableau de Bord', icon: 'pi pi-fw pi-home', to: '/', permissions: ['administrateur','user'], }
         ]
     },
 

@@ -21,7 +21,7 @@
             scrollable
             scrollHeight="auto"
             :rowClass="rowClass"
-        >
+            >
             <div class="flex justify-center my-4">
                 <Chip 
                     label="Seules les données actuellement visibles dans le tableau seront exportées. Les filtres appliqués sont automatiquement pris en compte." 

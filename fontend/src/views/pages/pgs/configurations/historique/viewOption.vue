@@ -4,7 +4,7 @@
         <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
                 <div class="flex flex-col justify-center items-center">
-                    <img height="100" width="100" src="@/assets/img/log.jpg" />                 
+                    <img height="100" width="100" src="@/assets/img/log.png" />                 
                 </div>
             </div>
             <div class="flex flex-col gap-2">
