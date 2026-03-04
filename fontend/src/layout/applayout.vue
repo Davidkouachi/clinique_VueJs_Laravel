@@ -268,7 +268,7 @@ const containerClass = computed(() => {
 });
 
 router.beforeEach((to, from, next) => {
-    // if (!auth.expired) preloader.show(); // afficher loader
+    if (!auth.expired) preloader.show(); // afficher loader
     next();
 });
 

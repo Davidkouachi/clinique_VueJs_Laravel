@@ -121,12 +121,12 @@
                         <div class="flex flex-col md:flex-row gap-4 mt-4">
                             <div class="flex flex-col grow gap-2">
                                 <label>Téléphone principal *</label>
-                                <InputText v-model="form.telephone1" id="telephone1" variant="filled"/>
+                                <InputMask id="telephone1" v-model="form.telephone1" size="" class="w-full" mask="9999999999" inputmode="numeric" pattern="[0-9]*" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
                                 <label>Téléphone secondaire</label>
-                                <InputText v-model="form.telephone2" id="telephone2" variant="filled"/>
+                                <InputMask id="telephone2" v-model="form.telephone2" size="" class="w-full" mask="9999999999" inputmode="numeric" pattern="[0-9]*" variant="filled"/>
                             </div>
 
                             <div class="flex flex-col grow gap-2">
@@ -194,7 +194,6 @@ import axios from '@/function/services/axios';
 import { useToastAlert } from '@/function/function/ToastAlert';
 import TitrePage from '@/layout/elements/TitrePage.vue';
 // import './style.css';
-import { onlyNumbers, onlyUppercase } from '@/function/format';
 
 const { showToast } = useToastAlert();
 const loading = ref(false);
@@ -487,9 +486,6 @@ const getConfigColor = (percentage) => {
 };
 
 onMounted(() => {
-    onlyNumbers('telephone1', 10);
-    onlyNumbers('telephone2', 10);
-
     loadParametres();
 });
 

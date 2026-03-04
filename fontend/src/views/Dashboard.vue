@@ -36,6 +36,73 @@
                 </div>
             </div>
         </div>
+        <div class="col-span-12 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12">
+            <div class="card !bg-blue-800">
+                <div class="flex flex-wrap">
+                    <div class="w-1/2 flex justify-start">
+                        <div>
+                            <div class="text-2xl text-white">Total Balance</div>
+                            <div class="mt-4 flex items-center gap-2">
+                                <div class="text-4xl font-semibold text-white">
+                                    $673,742.90
+                                </div>
+                                <span class="bg-green-500 p-1 rounded-[0.5rem]">
+                                    <span class="text-sm text-white">17%</span>
+                                </span>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-dark/70 text-white">
+                                    Compared to last month
+                                </span>
+                                <span class="font-medium text-green-400">$148,157.94</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/2 flex justify-end items-center hidden md:flex">
+                        <div class="">
+                            <i class="pi pi-wallet text-surface-0 !text-[5rem]" ></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12">
+            <div class="bg-surface-0 dark:bg-surface-950 px-6 py-8 md:px-12 lg:px-20">
+                <div class="flex items-center flex-col lg:flex-row lg:justify-between">
+                    <div class="flex items-start flex-col md:flex-row gap-8">
+                        <img src="https://fqjltiegiezfetthbags.supabase.co/storage/v1/object/public/block.images/blocks/pageheading/kathryn.png" class="w-[6.42rem] h-[6.42rem]" />
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center">
+                                <span class="text-surface-900 dark:text-surface-0 font-bold text-3xl">Kathryn Murphy</span>
+                            </div>
+                            <div class="flex items-center flex-wrap gap-8">
+                                <div>
+                                    <span class="text-surface-500 dark:text-surface-300">Followers</span>
+                                    <div class="text-surface-700 dark:text-surface-100 mt-1 text-sm font-semibold">333</div>
+                                </div>
+                                <div>
+                                    <span class="text-surface-500 dark:text-surface-300">Projects</span>
+                                    <div class="text-surface-700 dark:text-surface-100 mt-1 text-sm font-semibold">26</div>
+                                </div>
+                                <div>
+                                    <span class="text-surface-500 dark:text-surface-300">Collections</span>
+                                    <div class="text-surface-700 dark:text-surface-100 mt-1 text-sm font-semibold">17</div>
+                                </div>
+                                <div>
+                                    <span class="text-surface-500 dark:text-surface-300">Shots</span>
+                                    <div class="text-surface-700 dark:text-surface-100 mt-1 text-sm font-semibold">130</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 lg:mt-0 flex items-center gap-4">
+                        <Button icon="pi pi-bookmark" rounded severity="secondary" />
+                        <Button icon="pi pi-heart" rounded severity="secondary" />
+                        <Button icon="pi pi-list" rounded severity="secondary" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-12 gap-6 mb-5">
@@ -184,7 +251,7 @@
        </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-6 mb-5">
         <div class="col-span-12">
             <div class="card mb-0">
                 <div class="grid grid-cols-12 gap-6">
@@ -268,10 +335,126 @@
         </div>
     </div>
 
+    <div class="grid grid-cols-12 gap-6 mb-5">
+        <div class="col-span-12">
+            <div class="card flex flex-col gap-6 justify-center mb-0">
+                <div class="text-center mt-4 mb-4 text-2xl font-bold">
+                    FORMULAIRE
+                </div>
+                <Stepper linear value="1" v-model:value="currentStep" class="basis-full">
+                    
+                    <StepList >
+                        <Step v-for="(step, index) in steps" :key="step.value" v-slot="{ activateCallback, value, a11yAttrs }" asChild :value="step.value">
+                            <!-- si c'est le dernier step -->
+                            <div :class="index === steps.length - 1 ? 'flex flex-row pl-2' : 'flex flex-row flex-auto gap-2'" v-bind="a11yAttrs.root">
+                                <button class="bg-transparent border-0 inline-flex flex-col gap-2" @click="activateCallback" v-bind="a11yAttrs.header">
+                                    <span :class="[
+                                    'rounded-full border-2 w-12 h-12 inline-flex items-center justify-center',
+                                    { 'bg-primary text-primary-contrast border-primary': value <= currentStep, 'border-surface-200 dark:border-surface-700': value > currentStep }
+                                  ]">
+                                        <i :class="step.icon" />
+                                    </span>
+                                </button>
+                                <!-- ajouter un divider sauf pour le dernier -->
+                                <Divider v-if="index !== steps.length - 1" />
+                            </div>
+                        </Step>
+                    </StepList>
+
+                    <StepPanels>
+
+                        <!-- STEP 1 -->
+                        <StepPanel v-slot="{ activateCallback }" value="1">
+                            <div class="flex flex-col gap-3">
+                                <div class="text-center mt-4 mb-4 text-xl font-semibold">
+                                    Informations
+                                </div>
+                                <InputText v-model="form.nom" placeholder="Nom" />
+                                <InputText v-model="form.prenom" placeholder="Prénom" />
+                                <small class="text-red-500">{{ errors.step1 }}</small>
+                            </div>
+
+                            <div class="flex pt-6 justify-end">
+                                <Button
+                                    :disabled="!isStep1Valid"
+                                    label="Suivant"
+                                    severity="success"
+                                    icon="pi pi-arrow-circle-right"
+                                    iconPos="right"
+                                    @click="goToStep2(activateCallback)" 
+                                />
+                            </div>
+                        </StepPanel>
+
+                        <!-- STEP 2 -->
+                        <StepPanel v-slot="{ activateCallback }" value="2">
+                            <div class="flex flex-col gap-3">
+                                <div class="text-center mt-4 mb-4 text-xl font-semibold">
+                                    Compte
+                                </div>
+                                <InputText v-model="form.email" placeholder="Email" />
+                                <Password v-model="form.password" placeholder="Mot de passe" />
+                                <small class="text-red-500">{{ errors.step2 }}</small>
+                            </div>
+
+                            <div class="flex pt-6 justify-between">
+                                <Button 
+                                    label="Retour" 
+                                    severity="danger"
+                                    icon="pi pi-arrow-circle-left"
+                                    iconPos="left"
+                                    @click="activateCallback('1')" 
+                                />
+                                <Button
+                                    :disabled="!isStep2Valid"
+                                    label="Suivant"
+                                    severity="success"
+                                    icon="pi pi-arrow-circle-right"
+                                    iconPos="right"
+                                    @click="goToStep3(activateCallback)" 
+                                />
+                            </div>
+                        </StepPanel>
+
+                        <!-- STEP 3 -->
+                        <StepPanel v-slot="{ activateCallback }" value="3">
+                            <div class="flex flex-col gap-2">
+                                <div class="text-center mt-4 mb-4 text-xl font-semibold">
+                                    Confirmation
+                                </div>
+                                <p><strong>Nom:</strong> {{ form.nom }}</p>
+                                <p><strong>Prénom:</strong> {{ form.prenom }}</p>
+                                <p><strong>Email:</strong> {{ form.email }}</p>
+                            </div>
+
+                            <div class="flex pt-6 justify-between">
+                                <Button
+                                    label="Retour"
+                                    severity="danger"
+                                    icon="pi pi-arrow-circle-left"
+                                    iconPos="left"
+                                    @click="goToStep2(activateCallback)"
+                                />
+                                <Button
+                                    severity="warn"
+                                    label="Réinitialiser"
+                                    icon="pi pi-sync"
+                                    iconPos="right"
+                                    @click="goToStepReset(activateCallback)" 
+                                />
+                            </div>
+                        </StepPanel>
+
+                    </StepPanels>
+                </Stepper>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 
 const stats = ref([])
 
@@ -411,6 +594,83 @@ const setChartOptions8 = () => {
         }
     };
 }
+// --------------------------------------------------------------
+
+const steps = [
+    { value: 1, icon: 'pi pi-user' },
+    { value: 2, icon: 'pi pi-key' },
+    { value: 3, icon: 'pi pi-id-card' }
+]
+
+const currentStep = ref('1')
+
+const form = reactive({
+    nom: '',
+    prenom: '',
+    email: '',
+    password: ''
+})
+
+const errors = reactive({
+    step1: '',
+    step2: ''
+})
+
+const validateStep1 = () => {
+    if (!form.nom || !form.prenom) {
+        errors.step1 = "Tous les champs sont obligatoires"
+        return false
+    }
+    errors.step1 = ''
+    return true
+}
+
+const validateStep2 = () => {
+    if (!form.email || !form.password) {
+        errors.step2 = "Tous les champs sont obligatoires"
+        return false
+    }
+    errors.step2 = ''
+    return true
+}
+
+const isStep1Valid = computed(() => {
+    return form.nom.trim() !== '' && form.prenom.trim() !== ''
+})
+
+const isStep2Valid = computed(() => {
+    return form.email.trim() !== '' && form.password.trim() !== ''
+})
+
+const goToStep2 = (activateCallback) => {
+    if (validateStep1()) {
+        activateCallback('2')
+    }
+}
+
+const goToStep3 = (activateCallback) => {
+    if (validateStep2()) {
+        activateCallback('3')
+    }
+}
+
+const goToStepReset = (activateCallback) => {
+    // Revenir au premier step
+    currentStep.value = '1'
+
+    // Reset formulaire
+    form.nom = ''
+    form.prenom = ''
+    form.email = ''
+    form.password = ''
+
+    // Reset erreurs
+    errors.step1 = ''
+    errors.step2 = ''
+
+    activateCallback('1')
+}
+
 // --------------------------------------------------------------
 
 onMounted(() => {

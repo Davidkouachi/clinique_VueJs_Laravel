@@ -4,7 +4,10 @@
             <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
-            <div class="mt-0 flex items-center left-0">
+            <div class="mt-0 flex items-center left-0 gap-2">
+                <!-- <router-link to="/" class="layout-topbar-logo xl:hidden">
+                    <img src="@/assets/img/logo.png" class="w-[3rem] shrink-0" alt="Logo">
+                </router-link> -->
                 <span class="font-semibold text-[1.5rem]" v-if="breadcrumbMenu.items.length">
                     {{ breadcrumbMenu.items[breadcrumbMenu.items.length - 1].label }}
                 </span>
@@ -36,6 +39,14 @@
                 <button class="btnBell" @click="showNotifications">
                     <OverlayBadge value="9+" severity="danger" size="small">
                         <i class="pi pi-bell"></i>
+                    </OverlayBadge>
+                </button>
+            </div>
+
+            <div class="relative mt-1">
+                <button class="btnBell" @click="showNotifications">
+                    <OverlayBadge value="9+" severity="danger" size="small">
+                        <i class="pi pi-shopping-cart"></i>
                     </OverlayBadge>
                 </button>
             </div>

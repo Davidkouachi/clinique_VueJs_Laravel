@@ -2,6 +2,8 @@
 
 <template>
     <div class="layout-footer">
-        Copyright  &copy;  – Tous droits réservés. SAKAI dévélopper par DAVID Kouachi
+        <div class="px-5 text-center" >
+            Copyright  &copy;  – Tous droits réservés. SAKAI dévélopper par DAVID Kouachi
+        </div>
     </div>
 </template>

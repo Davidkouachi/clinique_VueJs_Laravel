@@ -86,13 +86,6 @@
                     </template>
                 </Column>
 
-                <Column sortable field="email" header="Email" style="min-width: 10rem">
-                    <template #body="{ data }">
-                        <Skeleton v-if="loading" width="12rem" height="1rem"/>
-                        <span v-else>{{ data?.email ?? '-' }}</span>
-                    </template>
-                </Column>
-
                 <Column sortable field="numero_ordre" header="Numéro d'ordre" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="12rem" height="1rem"/>
