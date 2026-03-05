@@ -17,6 +17,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import Rating from 'primevue/rating';
+import Paginator from 'primevue/paginator';
 
 import '@/assets/styles.scss';
 import '@/assets/style.css';
@@ -44,6 +45,7 @@ app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('Dialog', Dialog);
 app.component('Rating', Rating);
+app.component('Paginator', Paginator);
 
 app.use(ToastService);
 app.use(ConfirmationService);

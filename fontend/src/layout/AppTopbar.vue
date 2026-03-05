@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="relative mt-1">
+            <div class="relative mt-1" >
                 <button class="btnBell" @click="showNotifications">
                     <OverlayBadge value="9+" severity="danger" size="small">
                         <i class="pi pi-bell"></i>
@@ -46,7 +46,7 @@
             <div class="relative mt-1">
                 <button class="btnBell" @click="showNotifications">
                     <OverlayBadge value="9+" severity="danger" size="small">
-                        <i class="pi pi-shopping-cart"></i>
+                        <i class="pi pi-shopping-cart" id="global-cart-icon"></i>
                     </OverlayBadge>
                 </button>
             </div>

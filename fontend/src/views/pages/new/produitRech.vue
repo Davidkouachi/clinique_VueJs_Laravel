@@ -21,32 +21,39 @@
             </div>
         </div>
         <!-- Filtre par prix -->
-        <div class="flex flex-row justify-between" >
-            <IftaLabel>
-                <InputNumber
-                    id="min-price"
-                    v-model="localMinPrix"
-                    inputId="min-price"
-                    mode="currency"
-                    currency="XOF"
-                    locale="fr-FR"
-                    class="w-full"
-                    :min="0"
-                />
-                <label for="min-price">Prix minimum</label>
-            </IftaLabel>
-            <IftaLabel>
-                <InputNumber
-                    v-model="localMaxPrix"
-                    inputId="max-price"
-                    mode="currency"
-                    currency="XOF"
-                    locale="fr-FR"
-                    class="w-full"
-                    :min="0"
-                />
-                <label for="max-price">Prix maximum</label>
-            </IftaLabel>
+        <div class="flex flex-col gap-0">
+            <label class="block mb-2 font-medium">Montant</label>
+            <div class="flex flex-row justify-between" >
+                <IftaLabel>
+                    <InputNumber
+                        id="min-price"
+                        v-model="localMinPrix"
+                        inputId="min-price"
+                        mode="currency"
+                        currency="XOF"
+                        locale="fr-FR"
+                        class="w-full"
+                        :min="0"
+                    />
+                    <label for="min-price">Min</label>
+                </IftaLabel>
+                <IftaLabel>
+                    <InputNumber
+                        v-model="localMaxPrix"
+                        inputId="max-price"
+                        mode="currency"
+                        currency="XOF"
+                        locale="fr-FR"
+                        class="w-full"
+                        :min="0"
+                    />
+                    <label for="max-price">Max</label>
+                </IftaLabel>
+            </div>
+        </div>
+        <div>
+            <label class="block mb-2 font-medium">Statut</label>
+            <SelectButton v-model="localSelectedStock" :options="props.stockOptions()" optionLabel="label" optionValue="value" :allowEmpty="false" :pt="{ root: { class: 'flex flex-row gap-1 w-full' }, button: { class: 'w-full text-center justify-center' } }" />
         </div>
         <div>
             <label class="block mb-2 font-medium">Livraison</label>
@@ -66,9 +73,11 @@ const props = defineProps({
   maxPrix: Number,
   selectedLivraison: Number,
   selectedCategory: Number,
+  selectedStock: Number,
   layout: String,
   categoryOptions: Function,
   livraisonOptions: Function,
+  stockOptions: Function,
   applyFilters: Function,
   reloadloadProducts: Function,
 })
@@ -79,6 +88,7 @@ const drawerUse = useDrawerStore()
 const localSearchQuery = ref(props.searchQuery)
 const localSelectedCategory = ref(props.selectedCategory ?? 0)
 const localSelectedLivraison = ref(props.selectedLivraison ?? 0)
+const localSelectedStock = ref(props.selectedStock ?? 0)
 const localLayout = ref(props.layout)
 const localMinPrix = ref(props.minPrix ?? 0)
 const localMaxPrix = ref(props.maxPrix ?? 1000000)
@@ -92,7 +102,8 @@ const formSubmit = () => {
     layout: localLayout.value,
     minPrix: localMinPrix.value,
     maxPrix: localMaxPrix.value,
-    selectedLivraison: localSelectedLivraison.value
+    selectedLivraison: localSelectedLivraison.value,
+    selectedStock: localSelectedStock.value
   })
   drawerUse.hide()
 }

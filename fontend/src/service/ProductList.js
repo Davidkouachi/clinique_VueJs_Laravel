@@ -108,10 +108,11 @@ export const ProductService = {
     getProductsPaginated(offset = 0, limit = 20, filters = {}) {
         let data = this.getProductsData(10000);
 
-        const { searchQuery, selectedCategory, minPrix, maxPrix, livraison } = filters;
+        const { searchQuery, selectedCategory, minPrix, maxPrix, livraison, stock } = filters;
 
         const category = Number(selectedCategory);
         const livraisonFilter = Number(livraison);
+        const stockFilter = Number(stock);
         const min = Number(minPrix);
         const max = Number(maxPrix);
 
@@ -136,6 +137,26 @@ export const ProductService = {
 
         if (!isNaN(max)) {
             data = data.filter(p => p.prix <= max);
+        }
+
+        if (stockFilter !== 0) {
+
+            switch (stockFilter) {
+
+                case 1: // stock suffisant
+                    data = data.filter(p => p.qte > p.qteLimit);
+                    break;
+
+                case 2: // stock faible
+                    data = data.filter(p => p.qte > 0 && p.qte <= p.qteLimit);
+                    break;
+
+                case 3: // rupture
+                    data = data.filter(p => p.qte === 0);
+                    break;
+
+            }
+            
         }
 
         const total = data.length;

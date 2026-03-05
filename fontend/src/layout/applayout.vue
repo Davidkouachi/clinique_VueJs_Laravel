@@ -233,6 +233,12 @@ const verifLoginForm = async () => {
 
             visibleAuth.value = false
 
+            if (drawerUse.loading) {
+                hideScroll()
+            } else {
+                showScroll()
+            }
+
         } else if (res.data.info) {
             showToast('info', 'Informations', res.data.message);
         } else if (res.data.warn) {
@@ -266,6 +272,16 @@ const containerClass = computed(() => {
         'layout-mobile-active': layoutState.staticMenuMobileActive
     };
 });
+
+function hideScroll() {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+}
+
+function showScroll() {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+}
 
 router.beforeEach((to, from, next) => {
     if (!auth.expired) preloader.show(); // afficher loader
@@ -303,6 +319,8 @@ watch( () => auth.expired, async (val) => {
     if (souvenir) {
         visibleAuth.value = true;
     } else {
+        hideScroll()
+
         const result = await showSwal({
             icon: 'warning',
             title: 'Session expirée',
@@ -326,11 +344,9 @@ watch( () => auth.expired, async (val) => {
 
 watch(() => drawerUse.loading, (isOpen) => {
     if (isOpen) {
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+        hideScroll()
     } else {
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
+        showScroll()
     }
 });
 
@@ -338,11 +354,9 @@ watch(() => visibleAuth.value, (isOpen) => {
     console.log(isOpen)
 
     if (isOpen) {
-        document.body.style.overflow = 'hidden';        // Désactive le scroll global
-        document.documentElement.style.overflow = 'hidden';
+        hideScroll()
     } else {
-        document.body.style.overflow = '';             // Réactive le scroll
-        document.documentElement.style.overflow = '';
+        showScroll()
     }
 });
 
@@ -367,11 +381,9 @@ watch(() => route.path, (newPath) => {
 
 watch(() => layoutState.staticMenuMobileActive, (isMobileActive) => {
     if (isMobileActive) {
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+        hideScroll()
     } else {
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
+        showScroll()
     }
   }
 );
