@@ -7,11 +7,11 @@ export const ProductService = {
                 code: 'prod1234',
                 nom: 'Montre Rolex 15 quarat',
                 img: 'bamboo-watch.jpg',
-                prix: 50000000,
-                prixReduc: 10000000,
+                prix: 100000,
+                prixReduc: 80000,
                 livraison: 1,
                 categoryID: 1,
-                category: 'Accessories',
+                category: 'accessories',
                 qte: 40,
                 qteLimit: 10,
                 dateCreat: '2026-02-20',
@@ -25,7 +25,7 @@ export const ProductService = {
                 prixReduc: 65000,
                 livraison: 2,
                 categoryID: 2,
-                category: 'Shoes',
+                category: 'shoes',
                 qte: 8,
                 qteLimit: 10,
                 dateCreat: '2026-01-15',
@@ -37,9 +37,9 @@ export const ProductService = {
                 img: 'blue-band.jpg',
                 prix: 120000,
                 prixReduc: 0,
-                livraison: 0,
+                livraison: 1,
                 categoryID: 3,
-                category: 'Fashion',
+                category: 'fashion',
                 qte: 0,
                 qteLimit: 5,
                 dateCreat: '2026-02-01',
@@ -53,7 +53,7 @@ export const ProductService = {
                 prixReduc: 35000,
                 livraison: 2,
                 categoryID: 4,
-                category: 'Electronics',
+                category: 'electronics',
                 qte: 25,
                 qteLimit: 7,
                 dateCreat: '2026-02-10',
@@ -61,13 +61,27 @@ export const ProductService = {
             },
             {
                 code: 'prod3344',
-                nom: 'Lunettes de soleil Ray-Ban',
+                nom: 'Lunettes Ray-Ban',
+                img: 'bracelet.jpg',
+                prix: 95000,
+                prixReduc: 0,
+                livraison: 2,
+                categoryID: 5,
+                category: 'informatique',
+                qte: 5,
+                qteLimit: 10,
+                dateCreat: '2026-02-18',
+                eval: 5
+            },
+            {
+                code: 'prod3345',
+                nom: 'Montre Homme Premium',
                 img: 'bracelet.jpg',
                 prix: 95000,
                 prixReduc: 0,
                 livraison: 1,
-                categoryID: 1,
-                category: 'Accessories',
+                categoryID: 6,
+                category: 'hommes',
                 qte: 5,
                 qteLimit: 10,
                 dateCreat: '2026-02-18',
@@ -78,7 +92,8 @@ export const ProductService = {
         const bigList = [];
 
         for (let i = 0; i < total; i++) {
-            const p = baseProducts[i % baseProducts.length];
+            const randomIndex = Math.floor(Math.random() * baseProducts.length);
+            const p = baseProducts[randomIndex];
 
             bigList.push({
                 ...p,
@@ -91,32 +106,36 @@ export const ProductService = {
     },
 
     getProductsPaginated(offset = 0, limit = 20, filters = {}) {
-        let data = this.getProductsData(10000); // 🔥 simule 10 000 produits
+        let data = this.getProductsData(10000);
 
         const { searchQuery, selectedCategory, minPrix, maxPrix, livraison } = filters;
 
-        // 🔎 Filtrage recherche
-        if (searchQuery) {
+        const category = Number(selectedCategory);
+        const livraisonFilter = Number(livraison);
+        const min = Number(minPrix);
+        const max = Number(maxPrix);
+
+        if (searchQuery && searchQuery.trim() !== '') {
             data = data.filter(p =>
                 p.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 p.category.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
-        if (selectedCategory && selectedCategory !== 'all') {
-            data = data.filter(p => p.category === selectedCategory);
+        if (category !== 0) {
+            data = data.filter(p => p.categoryID === category);
         }
 
-        if (livraison && livraison !== 0) {
-            data = data.filter(p => p.livraison === livraison);
+        if (livraisonFilter !== 0) {
+            data = data.filter(p => p.livraison === livraisonFilter);
         }
 
-        // 🔎 Filtrage prix
-        if (minPrix != null) {
-            data = data.filter(p => p.prix >= minPrix);
+        if (!isNaN(min)) {
+            data = data.filter(p => p.prix >= min);
         }
-        if (maxPrix != null) {
-            data = data.filter(p => p.prix <= maxPrix);
+
+        if (!isNaN(max)) {
+            data = data.filter(p => p.prix <= max);
         }
 
         const total = data.length;

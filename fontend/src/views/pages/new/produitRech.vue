@@ -16,7 +16,7 @@
         <!-- Catégories -->
         <div>
             <label class="block mb-2 font-medium">Catégorie</label>
-            <div class="h-62 overflow-y-auto pr-2 border rounded-lg p-2">
+            <div class="h-[17.7rem] overflow-y-auto pr-2 border rounded-lg p-2">
                 <SelectButton v-model="localSelectedCategory" :options="props.categoryOptions()" optionLabel="label" optionValue="value" :allowEmpty="false" :pt="{ root: { class: 'flex flex-col gap-2 w-full' }, button: { class: 'w-full text-left justify-start' } }" />
             </div>
         </div>
@@ -65,18 +65,19 @@ const props = defineProps({
   minPrix: Number,
   maxPrix: Number,
   selectedLivraison: Number,
-  selectedCategory: String,
+  selectedCategory: Number,
   layout: String,
   categoryOptions: Function,
   livraisonOptions: Function,
-  applyFilters: Function
+  applyFilters: Function,
+  reloadloadProducts: Function,
 })
 
 const drawerUse = useDrawerStore()
 
 // --- refs locales pour éviter readonly
 const localSearchQuery = ref(props.searchQuery)
-const localSelectedCategory = ref(props.selectedCategory)
+const localSelectedCategory = ref(props.selectedCategory ?? 0)
 const localSelectedLivraison = ref(props.selectedLivraison ?? 0)
 const localLayout = ref(props.layout)
 const localMinPrix = ref(props.minPrix ?? 0)
@@ -96,6 +97,17 @@ const formSubmit = () => {
   drawerUse.hide()
 }
 
+const resetSubmit = () => {
+
+  props.reloadloadProducts()
+  drawerUse.hide()
+}
+
 // --- exposer submit pour drawer
-defineExpose({ submit: formSubmit })
+defineExpose(
+    { 
+        submit: formSubmit,
+        reset: resetSubmit
+    }
+)
 </script>

@@ -1,7 +1,7 @@
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col" ref="productTop">
 
-        <div v-if="firstLoad" class="px-3 py-2 rounded-[0.5rem] bg-surface-0 dark:bg-surface-900 flex flex-row gap-3 w-full justify-between items-center">
+        <!-- <div v-if="firstLoad" class="px-3 py-2 rounded-[0.5rem] bg-surface-0 dark:bg-surface-900 flex flex-row gap-3 w-full justify-between items-center">
             <div class="flex justify-center items-center">
                 <div class="font-bold text-2xl">Produits</div>
             </div>
@@ -25,8 +25,7 @@
                     severity="primary"
                 />
             </div>
-            <!-- GRID / LIST -->
-            <!-- <div class="flex justify-center -mb-6">
+            <div class="flex justify-center -mb-6">
                 <SelectButton 
                     v-model="layout" 
                     :options="options" 
@@ -36,13 +35,47 @@
                         <i :class="[option === 'list' ? 'pi pi-list' : 'pi pi-th-large']" />
                     </template>
                 </SelectButton>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
+
+        <Toolbar v-if="firstLoad">
+            <template #start>
+                <div class="flex justify-center items-center">
+                    <div class="font-bold text-2xl">Produits</div>
+                </div>
+            </template>
+
+            <template #center>
+                <div class="flex justify-center items-center">
+                    <SelectButton 
+                        v-model="layout" 
+                        :options="options" 
+                        :allowEmpty="false"
+                    >
+                        <template #option="{ option }">
+                            <i :class="[option === 'list' ? 'pi pi-list' : 'pi pi-th-large']" />
+                        </template>
+                    </SelectButton>
+                </div>
+            </template>
+
+            <template #end>
+                <div class="flex justify-center items-center">
+                    <Button 
+                        type="button" 
+                        icon="pi pi-search" 
+                        label="" 
+                        @click="openDrawerRech()" 
+                        severity="primary"
+                    />
+                </div>
+            </template>
+        </Toolbar>
         
         <div v-if="loading" class="flex flex-col gap-4">
             <!-- GRID Skeleton -->
             <div v-if="layout === 'grid'">
-                <div class="grid grid-cols-12 gap-4">
+                <div class="grid grid-cols-12 gap-2">
                     <div v-for="i in 20" :key="i" class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-2 p-2">
                         <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded">
                             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -91,7 +124,7 @@
 
         <DataView 
             v-else 
-            :value="filteredProducts" 
+            :value="products"
             :layout="layout" 
             :emptyMessage="''" 
             :pt="{
@@ -104,7 +137,7 @@
             </template> -->
 
             <template #grid="slotProps">
-                <div class="grid grid-cols-12 gap-4 mt-3 p-0">
+                <div class="grid grid-cols-12 gap-1 mt-3 p-0">
                     <div v-for="(item, index) in slotProps.items || []" :key="index" class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-2 p-2" >
                         <div class="p-3 border border-surface-0 dark:border-surface-900 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full">
                             <div class="bg-surface-50 flex justify-center rounded p-0 border-[0.1rem]">
@@ -176,7 +209,12 @@
                                             <span class="text-sm line-through text-blue-800">
                                                 {{ formatXOF(item.prix) }}
                                             </span>
-                                            <Badge value="-8%" size="large" severity="warn"></Badge>
+                                            <Badge
+                                                v-if="getDiscountPercent(item) > 0"
+                                                :value="`-${getDiscountPercent(item)}%`"
+                                                size="large"
+                                                :severity="getDiscountSeverity(getDiscountPercent(item))"
+                                            />
                                         </div>
 
                                     </template>
@@ -360,6 +398,7 @@ import rechOption from './produitRech.vue'
 const drawerUse = useDrawerStore();
 
 // --- Références
+const productTop = ref(null);
 const products = ref([]);
 const layout = ref('grid');
 const options = ref(['grid', 'list']);
@@ -380,7 +419,17 @@ const livraisonOptions = ref([
     { label: 'Payante', value: 2 },
 ]);
 
-const selectedCategory = ref('all');
+const selectedCategory = ref(0);
+const categoryOptions = ref([
+    { label: 'Tous', value: 0 },
+    { label: 'Accessories', value: 1 },
+    { label: 'Shoes', value: 2 },
+    { label: 'Fashion', value: 3 },
+    { label: 'Electronics', value: 4 },
+    { label: 'Informatique', value: 5 },
+    { label: 'Hommes', value: 6 },
+]);
+
 
 // --- Charger les produits pour une page
 const loadProducts = async (page = 1, filters = {}) => {
@@ -396,7 +445,7 @@ const loadProducts = async (page = 1, filters = {}) => {
 
     products.value = result.products;
     totalProducts.value = result.total;
-
+    
     loading.value = false;
     firstLoad.value = true;
     currentPage.value = page;
@@ -404,7 +453,7 @@ const loadProducts = async (page = 1, filters = {}) => {
 
 function reloadloadProducts() {
     searchQuery.value = ''
-    selectedCategory.value = 'all'
+    selectedCategory.value = 0
     layout.value = 'grid'
     minPrix.value = 0
     maxPrix.value = 1000000
@@ -424,22 +473,17 @@ function reloadloadProducts() {
 const totalPages = computed(() => Math.ceil(totalProducts.value / limit));
 const goToPage = (page) => {
     if (page < 1 || page > totalPages.value) return;
-    loadProducts(page);
+
+    loadProducts(page, {
+        searchQuery: searchQuery.value,
+        selectedCategory: selectedCategory.value,
+        minPrix: minPrix.value,
+        maxPrix: maxPrix.value,
+        livraison: selectedLivraison.value,
+    });
+
+    scrollToTop();
 };
-
-// --- Filtrage par catégorie
-const categoryOptions = computed(() => {
-    const unique = [...new Set(products.value.map(p => p.category))];
-    return [
-        { label: 'Tous', value: 'all' },
-        ...unique.map(cat => ({ label: cat, value: cat }))
-    ];
-});
-
-const filteredProducts = computed(() => {
-    if (selectedCategory.value === 'all') return products.value;
-    return products.value.filter(p => p.category === selectedCategory.value);
-});
 
 // ------------------------ ajouter & modifier une ligne -----------------------------
     const getFooterButtons = () => [
@@ -450,6 +494,13 @@ const filteredProducts = computed(() => {
         variant: 'outlined',
         severity: 'danger',
         command: () => drawerUse.hide()
+      },
+      {
+        id: 'DrawerBtn',
+        label: 'Réinitialiser',
+        icon: 'pi pi-refresh',
+        severity: 'warn',
+        command: () => drawerUse.callComponentMethod('reset')
       },
       {
         id: 'DrawerBtn',
@@ -477,7 +528,13 @@ const filteredProducts = computed(() => {
           layout,
           categoryOptions: () => categoryOptions.value,
           livraisonOptions: () => livraisonOptions.value,
-          applyFilters: ({ searchQuery: newSearch, selectedCategory: newCategory, layout: newLayout, minPrix: newMinPrix, maxPrix: newMaxPrix, selectedLivraison: newSelectedLivraison }) => {
+          applyFilters: ({ 
+            searchQuery: newSearch, 
+            selectedCategory: newCategory, 
+            layout: newLayout, 
+            minPrix: newMinPrix, 
+            maxPrix: newMaxPrix, 
+            selectedLivraison: newSelectedLivraison }) => {
                 // 🔹 mettre à jour les refs
                 searchQuery.value = newSearch;
                 selectedCategory.value = newCategory;
@@ -498,7 +555,8 @@ const filteredProducts = computed(() => {
                     maxPrix: newMaxPrix,
                     livraison: newSelectedLivraison,
                 });
-            }
+            },
+            reloadloadProducts
         },
         { footerBtn: getFooterButtons() }
       )
@@ -506,11 +564,48 @@ const filteredProducts = computed(() => {
 
 // ------------------------ supprimer une ligne -----------------------------
 
+function scrollToTop() {
+    if (productTop.value) {
+        productTop.value.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+function updateCategoryOptions() {
+    const unique = [...new Set(products.value.map(p => p.category))];
+
+    categoryOptions.value = [
+        { label: 'Tous', value: 'all' },
+        ...unique.map(cat => ({
+            label: cat,
+            value: cat
+        }))
+    ];
+}
+
 // --- Helpers
 function getStockInfo(product) {
     if (product.qte === 0) return { label: 'rupture', class: '!bg-red-600' };
     if (product.qte <= product.qteLimit) return { label: 'stock faible', class: '!bg-orange-500' };
     return { label: 'en stock', class: '!bg-green-600' };
+}
+
+// --- Calcul de pourcentage
+function getDiscountPercent(product) {
+    if (!product.prixReduc || product.prixReduc >= product.prix) return 0;
+
+    const percent = ((product.prix - product.prixReduc) / product.prix) * 100;
+    return Math.round(percent);
+}
+
+// --- Couleur de pourcentage
+function getDiscountSeverity(percent) {
+    if (percent >= 50) return 'danger';   // grosse promo
+    if (percent >= 30) return 'warn';     // bonne promo
+    if (percent >= 10) return 'info';     // petite promo
+    return 'success';                     // très faible
 }
 
 function formatXOF(value) {
@@ -524,9 +619,9 @@ onMounted(() => {
         searchQuery: searchQuery.value,
         selectedCategory: selectedCategory.value,
         layout: layout.value,
-        minPrix: null,
-        maxPrix: null,
-        selectedLivraison: null,
+        minPrix: minPrix.value,
+        maxPrix: maxPrix.value,
+        livraison: selectedLivraison.value, // ✅ bon nom
     });
 });
 </script>
