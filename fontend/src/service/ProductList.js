@@ -15,7 +15,7 @@ export const ProductService = {
                 qte: 40,
                 qteLimit: 10,
                 dateCreat: '2026-02-20',
-                eval: 5
+                eval: 3.5
             },
             {
                 code: 'prod5678',

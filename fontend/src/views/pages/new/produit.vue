@@ -219,11 +219,11 @@
                                             @click="openDrawerView(item)"
                                         />
                                         <Button
-                                            :icon="favorites.has(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                            :icon="toggleFavorite.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            :outlined="!favorites.has(item.id)"
+                                            :outlined="!toggleFavorite.check(item.id)"
                                             class="favorite-btn"
-                                            @click="toggleFavorite(item.id)"
+                                            @click="toggleFavorite.toggle(item.id)"
                                         />
                                     </div>
                                 </div>
@@ -309,11 +309,11 @@
                                     </div>
                                     <div class="flex flex-row-reverse md:flex-row gap-2">
                                         <Button
-                                            :icon="favorites.has(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                            :icon="toggleFavorite.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            :outlined="!favorites.has(item.id)"
+                                            :outlined="!toggleFavorite.check(item.id)"
                                             class="favorite-btn"
-                                            @click="toggleFavorite(item.id)"
+                                            @click="toggleFavorite.toggle(item.id)"
                                         />
                                         <Button
                                             label=""
@@ -484,14 +484,37 @@ const addToCart = (item) => {
   }, 900)
 }
 
-const favorites = ref(new Set())
-const toggleFavorite = (itemId) => {
-    if (favorites.value.has(itemId)) {
-        favorites.value.delete(itemId)
-    } else {
-        favorites.value.add(itemId)
+// On transforme toggleFavorite en objet
+const toggleFavorite = (() => {
+    const favorites = ref(new Set())
+
+    return {
+        // toggle un item
+        toggle(itemId) {
+            if (favorites.value.has(itemId)) {
+                favorites.value.delete(itemId)
+            } else {
+                favorites.value.add(itemId)
+            }
+        },
+        // vérifier si c'est favori
+        check(itemId) {
+            return favorites.value.has(itemId)
+        },
+        // ajouter un favori
+        add(itemId) {
+            favorites.value.add(itemId)
+        },
+        // supprimer un favori
+        remove(itemId) {
+            favorites.value.delete(itemId)
+        },
+        // exposer la liste complète si besoin
+        all() {
+            return favorites.value
+        }
     }
-}
+})()
 
 // --- Charger les produits pour une page
 const loadProducts = async (page = 1, filters = {}) => {
@@ -569,105 +592,106 @@ const onPageChange = (event) => {
 }
 
 // ------------------------ ajouter & modifier une ligne -----------------------------
-    const getFooterButtons = () => [
-      {
-        id: 'logout',
-        label: 'Fermer',
-        icon: 'pi pi-times',
-        variant: 'outlined',
-        severity: 'danger',
-        command: () => drawerUse.hide()
-      },
-      {
-        id: 'DrawerBtn',
-        label: 'Réinitialiser',
-        icon: 'pi pi-refresh',
-        severity: 'warn',
-        command: () => drawerUse.callComponentMethod('reset')
-      },
-      {
-        id: 'DrawerBtn',
-        label: 'Valider',
-        icon: 'pi pi-check',
-        severity: 'primary',
-        command: () => drawerUse.callComponentMethod('submit')
-      }
-    ]
+const getFooterButtons = () => [
+  {
+    id: 'logout',
+    label: 'Fermer',
+    icon: 'pi pi-times',
+    variant: 'outlined',
+    severity: 'danger',
+    command: () => drawerUse.hide()
+  },
+  {
+    id: 'DrawerBtn',
+    label: 'Réinitialiser',
+    icon: 'pi pi-refresh',
+    severity: 'warn',
+    command: () => drawerUse.callComponentMethod('reset')
+  },
+  {
+    id: 'DrawerBtn',
+    label: 'Valider',
+    icon: 'pi pi-check',
+    severity: 'primary',
+    command: () => drawerUse.callComponentMethod('submit')
+  }
+]
 
-    const openDrawerRech = () => {
+const openDrawerRech = () => {
 
-      drawerUse.show(
-        "Recherche",
-        "pi pi-search",
-        "right",
-        "30rem",
-        markRaw(rechOption),
-        {
-          searchQuery,
-          minPrix,
-          maxPrix,
-          selectedLivraison,
-          selectedCategory,
-          selectedStock,
-          layout,
-          categoryOptions: () => categoryOptions.value,
-          livraisonOptions: () => livraisonOptions.value,
-          stockOptions: () => stockOptions.value,
-          applyFilters: ({ 
-            searchQuery: newSearch, 
-            selectedCategory: newCategory, 
-            layout: newLayout, 
-            minPrix: newMinPrix, 
-            maxPrix: newMaxPrix, 
-            selectedLivraison: newSelectedLivraison,
-            selectedStock: newSelectedStock }) => {
-                // 🔹 mettre à jour les refs
-                searchQuery.value = newSearch;
-                selectedCategory.value = newCategory;
-                layout.value = newLayout;
-                minPrix.value = newMinPrix;
-                maxPrix.value = newMaxPrix;
-                selectedLivraison.value = newSelectedLivraison;
-                selectedStock.value = newSelectedStock;
+  drawerUse.show(
+    "Recherche",
+    "pi pi-search",
+    "right",
+    "30rem",
+    markRaw(rechOption),
+    {
+      searchQuery,
+      minPrix,
+      maxPrix,
+      selectedLivraison,
+      selectedCategory,
+      selectedStock,
+      layout,
+      categoryOptions: () => categoryOptions.value,
+      livraisonOptions: () => livraisonOptions.value,
+      stockOptions: () => stockOptions.value,
+      applyFilters: ({ 
+        searchQuery: newSearch, 
+        selectedCategory: newCategory, 
+        layout: newLayout, 
+        minPrix: newMinPrix, 
+        maxPrix: newMaxPrix, 
+        selectedLivraison: newSelectedLivraison,
+        selectedStock: newSelectedStock }) => {
+            // 🔹 mettre à jour les refs
+            searchQuery.value = newSearch;
+            selectedCategory.value = newCategory;
+            layout.value = newLayout;
+            minPrix.value = newMinPrix;
+            maxPrix.value = newMaxPrix;
+            selectedLivraison.value = newSelectedLivraison;
+            selectedStock.value = newSelectedStock;
 
-                // 🔹 reset pagination
-                currentPage.value = 1;
+            // 🔹 reset pagination
+            currentPage.value = 1;
 
-                // 🔹 appeler loadProducts avec toutes les infos
-                loadProducts(1, {
-                    searchQuery: newSearch,
-                    selectedCategory: newCategory,
-                    layout: newLayout,
-                    minPrix: newMinPrix,
-                    maxPrix: newMaxPrix,
-                    livraison: newSelectedLivraison,
-                    stock: newSelectedStock,
-                });
-            },
-            reloadloadProducts
+            // 🔹 appeler loadProducts avec toutes les infos
+            loadProducts(1, {
+                searchQuery: newSearch,
+                selectedCategory: newCategory,
+                layout: newLayout,
+                minPrix: newMinPrix,
+                maxPrix: newMaxPrix,
+                livraison: newSelectedLivraison,
+                stock: newSelectedStock,
+            });
         },
-        { footerBtn: getFooterButtons() }
-      )
-    }
+        reloadloadProducts
+    },
+    { footerBtn: getFooterButtons() }
+  )
+}
 
-    const openDrawerView = (data = null) => {
+const openDrawerView = (data = null) => {
 
-      drawerUse.show(
-        "Détails",
-        "pi pi-eye",
-        "right",
-        "100%",
-        markRaw(viewOption),
-        { 
-            data,
-            getStockInfo,
-            getDiscountPercent,
-            getDiscountSeverity,
-            formatXOF
-        },
-        { footerBtn: null }
-      )
-    }
+  drawerUse.show(
+    "Détails",
+    "pi pi-eye",
+    "right",
+    "100%",
+    markRaw(viewOption),
+    { 
+        data,
+        getStockInfo,
+        getDiscountPercent,
+        getDiscountSeverity,
+        formatXOF,
+        toggleFavorite,
+    },
+    { footerBtn: null }
+  )
+}
 
 // ------------------------ supprimer une ligne -----------------------------
 
