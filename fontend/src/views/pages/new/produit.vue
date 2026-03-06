@@ -197,9 +197,9 @@
 
                                     <div class="flex flex-col items-start gap-0 mt-0 mb-0">
 
-                                        <span class="text-sm text-gray-600">
+                                        <!-- <span class="text-sm text-gray-600">
                                             Livraison rapide garantie sous 3 jours ouvrables
-                                        </span>
+                                        </span> -->
 
                                     </div>
 
@@ -221,7 +221,7 @@
                                         <Button
                                             :icon="favorites.has(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            outlined="!favorites.has(item.id)"
+                                            :outlined="!favorites.has(item.id)"
                                             class="favorite-btn"
                                             @click="toggleFavorite(item.id)"
                                         />
@@ -289,7 +289,12 @@
                                                 <span class="text-sm line-through text-blue-800">
                                                     {{ formatXOF(item.prix) }}
                                                 </span>
-                                                <Badge value="-8%" size="large" severity="warn"></Badge>
+                                                <Badge
+                                                    v-if="getDiscountPercent(item) > 0"
+                                                    :value="`-${getDiscountPercent(item)}%`"
+                                                    size="large"
+                                                    :severity="getDiscountSeverity(getDiscountPercent(item))"
+                                                />
                                             </div>
 
                                         </template>
@@ -306,7 +311,7 @@
                                         <Button
                                             :icon="favorites.has(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            outlined="!favorites.has(item.id)"
+                                            :outlined="!favorites.has(item.id)"
                                             class="favorite-btn"
                                             @click="toggleFavorite(item.id)"
                                         />
@@ -376,7 +381,6 @@
             :totalRecords="totalProducts"
             :first="first"
             @page="onPageChange"
-            :Paginator
             :rowsPerPageOptions="[18, 36, 54]"
             template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
             class="mt-6"
@@ -652,10 +656,14 @@ const onPageChange = (event) => {
         "Détails",
         "pi pi-eye",
         "right",
-        "50rem",
+        "100%",
         markRaw(viewOption),
         { 
-            data 
+            data,
+            getStockInfo,
+            getDiscountPercent,
+            getDiscountSeverity,
+            formatXOF
         },
         { footerBtn: null }
       )
