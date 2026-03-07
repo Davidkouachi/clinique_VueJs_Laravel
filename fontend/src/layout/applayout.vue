@@ -154,7 +154,7 @@ import { useLayout } from '@/layout/composables/layout';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
-import { computed, ref, watch, onMounted, nextTick } from 'vue';
+import { computed, ref, watch, onMounted, nextTick, watchEffect } from 'vue';
 import { useAuthStore } from '@/function/stores/auth';
 import { useSwalAlert } from '@/function/function/SwalAlert';
 import { usePreloaderStore } from '@/function/stores/preloader';
@@ -233,12 +233,6 @@ const verifLoginForm = async () => {
 
             visibleAuth.value = false
 
-            if (drawerUse.loading) {
-                hideScroll()
-            } else {
-                showScroll()
-            }
-
         } else if (res.data.info) {
             showToast('info', 'Informations', res.data.message);
         } else if (res.data.warn) {
@@ -273,120 +267,25 @@ const containerClass = computed(() => {
     };
 });
 
+const shouldLockScroll = computed(() => {
+    return (
+        drawerUse.loading ||
+        visibleAuth.value ||
+        layoutState.staticMenuMobileActive
+    )
+})
+
 function hideScroll() {
+    console.log('cacher')
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 }
 
 function showScroll() {
+    console.log('afficher')
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
 }
-
-router.beforeEach((to, from, next) => {
-    if (!auth.expired) preloader.show(); // afficher loader
-    next();
-});
-
-router.afterEach(() => {
-    // Ici on peut attendre un délai pour le loader
-    if (!auth.expired) {
-        // setTimeout(() => {
-            preloader.hide();
-        // }, 0.5); // 0.5s ou 2s selon ton besoin
-    }
-});
-
-onMounted(() => {
-})
-
-watch(isSidebarActive, (newVal) => {
-    if (newVal) {
-        bindOutsideClickListener();
-    } else {
-        unbindOutsideClickListener();
-    }
-});
-
-watch( () => auth.expired, async (val) => {
-    if (!val || swalShown || auth.manualLogout || auth.isLoggingOut) return;
-    swalShown = true;
-
-    auth.logoutServer(false);
-
-    const souvenir = getSecureItem('me');
-
-    if (souvenir) {
-        visibleAuth.value = true;
-    } else {
-        hideScroll()
-
-        const result = await showSwal({
-            icon: 'warning',
-            title: 'Session expirée',
-            text: 'Votre session a expiré. Veuillez vous reconnecter.',
-            confirmButtonText: 'Ok',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-        });
-
-        if (result.isConfirmed) {
-            preloaderSpinner.showSpiner('Rédirection en cours...', () => {
-                setTimeout(() => {
-                    auth.logoutLocal(true);
-                }, 1000);
-            });
-        }
-    }
-
-    swalShown = false;
-});
-
-watch(() => drawerUse.loading, (isOpen) => {
-    if (isOpen) {
-        hideScroll()
-    } else {
-        showScroll()
-    }
-});
-
-watch(() => visibleAuth.value, (isOpen) => {
-    console.log(isOpen)
-
-    if (isOpen) {
-        hideScroll()
-    } else {
-        showScroll()
-    }
-});
-
-watch(() => route.path, (newPath) => {
-        console.log('Route changée :', newPath);
-
-        const pathItems = findBreadcrumb(model.value, newPath);
-        if (pathItems) {
-            breadcrumbMenu.set([
-              ...pathItems
-                .filter(i => i && i.label) // ⬅️ enlève les labels vides
-                .map(i => ({
-                  label: i.label,
-                  // icon: i.icon,
-                  // to: i.to,
-                }))
-            ]);
-        }
-    },
-    { immediate: true }
-);
-
-watch(() => layoutState.staticMenuMobileActive, (isMobileActive) => {
-    if (isMobileActive) {
-        hideScroll()
-    } else {
-        showScroll()
-    }
-  }
-);
 
 function bindOutsideClickListener() {
     if (!outsideClickListener.value) {
@@ -414,6 +313,119 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
+
+router.beforeEach((to, from, next) => {
+    if (!auth.expired) preloader.show(); // afficher loader
+    next();
+});
+
+router.afterEach(() => {
+    // Ici on peut attendre un délai pour le loader
+    if (!auth.expired) {
+        // setTimeout(() => {
+            preloader.hide();
+        // }, 0.5); // 0.5s ou 2s selon ton besoin
+    }
+});
+
+watchEffect(() => {
+    document.body.style.overflow = shouldLockScroll.value ? 'hidden' : ''
+})
+
+// watch(shouldLockScroll, (lock) => {
+//     if (lock) {
+//         hideScroll()
+//     } else {
+//         showScroll()
+//     }
+// })
+
+watch(isSidebarActive, (newVal) => {
+    if (newVal) {
+        bindOutsideClickListener();
+    } else {
+        unbindOutsideClickListener();
+    }
+});
+
+watch( () => auth.expired, async (val) => {
+    if (!val || swalShown || auth.manualLogout || auth.isLoggingOut) return;
+    swalShown = true;
+
+    auth.logoutServer(false);
+
+    const souvenir = getSecureItem('me');
+
+    if (souvenir) {
+        visibleAuth.value = true;
+    } else {
+
+        const result = await showSwal({
+            icon: 'warning',
+            title: 'Session expirée',
+            text: 'Votre session a expiré. Veuillez vous reconnecter.',
+            confirmButtonText: 'Ok',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        });
+
+        if (result.isConfirmed) {
+            preloaderSpinner.showSpiner('Rédirection en cours...', () => {
+                setTimeout(() => {
+                    auth.logoutLocal(true);
+                }, 1000);
+            });
+        }
+    }
+
+    swalShown = false;
+});
+
+// watch(() => drawerUse.loading, (isOpen) => {
+//     if (isOpen) {
+//         hideScroll()
+//     } else {
+//         showScroll()
+//     }
+// });
+
+// watch(() => visibleAuth.value, (isOpen) => {
+//     console.log(isOpen)
+
+//     if (isOpen) {
+//         hideScroll()
+//     } else {
+//         showScroll()
+//     }
+// });
+
+// watch(() => layoutState.staticMenuMobileActive, (isMobileActive) => {
+//     if (isMobileActive) {
+//         hideScroll()
+//     } else {
+//         showScroll()
+//     }
+//   }
+// );
+
+watch(() => route.path, (newPath) => {
+        console.log('Route changée :', newPath);
+
+        const pathItems = findBreadcrumb(model.value, newPath);
+        if (pathItems) {
+            breadcrumbMenu.set([
+              ...pathItems
+                .filter(i => i && i.label) // ⬅️ enlève les labels vides
+                .map(i => ({
+                  label: i.label,
+                  // icon: i.icon,
+                  // to: i.to,
+                }))
+            ]);
+        }
+    },
+    { immediate: true }
+);
 
 </script>
 

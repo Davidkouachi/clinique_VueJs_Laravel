@@ -129,11 +129,11 @@
                             class="flex-auto whitespace-nowrap"
                         />
                         <Button
-                            :icon="props.toggleFavorite.check(props.data.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                            :icon="favoriteStore.check(props.data.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                             variant="outlined"
-                            :outlined="!props.toggleFavorite.check(props.data.id)"
+                            :outlined="!favoriteStore.check(props.data.id)"
                             class="favorite-btn"
-                            @click="props.toggleFavorite.toggle(props.data.id)"
+                            @click="favoriteStore.toggle(props.data.id)"
                         />
                     </div>
                 </div>
@@ -179,40 +179,60 @@
                             Articles similaires
                         </div>
                     </div>
-                    <Carousel :value="products" :numVisible="7" :numScroll="1" :responsiveOptions="responsiveOptionsProducts" class="rounded">
-                        <!-- bouton gauche -->
-                        <template #previcon>
-                            <div class="bg-surface-0 p-5 rounded-full" >
-                                <i class="pi pi-angle-left text-2xl text-surface-500"></i>
-                            </div>
-                        </template>
+                    <div class="relative">
 
-                        <template #item="slotProps">
-                            <div class="bg-surface-0 dark:bg-surface-700 rounded m-2  p-4">
+                        <!-- bouton gauche -->
+                        <button class="nav-btn left" @click="scrollLeft">
+                            <i class="pi pi-angle-left"></i>
+                        </button>
+
+                        <!-- slider -->
+                        <div ref="slider" class="carousel-slider">
+                            <div
+                                v-for="product in products"
+                                :key="product.id"
+                                class="product-card !bg-surface-0"
+                            >
                                 <div class="mb-4">
                                     <div class="relative mx-auto">
-                                        <img :src="'https://primefaces.org/cdn/primevue/images/product/' + slotProps.data.image" :alt="slotProps.data.name" class="w-full rounded" />
-                                        <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data.inventoryStatus)" class="absolute" style="left:5px; top: 5px"/>
+                                        <img
+                                            :src="'https://primefaces.org/cdn/primevue/images/product/' + product.image"
+                                            :alt="product.name"
+                                            class="w-full rounded"
+                                        />
+
+                                        <Tag
+                                            :value="product.inventoryStatus"
+                                            :severity="getSeverity(product.inventoryStatus)"
+                                            class="absolute"
+                                            style="left:5px; top:5px"
+                                        />
                                     </div>
                                 </div>
-                                <div class="mb-4 font-medium">{{ slotProps.data.name }}</div>
+
+                                <div class="mb-4 font-medium">
+                                    {{ product.name }}
+                                </div>
+
                                 <div class="flex justify-between items-center">
-                                    <div class="mt-0 font-semibold text-xl">${{ slotProps.data.price }}</div>
+                                    <div class="font-semibold text-xl">
+                                        ${{ product.price }}
+                                    </div>
+
                                     <span>
-                                        <Button icon="pi pi-heart" severity="secondary" variant="outlined" />
+                                        <Button icon="pi pi-heart" severity="secondary" variant="outlined"/>
                                         <Button icon="pi pi-shopping-cart" class="ml-2"/>
                                     </span>
                                 </div>
                             </div>
-                        </template>
+                        </div>
 
                         <!-- bouton droite -->
-                        <template #nexticon>
-                            <div class="bg-surface-0 p-5 rounded-full" >
-                                <i class="pi pi-angle-right text-2xl text-surface-500"></i>
-                            </div>
-                        </template>
-                    </Carousel>
+                        <button class="nav-btn right" @click="scrollRight">
+                            <i class="pi pi-angle-right"></i>
+                        </button>
+
+                    </div>
                 </div>
             </div>
             <div class="col-span-12">
@@ -266,17 +286,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { PhotoService } from '@/service/ProductListDetail';
+import { useFavoriteStore } from '@/function/stores/product/favories'
+
+const favoriteStore = useFavoriteStore()
 
 const props = defineProps({
     data: Object,
-    categoryOptions: Function,
     getStockInfo: Function,
     getDiscountPercent: Function,
     getDiscountSeverity: Function,
     formatXOF: Function,
-    toggleFavorite: Object,
 });
 
 const evaluation = ref(props.data.eval ?? 0);
@@ -383,15 +404,22 @@ const responsiveOptions = ref([
     }
 ]);
 
-const products = ref();
-const responsiveOptionsProducts = ref([
-    { breakpoint: '1600px', numVisible: 6, numScroll: 1 },
-    { breakpoint: '1400px', numVisible: 5, numScroll: 1 },
-    { breakpoint: '1200px', numVisible: 4, numScroll: 1 },
-    { breakpoint: '992px', numVisible: 3, numScroll: 1 },
-    { breakpoint: '768px', numVisible: 2, numScroll: 1 },
-    { breakpoint: '576px', numVisible: 1, numScroll: 1 }
-])
+const products = ref([])
+const slider = ref(null)
+
+function scrollLeft() {
+    slider.value.scrollBy({
+        left: -300,
+        behavior: "smooth"
+    })
+}
+
+function scrollRight() {
+    slider.value.scrollBy({
+        left: 300,
+        behavior: "smooth"
+    })
+}
 
 const getSeverity = (status) => {
     switch (status) {
@@ -417,5 +445,43 @@ onMounted(() => {
 </script>
 
 <style >
+.carousel-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    padding: 0.5rem;
+}
 
+.carousel-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    background: var(--surface-0);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+
+.nav-btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: white;
+    border-radius: 50%;
+    padding: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.nav-btn.left {
+    left: -10px;
+}
+
+.nav-btn.right {
+    right: -10px;
+}
 </style>

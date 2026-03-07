@@ -101,8 +101,11 @@
             </template> -->
 
             <template #grid="slotProps">
-                <div class="grid grid-cols-12 gap-1 mt-3 p-0">
-                    <div v-for="(item, index) in slotProps.items || []" :key="index" class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-2 p-2" >
+                <div class="carousel-grid mt-6">
+                    <div 
+                        v-for="(item, index) in slotProps.items || []" 
+                        :key="index" 
+                        class="bg-surface-0 dark:bg-surface-700 rounded m-0 p-0" >
                         <div class="p-3 border border-surface-0 dark:border-surface-900 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full">
                             <div class="bg-surface-50 flex justify-center rounded p-0 border-[0.1rem]">
                                 <div class="relative w-full h-55">
@@ -115,8 +118,8 @@
                                     />
                                     <Tag
                                         v-if="item.qte >= 0"
-                                        :value="getStockInfo(item).label"
-                                        :class="['absolute border-none !text-white',getStockInfo(item).class]"
+                                        :value="utilsStore.getStockInfo(item).label"
+                                        :class="['absolute border-none !text-white',utilsStore.getStockInfo(item).class]"
                                         style="left: 4px; top: 4px"
                                     />
                                     <div class="absolute bg-surface-100 p-0 rounded-[5rem]" style="right: 4px; top: 4px">
@@ -166,19 +169,19 @@
 
                                         <!-- Nouveau prix -->
                                         <span class="text-lg font-bold text-red-600">
-                                            {{ formatXOF(item.prixReduc) }}
+                                            {{ utilsStore.formatXOF(item.prixReduc) }}
                                         </span>
 
                                         <!-- Ancien prix barré -->
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm line-through text-blue-800">
-                                                {{ formatXOF(item.prix) }}
+                                                {{ utilsStore.formatXOF(item.prix) }}
                                             </span>
                                             <Badge
-                                                v-if="getDiscountPercent(item) > 0"
-                                                :value="`-${getDiscountPercent(item)}%`"
+                                                v-if="utilsStore.getDiscountPercent(item) > 0"
+                                                :value="`-${utilsStore.getDiscountPercent(item)}%`"
                                                 size="large"
-                                                :severity="getDiscountSeverity(getDiscountPercent(item))"
+                                                :severity="utilsStore.getDiscountSeverity(utilsStore.getDiscountPercent(item))"
                                             />
                                         </div>
 
@@ -187,7 +190,7 @@
                                     <!-- Sinon prix normal -->
                                     <template v-else>
                                         <span class="text-lg font-bold text-blue-800">
-                                            {{ formatXOF(item.prix) }}
+                                            {{ utilsStore.formatXOF(item.prix) }}
                                         </span>
                                     </template>
 
@@ -216,14 +219,14 @@
                                             label=""
                                             severity="warn"
                                             icon="pi pi-eye"
-                                            @click="openDrawerView(item)"
+                                            @click="goToProduct(item)"
                                         />
                                         <Button
-                                            :icon="toggleFavorite.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                            :icon="favoriteStore.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            :outlined="!toggleFavorite.check(item.id)"
+                                            :outlined="!favoriteStore.check(item.id)"
                                             class="favorite-btn"
-                                            @click="toggleFavorite.toggle(item.id)"
+                                            @click="favoriteStore.toggle(item.id)"
                                         />
                                     </div>
                                 </div>
@@ -265,10 +268,10 @@
                                         </div>
                                         <Tag
                                             v-if="item.qte >= 0"
-                                            :value="getStockInfo(item).label"
+                                            :value="utilsStore.getStockInfo(item).label"
                                             :class="[
                                                 'border-none !text-white !text-[0.9rem]',
-                                                getStockInfo(item).class
+                                                utilsStore.getStockInfo(item).class
                                             ]"
                                         />
                                     </div>
@@ -281,19 +284,19 @@
 
                                             <!-- Nouveau prix -->
                                             <span class="text-lg font-bold text-red-600">
-                                                {{ formatXOF(item.prixReduc) }}
+                                                {{ utilsStore.formatXOF(item.prixReduc) }}
                                             </span>
 
                                             <!-- Ancien prix barré -->
                                             <div class="flex items-center gap-2">
                                                 <span class="text-sm line-through text-blue-800">
-                                                    {{ formatXOF(item.prix) }}
+                                                    {{ utilsStore.formatXOF(item.prix) }}
                                                 </span>
                                                 <Badge
-                                                    v-if="getDiscountPercent(item) > 0"
-                                                    :value="`-${getDiscountPercent(item)}%`"
+                                                    v-if="utilsStore.getDiscountPercent(item) > 0"
+                                                    :value="`-${utilsStore.getDiscountPercent(item)}%`"
                                                     size="large"
-                                                    :severity="getDiscountSeverity(getDiscountPercent(item))"
+                                                    :severity="utilsStore.getDiscountSeverity(utilsStore.getDiscountPercent(item))"
                                                 />
                                             </div>
 
@@ -302,7 +305,7 @@
                                         <!-- Sinon prix normal -->
                                         <template v-else>
                                             <span class="text-lg font-bold text-blue-800">
-                                                {{ formatXOF(item.prix) }}
+                                                {{ utilsStore.formatXOF(item.prix) }}
                                             </span>
                                         </template>
 
@@ -318,7 +321,8 @@
                                         <Button
                                             label=""
                                             severity="warn"
-                                            icon="pi pi-eye" 
+                                            icon="pi pi-eye"
+                                            @click="goToProduct(item)" 
                                         />
                                         <Button
                                             :severity="item.qte === 0 ? `danger` : `success`"
@@ -392,11 +396,23 @@
 <script setup>
 import { ProductService } from '@/service/ProductList';
 import { ref, computed, onMounted, watch, markRaw } from 'vue';
+import { useRouter } from 'vue-router'
 import { useDrawerStore } from '@/function/stores/drawer'
+import { useFavoriteStore } from '@/function/stores/product/favories'
+import { useProductUtilsStore  } from '@/function/stores/product/utils'
 import rechOption from './produitRech.vue'
-import viewOption from './produitView.vue'
 
+const router = useRouter()
 const drawerUse = useDrawerStore();
+const favoriteStore = useFavoriteStore()
+const utilsStore = useProductUtilsStore()
+
+const goToProduct = (product) => {
+    router.push({
+        name: 'element_produit_detail',
+        params: { code: product.code }
+    })
+}
 
 // --- Références
 const productTop = ref(null);
@@ -483,38 +499,6 @@ const addToCart = (item) => {
     img.remove()
   }, 900)
 }
-
-// On transforme toggleFavorite en objet
-const toggleFavorite = (() => {
-    const favorites = ref(new Set())
-
-    return {
-        // toggle un item
-        toggle(itemId) {
-            if (favorites.value.has(itemId)) {
-                favorites.value.delete(itemId)
-            } else {
-                favorites.value.add(itemId)
-            }
-        },
-        // vérifier si c'est favori
-        check(itemId) {
-            return favorites.value.has(itemId)
-        },
-        // ajouter un favori
-        add(itemId) {
-            favorites.value.add(itemId)
-        },
-        // supprimer un favori
-        remove(itemId) {
-            favorites.value.delete(itemId)
-        },
-        // exposer la liste complète si besoin
-        all() {
-            return favorites.value
-        }
-    }
-})()
 
 // --- Charger les produits pour une page
 const loadProducts = async (page = 1, filters = {}) => {
@@ -673,26 +657,6 @@ const openDrawerRech = () => {
   )
 }
 
-const openDrawerView = (data = null) => {
-
-  drawerUse.show(
-    "Détails",
-    "pi pi-eye",
-    "right",
-    "100%",
-    markRaw(viewOption),
-    { 
-        data,
-        getStockInfo,
-        getDiscountPercent,
-        getDiscountSeverity,
-        formatXOF,
-        toggleFavorite,
-    },
-    { footerBtn: null }
-  )
-}
-
 // ------------------------ supprimer une ligne -----------------------------
 
 function scrollToTop() {
@@ -716,34 +680,6 @@ function updateCategoryOptions() {
     ];
 }
 
-// --- Helpers
-function getStockInfo(product) {
-    if (product.qte === 0) return { label: 'rupture', class: '!bg-red-600' };
-    if (product.qte <= product.qteLimit) return { label: 'stock faible', class: '!bg-orange-500' };
-    return { label: 'en stock', class: '!bg-green-600' };
-}
-
-// --- Calcul de pourcentage
-function getDiscountPercent(product) {
-    if (!product.prixReduc || product.prixReduc >= product.prix) return 0;
-
-    const percent = ((product.prix - product.prixReduc) / product.prix) * 100;
-    return Math.round(percent);
-}
-
-// --- Couleur de pourcentage
-function getDiscountSeverity(percent) {
-    if (percent >= 50) return 'danger';   // grosse promo
-    if (percent >= 30) return 'warn';     // bonne promo
-    if (percent >= 10) return 'info';     // petite promo
-    return 'success';                     // très faible
-}
-
-function formatXOF(value) {
-    if (!value) return '0 Fcfa';
-    return new Intl.NumberFormat('fr-FR').format(value).replace(/,/g, '.') + ' Fcfa';
-}
-
 // --- Chargement initial
 onMounted(() => {
     loadProducts(1, {
@@ -760,6 +696,25 @@ onMounted(() => {
 
 <style>
 
+.carousel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+.carousel-grid > div {
+    height: 100%;
+}
+.carousel-grid > div {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carousel-grid > div:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+
+
 .flying-item {
     position: fixed;
     z-index: 9999;
@@ -767,23 +722,4 @@ onMounted(() => {
     pointer-events: none;
 }
 
-.favorite-btn .pi {
-    transition: transform 0.2s ease;
-}
-
-.favorite-btn:active .pi {
-    transform: scale(1.4);
-}
-
-.favorite-btn .pi-heart-fill {
-    color: #ef4444;
-    text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-    animation: heartPop 0.4s ease;
-}
-
-@keyframes heartPop {
-    0%   { transform: scale(0.5); }
-    50%  { transform: scale(1.5); }
-    100% { transform: scale(1); }
-}
 </style>

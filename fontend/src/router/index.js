@@ -21,6 +21,8 @@ const customPages = [
     { path: '/element_calendrier', name: 'element_calendrier', component: () => import('@/views/pages/new/calendrier.vue'), meta: { title: 'Calendrier', requiresAuth: true } },
     { path: '/element_carte', name: 'element_carte', component: () => import('@/views/pages/new/carte.vue'), meta: { title: 'Carte', requiresAuth: true } },
     { path: '/element_produit', name: 'element_produit', component: () => import('@/views/pages/new/produit.vue'), meta: { title: 'Produit', requiresAuth: true } },
+    { path: '/element_produit_detail/:code', name: 'element_produit_detail', component: () => import('@/views/pages/new/produitDetail.vue'), meta: { title: 'Détail Produit', requiresAuth: true } },
+
 ];
 
 const pgsPagesAdministration = [

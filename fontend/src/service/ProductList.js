@@ -105,6 +105,19 @@ export const ProductService = {
         return bigList;
     },
 
+    getProductById(code) {
+
+        const data = this.getProductsData(10000)
+
+        const product = data.find(p => p.code == code)
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(product)
+            }, 300)
+        })
+    },
+
     getProductsPaginated(offset = 0, limit = 20, filters = {}) {
         let data = this.getProductsData(10000);
 
@@ -169,6 +182,6 @@ export const ProductService = {
                 });
             }, 500);
         });
-    }
+    },
 
 };
