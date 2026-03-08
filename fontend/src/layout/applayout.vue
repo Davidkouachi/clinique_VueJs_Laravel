@@ -31,6 +31,7 @@
                 </div>
             </template>
         </ConfirmDialog>
+        <!-- afficher modal pour session expirer -->
         <Dialog :dismissableMask="false" :visible="visibleAuth" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
             <template #container="{ closeCallback }">
                 <div style="border-radius: 10px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color), rgba(33, 150, 243, 0) 30%)" >
@@ -70,6 +71,44 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </template>
+        </Dialog>
+        <!-- afficher modal pour les recherches produit -->
+        <Dialog 
+            v-model:visible="dialogUse.loading"
+            modal 
+            :style="{ width: dialogUse.width }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <template #header>
+                <div class="flex items-center gap-2">
+                    <Avatar v-if="dialogUse.icon" :icon="dialogUse.icon" class="mr-2" size="large" shape="circle" />
+                    <span class="font-bold">{{dialogUse.header}}</span>
+                </div>
+            </template>
+            <component
+              v-if="dialogUse.component"
+              :is="dialogUse.component"
+              v-bind="dialogUse.props"
+              :ref="el => dialogUse.setComponentRef(el)"
+            />
+            <!-- <template #footer v-if="dialogUse.propsBtnFotter"> -->
+            <template #footer v-if="dialogUse.propsBtnFotter.footerBtn?.length">
+                <div class="flex items-center justify-center gap-2 w-full">
+                    <Button
+                        v-for="item in dialogUse.propsBtnFotter.footerBtn"
+                        :key="item.id"
+                        :id="item.id"
+                        :label="dialogUse.footerLoadingId === item.id && item.loadingLabel
+                                ? item.loadingLabel
+                                : item.label"
+                        :icon="item.icon"
+                        :loading ="dialogUse.footerLoadingId === item.id"
+                        class="flex-auto"
+                        :variant="item.variant"
+                        :severity="item.severity"
+                        @click="item.command"
+                    />
                 </div>
             </template>
         </Dialog>
@@ -159,6 +198,7 @@ import { useAuthStore } from '@/function/stores/auth';
 import { useSwalAlert } from '@/function/function/SwalAlert';
 import { usePreloaderStore } from '@/function/stores/preloader';
 import { useDrawerStore } from '@/function/stores/drawer';
+import { useDialogStore } from '@/function/stores/dialog';
 import { useToastAlert } from '@/function/function/ToastAlert';
 import { useRoute, useRouter } from 'vue-router';
 import axios from '@/function/services/axios';
@@ -177,6 +217,7 @@ const { showToast, removeAllToasts, removeAllExcept } = useToastAlert();
 const preloader = usePreloaderStore();
 const preloaderSpinner = usePreloaderSpinner();
 const drawerUse = useDrawerStore();
+const dialogUse = useDialogStore();
 
 const visibleAuth = ref(false);
 
@@ -287,6 +328,11 @@ function showScroll() {
     document.documentElement.style.overflow = '';
 }
 
+function hideModal() {
+    drawerUse.hide()
+    dialogUse.hide()
+}
+
 function bindOutsideClickListener() {
     if (!outsideClickListener.value) {
         outsideClickListener.value = (event) => {
@@ -351,6 +397,8 @@ watch(isSidebarActive, (newVal) => {
 watch( () => auth.expired, async (val) => {
     if (!val || swalShown || auth.manualLogout || auth.isLoggingOut) return;
     swalShown = true;
+
+    hideModal()
 
     auth.logoutServer(false);
 

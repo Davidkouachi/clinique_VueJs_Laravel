@@ -12,6 +12,12 @@
     <div v-else >
         <!-- Informations principales -->
         <div class="card rounded">
+            <Button
+                icon="pi pi-arrow-left"
+                label="Retour"
+                severity="danger"
+                @click="goBack"
+            />
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-6 xl:col-span-6 p-2 flex flex-col gap-2">
                     <Galleria :value="images" :responsiveOptions="responsiveOptions" :numVisible="5" containerStyle="max-width: 100%">
@@ -25,7 +31,7 @@
                                     :value="utilsStore.getStockInfo(product).label"
                                     :class="['absolute border-none !text-white',utilsStore.getStockInfo(product).class]"
                                     size="xlarge"
-                                    style="left: 4px; top: 4px"
+                                    style="left: 10px; top: 10px"
                                 />
                             </img>
                         </template>
@@ -203,38 +209,135 @@
                     <div
                         v-for="prodSlider in productSlider"
                         :key="prodSlider.id"
-                        class="product-card !bg-surface-0"
+                        class="product-card !bg-surface-0 dark:bg-surface-700 rounded m-0 p-0"
                     >
-                        <div class="mb-4">
-                            <div class="relative mx-auto">
-                                <img
-                                    :src="'https://primefaces.org/cdn/primevue/images/product/' + prodSlider.image"
-                                    :alt="prodSlider.name"
-                                    class="w-full rounded"
-                                />
-
-                                <Tag
-                                    :value="prodSlider.inventoryStatus"
-                                    :severity="getSeverity(prodSlider.inventoryStatus)"
-                                    class="absolute"
-                                    style="left:5px; top:5px"
-                                />
+                        <div class="p-0 border border-surface-0 dark:border-surface-900 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full">
+                            <div class="bg-surface-50 flex justify-center rounded p-0 border-[0.1rem]">
+                                <div class="relative w-full h-55">
+                                    <img
+                                        :id="`product-image-${prodSlider.code}`"
+                                        class="w-full h-full object-cover"
+                                        imageClass="w-full h-full object-cover"
+                                        :src="`https://primefaces.org/cdn/primevue/images/product/${prodSlider.img}`"
+                                        :alt="prodSlider.nom"
+                                        @click="goToProduct(prodSlider)"
+                                    />
+                                    <Tag
+                                        v-if="prodSlider.qte >= 0"
+                                        :value="utilsStore.getStockInfo(prodSlider).label"
+                                        :class="['absolute border-none !text-white',utilsStore.getStockInfo(prodSlider).class]"
+                                        style="left: 4px; top: 4px"
+                                    />
+                                    <div class="absolute bg-surface-100 p-0 rounded-[5rem]" style="right: 4px; top: 4px">
+                                        <div class="flex items-center justify-center gap-2 justify-center py-1 px-2">
+                                            <span class="text-surface-900 font-medium text-[0.9rem]">
+                                                {{ prodSlider.eval }}
+                                            </span>
+                                            <i class="pi pi-star-fill text-yellow-500"></i>
+                                        </div>
+                                    </div>
+                                    <div class="absolute p-1 rounded-[5rem]"
+                                        style="right: 4px; top: 30px"
+                                        :class="prodSlider.livraison == 1 ? 'bg-green-500' : 'bg-red-500'">
+                                        <div class="flex items-center justify-center gap-2 p-1">
+                                            <i class="pi pi-truck" :class="prodSlider.livraison == 1 ? 'text-white' : 'text-white'"></i>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="absolute flex justify-center w-14 h-14 rounded-full border-[0.1rem]"
+                                      :style="{
+                                        right: '10px',
+                                        bottom: '-25px',
+                                        backgroundImage: `url(https://primefaces.org/cdn/primevue/images/product/${prodSlider.img})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                      }"
+                                    >
+                                    </div> -->
+                                </div>
                             </div>
-                        </div>
+                            <div class="pt-6 flex flex-col flex-1" @click="goToProduct(prodSlider)">
+                                <div class="flex flex-row justify-between items-start gap-2 mb-1">
+                                    <div class="flex-1">
+                                        <span class="font-medium text-surface-500 dark:text-surface-400 text-sm" >
+                                            {{ prodSlider.category }}
+                                        </span>
+                                        <div class="text-md font-medium mt-1 line-clamp-1 break-words mt-auto">
+                                            {{ prodSlider.nom }}
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="mb-4 font-medium">
-                            {{ prodSlider.name }}
-                        </div>
+                                <div class="flex flex-col items-start gap-0 mt-auto mb-0">
 
-                        <div class="flex justify-between items-center">
-                            <div class="font-semibold text-xl">
-                                ${{ prodSlider.price }}
+                                    <!-- Si réduction existe -->
+                                    <template v-if="prodSlider.prixReduc">
+
+                                        <!-- Nouveau prix -->
+                                        <span class="text-lg font-bold text-red-600">
+                                            {{ utilsStore.formatXOF(prodSlider.prixReduc) }}
+                                        </span>
+
+                                        <!-- Ancien prix barré -->
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm line-through text-blue-800">
+                                                {{ utilsStore.formatXOF(prodSlider.prix) }}
+                                            </span>
+                                            <Badge
+                                                v-if="utilsStore.getDiscountPercent(prodSlider) > 0"
+                                                :value="`-${utilsStore.getDiscountPercent(prodSlider)}%`"
+                                                size="large"
+                                                :severity="utilsStore.getDiscountSeverity(utilsStore.getDiscountPercent(prodSlider))"
+                                            />
+                                        </div>
+
+                                    </template>
+
+                                    <!-- Sinon prix normal -->
+                                    <template v-else>
+                                        <span class="text-lg font-bold text-blue-800">
+                                            {{ utilsStore.formatXOF(prodSlider.prix) }}
+                                        </span>
+                                    </template>
+                                </div>
                             </div>
+                            
+                            <div class="flex flex-col flex-1"> 
+                                
+                                <div class="flex flex-col gap-2 mt-auto">
 
-                            <span>
-                                <Button icon="pi pi-heart" severity="secondary" variant="outlined"/>
-                                <Button icon="pi pi-shopping-cart" class="ml-2"/>
-                            </span>
+                                    <div class="flex flex-col items-start gap-0 mt-0 mb-0">
+
+                                        <!-- <span class="text-sm text-gray-600">
+                                            Livraison rapide garantie sous 3 jours ouvrables
+                                        </span> -->
+
+                                    </div>
+
+                                    <div class="flex gap-2">
+                                        <Button
+                                            :severity="prodSlider.qte === 0 ? `danger` : `success`"
+                                            :icon="prodSlider.qte === 0 ? `pi pi-cart-minus` : `pi pi-shopping-cart`"
+                                            :label="prodSlider.qte === 0 ? `indisponible` : `Ajouter`"
+                                            :disabled="prodSlider.qte === 0"
+                                            class="flex-auto whitespace-nowrap"
+                                            @click="addToCart(prodSlider)"
+                                        />
+                                        <!-- <Button
+                                            label=""
+                                            severity="warn"
+                                            icon="pi pi-eye"
+                                            @click="goToProduct(item)"
+                                        /> -->
+                                        <Button
+                                            :icon="favoriteStore.check(prodSlider.code) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                            variant="outlined"
+                                            :outlined="!favoriteStore.check(prodSlider.code)"
+                                            class="favorite-btn"
+                                            @click="favoriteStore.toggle(prodSlider.code)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -294,17 +397,50 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ProductService } from '@/service/ProductList';
 import { PhotoService } from '@/service/ProductListDetail';
 import { useFavoriteStore } from '@/function/stores/product/favories';
-import { useProductUtilsStore  } from '@/function/stores/product/utils'; 
+import { useProductUtilsStore  } from '@/function/stores/product/utils';
+import { useFlyingCartStore } from '@/function/stores/product/flyingCart'
 
 const favoriteStore = useFavoriteStore()
 const utilsStore = useProductUtilsStore()
+const flyingCart = useFlyingCartStore()
+
+const router = useRouter()
+const route = useRoute()
+
+const goBack = () => {
+    router.push({
+        name: 'element_produit',
+        query: route.query   // garde tous les filtres et la page
+    })
+}
+
+const goToProduct = (product) => {
+
+    router.push({
+        name: 'element_produit_detail',
+        params: { code: product.code },
+        query: {
+            // 🔹 On passe tous les filtres et la pagination
+            search: route.query.search || '',
+            category: Number(route.query.category) || 0,
+            minPrix: Number(route.query.minPrix) || 0,
+            maxPrix: Number(route.query.maxPrix) || 1000000,
+            livraison: Number(route.query.livraison) || 0,
+            stock: Number(route.query.stock) || 0,
+            layout: route.query.layout || 'grid',
+            page: Number(route.query.page) || 1,
+            
+            // 🔹 code du produit pour scroller au retour
+            fromProductCode: product.code
+        }
+    })
+}
 
 const loading = ref(true);
-const route = useRoute()
 const product = ref(null)
 const images = ref();
 const evaluation = ref(0)
@@ -427,6 +563,14 @@ function scrollRight() {
     })
 }
 
+function addToCart(item) {
+    flyingCart.flyToCart(
+        `#product-image-${item.code}`,
+        '#global-cart-icon',
+        { startSize: 50, endSize: 20 }
+    )
+}
+
 const getSeverity = (status) => {
     switch (status) {
         case 'INSTOCK':
@@ -460,7 +604,7 @@ const loadProduct = async () => {
     const imagesData = await PhotoService.getImages()
     images.value = imagesData
 
-    const sliderData = await PhotoService.getProductsSmall()
+    const sliderData = await ProductService.getProductsSmall()
     productSlider.value = sliderData.slice(0, 9)
 
     loading.value = false

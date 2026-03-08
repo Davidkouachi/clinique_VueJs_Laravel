@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col" ref="productTop">
 
-        <Toolbar v-if="firstLoad" class="!bg-orange-500">
+        <Toolbar v-if="firstLoad" class="!bg-surface-0">
             <template #start>
                 <div class="flex justify-center items-center">
-                    <div class="font-bold text-2xl text-white">Produits</div>
+                    <div class="font-bold text-2xl text-surface-600">Produits</div>
                 </div>
             </template>
 
@@ -28,9 +28,9 @@
                         type="button" 
                         icon="pi pi-search" 
                         label="" 
-                        @click="openDrawerRech()" 
+                        @click="openDialogRech()" 
                         severity="warn"
-                        variant="text"
+                        variant=""
                     />
                 </div>
             </template>
@@ -40,7 +40,10 @@
             <!-- GRID Skeleton -->
             <div v-if="layout === 'grid'">
                 <div class="grid grid-cols-12 gap-2">
-                    <div v-for="i in 20" :key="i" class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-2 p-2">
+                    <div 
+                        v-for="i in 20" 
+                        :key="i" 
+                        class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-2 p-2">
                         <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded">
                             <div class="flex flex-wrap items-center justify-between gap-2">
                                 <Skeleton width="6rem" height="2rem" />
@@ -105,16 +108,18 @@
                     <div 
                         v-for="(item, index) in slotProps.items || []" 
                         :key="index" 
-                        class="bg-surface-0 dark:bg-surface-700 rounded m-0 p-0" >
-                        <div class="p-3 border border-surface-0 dark:border-surface-900 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full">
-                            <div class="bg-surface-50 flex justify-center rounded p-0 border-[0.1rem]">
+                        class="bg-surface-0 dark:bg-surface-700 rounded m-0 p-0"
+                        :id="'product-' + item.code">
+                        <div class="p-3 border border-surface-0 dark:border-surface-900 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full" >
+                            <div class="bg-surface-50 flex justify-center rounded p-0 border-[0.1rem]" @click="goToProduct(item)">
                                 <div class="relative w-full h-55">
                                     <img
-                                        :id="`product-image-${item.id}`"
+                                        :id="`product-image-${item.code}`"
                                         class="w-full h-full object-cover"
                                         imageClass="w-full h-full object-cover"
                                         :src="`https://primefaces.org/cdn/primevue/images/product/${item.img}`"
                                         :alt="item.nom"
+                                        @click="goToProduct(item)"
                                     />
                                     <Tag
                                         v-if="item.qte >= 0"
@@ -149,13 +154,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-6 flex flex-col flex-1">
+                            <div class="pt-6 flex flex-col flex-1" @click="goToProduct(item)">
                                 <div class="flex flex-row justify-between items-start gap-2 mb-1">
                                     <div class="flex-1">
                                         <span class="font-medium text-surface-500 dark:text-surface-400 text-sm" >
                                             {{ item.category }}
                                         </span>
-
                                         <div class="text-md font-medium mt-1 line-clamp-1 break-words mt-auto">
                                             {{ item.nom }}
                                         </div>
@@ -193,9 +197,10 @@
                                             {{ utilsStore.formatXOF(item.prix) }}
                                         </span>
                                     </template>
-
                                 </div>
-                                
+                            </div>
+                            
+                            <div class="flex flex-col flex-1"> 
                                 <div class="flex flex-col gap-2 mt-auto">
 
                                     <div class="flex flex-col items-start gap-0 mt-0 mb-0">
@@ -215,12 +220,12 @@
                                             class="flex-auto whitespace-nowrap"
                                             @click="addToCart(item)"
                                         />
-                                        <Button
+                                        <!-- <Button
                                             label=""
                                             severity="warn"
                                             icon="pi pi-eye"
                                             @click="goToProduct(item)"
-                                        />
+                                        /> -->
                                         <Button
                                             :icon="favoriteStore.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
@@ -239,11 +244,14 @@
 
             <template #list="slotProps">
                 <div class="flex flex-col mt-2">
-                    <div v-for="(item, index) in slotProps.items || []" :key="index">
-                        <div class="flex flex-col md:flex-row md:items-center p-2 gap-4 bg-surface-0 dark:bg-surface-900 rounded my-2" :class="{ 'border-t border-surface': index !== 0 }">
+                    <div 
+                        v-for="(item, index) in slotProps.items || []" 
+                        :key="index"
+                        :id="'product-' + item.code">
+                        <div class="flex flex-col md:flex-row md:items-center p-2 gap-4 bg-surface-0 dark:bg-surface-900 rounded my-2" :class="{ 'border-t border-surface': index !== 0 }" @click="goToProduct(item)">
                             <div class="md:w-40 relative border-[0.1rem]">
                                 <img
-                                    :id="`product-image-${item.id}`"
+                                    :id="`product-image-${item.code}`"
                                     class="block xl:block mx-auto rounded w-full" 
                                     :src="`https://primefaces.org/cdn/primevue/images/product/${item.img}`" 
                                     :alt="item.nom" />
@@ -312,18 +320,18 @@
                                     </div>
                                     <div class="flex flex-row-reverse md:flex-row gap-2">
                                         <Button
-                                            :icon="toggleFavorite.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                            :icon="favoriteStore.check(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
                                             variant="outlined"
-                                            :outlined="!toggleFavorite.check(item.id)"
+                                            :outlined="!favoriteStore.check(item.id)"
                                             class="favorite-btn"
-                                            @click="toggleFavorite.toggle(item.id)"
+                                            @click="favoriteStore.toggle(item.id)"
                                         />
-                                        <Button
+                                        <!-- <Button
                                             label=""
                                             severity="warn"
                                             icon="pi pi-eye"
-                                            @click="goToProduct(item)" 
-                                        />
+                                            @click="goToProduct(item)"
+                                        /> -->
                                         <Button
                                             :severity="item.qte === 0 ? `danger` : `success`"
                                             :icon="item.qte === 0 ? `pi pi-cart-minus` : `pi pi-shopping-cart`"
@@ -395,22 +403,42 @@
 
 <script setup>
 import { ProductService } from '@/service/ProductList';
-import { ref, computed, onMounted, watch, markRaw } from 'vue';
-import { useRouter } from 'vue-router'
-import { useDrawerStore } from '@/function/stores/drawer'
+import { ref, computed, onMounted, watch, markRaw, nextTick } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
+import { useDialogStore } from '@/function/stores/dialog';
 import { useFavoriteStore } from '@/function/stores/product/favories'
 import { useProductUtilsStore  } from '@/function/stores/product/utils'
+import { useFlyingCartStore } from '@/function/stores/product/flyingCart'
 import rechOption from './produitRech.vue'
 
 const router = useRouter()
-const drawerUse = useDrawerStore();
+const route = useRoute()
+
+const dialogUse = useDialogStore();
+
 const favoriteStore = useFavoriteStore()
 const utilsStore = useProductUtilsStore()
+const flyingCart = useFlyingCartStore()
 
 const goToProduct = (product) => {
+
     router.push({
         name: 'element_produit_detail',
-        params: { code: product.code }
+        params: { code: product.code },
+        query: {
+            // 🔹 On passe tous les filtres et la pagination
+            search: route.query.search || '',
+            category: Number(route.query.category) || 0,
+            minPrix: Number(route.query.minPrix) || 0,
+            maxPrix: Number(route.query.maxPrix) || 1000000,
+            livraison: Number(route.query.livraison) || 0,
+            stock: Number(route.query.stock) || 0,
+            layout: route.query.layout || 'grid',
+            page: Number(route.query.page) || 1,
+            
+            // 🔹 code du produit pour scroller au retour
+            fromProductCode: product.code
+        }
     })
 }
 
@@ -456,48 +484,12 @@ const stockOptions = ref([
 ]);
 
 const cartIcon = ref(null)
-const addToCart = (item) => {
-
-  const cartIcon = document.querySelector('#global-cart-icon')
-  if (!cartIcon) return
-
-  const productImage = document.querySelector(`#product-image-${item.id}`)
-  if (!productImage) return
-
-  const start = productImage.getBoundingClientRect()
-  const end = cartIcon.getBoundingClientRect()
-
-  const img = document.createElement('img')
-  img.src = productImage.src
-  img.className = 'flying-item'
-
-  // 🔥 départ centre image
-  img.style.left = `${start.left + start.width / 2}px`
-  img.style.top = `${start.top + start.height / 2}px`
-  img.style.transform = 'translate(-50%, -50%)'
-
-  img.style.width = '50px'
-  img.style.height = '50px'
-  img.style.border = '1px solid white'
-  img.style.borderRadius = '50%'
-  img.style.objectFit = 'cover'
-  img.style.position = 'fixed'
-  img.style.transition = 'all 0.8s cubic-bezier(.22,1,.36,1)'
-  img.style.zIndex = '9999'
-
-  document.body.appendChild(img)
-
-  setTimeout(() => {
-    img.style.left = `${end.left + end.width / 2}px`
-    img.style.top = `${end.top + end.height / 2}px`
-    img.style.width = '20px'
-    img.style.height = '20px'
-    img.style.opacity = '0.5'
-  }, 200)
-
-  setTimeout(() => {
-    img.remove()
-  }, 900)
+function addToCart(item) {
+    flyingCart.flyToCart(
+        `#product-image-${item.code}`,
+        '#global-cart-icon',
+        { startSize: 50, endSize: 20 }
+    )
 }
 
 // --- Charger les produits pour une page
@@ -518,6 +510,8 @@ const loadProducts = async (page = 1, filters = {}) => {
     loading.value = false;
     firstLoad.value = true;
     currentPage.value = page;
+
+    scrollProduit()
 };
 
 function reloadloadProducts() {
@@ -563,6 +557,13 @@ const onPageChange = (event) => {
     first.value = event.first
     currentPage.value = event.page + 1
 
+    router.replace({
+        query: {
+            ...route.query,
+            page: currentPage.value
+        }
+    })
+
     loadProducts(currentPage.value, {
         searchQuery: searchQuery.value,
         selectedCategory: selectedCategory.value,
@@ -577,81 +578,93 @@ const onPageChange = (event) => {
 
 // ------------------------ ajouter & modifier une ligne -----------------------------
 const getFooterButtons = () => [
-  {
-    id: 'logout',
-    label: 'Fermer',
-    icon: 'pi pi-times',
-    variant: 'outlined',
-    severity: 'danger',
-    command: () => drawerUse.hide()
-  },
-  {
-    id: 'DrawerBtn',
-    label: 'Réinitialiser',
-    icon: 'pi pi-refresh',
-    severity: 'warn',
-    command: () => drawerUse.callComponentMethod('reset')
-  },
-  {
-    id: 'DrawerBtn',
-    label: 'Valider',
-    icon: 'pi pi-check',
-    severity: 'primary',
-    command: () => drawerUse.callComponentMethod('submit')
-  }
+    {
+        id: 'logout',
+        label: 'Fermer',
+        icon: 'pi pi-times',
+        variant: 'outlined',
+        severity: 'danger',
+        command: () => dialogUse.hide()
+    },
+    {
+        id: 'resetDrawer',
+        label: 'Réinitialiser',
+        icon: 'pi pi-refresh',
+        severity: 'warn',
+        command: () => dialogUse.callComponentMethod('reset')
+    },
+    {
+        id: 'submitDrawer',
+        label: 'Valider',
+        icon: 'pi pi-check',
+        severity: 'success',
+        command: () => dialogUse.callComponentMethod('submit')
+    }
 ]
 
-const openDrawerRech = () => {
+const openDialogRech = () => {
 
-  drawerUse.show(
-    "Recherche",
-    "pi pi-search",
-    "right",
-    "30rem",
-    markRaw(rechOption),
-    {
-      searchQuery,
-      minPrix,
-      maxPrix,
-      selectedLivraison,
-      selectedCategory,
-      selectedStock,
-      layout,
-      categoryOptions: () => categoryOptions.value,
-      livraisonOptions: () => livraisonOptions.value,
-      stockOptions: () => stockOptions.value,
-      applyFilters: ({ 
-        searchQuery: newSearch, 
-        selectedCategory: newCategory, 
-        layout: newLayout, 
-        minPrix: newMinPrix, 
-        maxPrix: newMaxPrix, 
-        selectedLivraison: newSelectedLivraison,
-        selectedStock: newSelectedStock }) => {
-            // 🔹 mettre à jour les refs
-            searchQuery.value = newSearch;
-            selectedCategory.value = newCategory;
-            layout.value = newLayout;
-            minPrix.value = newMinPrix;
-            maxPrix.value = newMaxPrix;
-            selectedLivraison.value = newSelectedLivraison;
-            selectedStock.value = newSelectedStock;
+    dialogUse.show(
+        "Filtre",
+        null,
+        "30rem",
+        markRaw(rechOption),
+        {
+            searchQuery,
+            minPrix,
+            maxPrix,
+            selectedLivraison,
+            selectedCategory,
+            selectedStock,
+            layout,
+            categoryOptions: () => categoryOptions.value,
+            livraisonOptions: () => livraisonOptions.value,
+            stockOptions: () => stockOptions.value,
+            applyFilters: ({ 
+                searchQuery: newSearch, 
+                selectedCategory: newCategory, 
+                layout: newLayout, 
+                minPrix: newMinPrix, 
+                maxPrix: newMaxPrix, 
+                selectedLivraison: newSelectedLivraison,
+                selectedStock: newSelectedStock }) => {
+                    // 🔹 mettre à jour les refs
+                    searchQuery.value = newSearch;
+                    selectedCategory.value = newCategory;
+                    layout.value = newLayout;
+                    minPrix.value = newMinPrix;
+                    maxPrix.value = newMaxPrix;
+                    selectedLivraison.value = newSelectedLivraison;
+                    selectedStock.value = newSelectedStock;
 
-            // 🔹 reset pagination
-            currentPage.value = 1;
+                    // 🔹 reset pagination
+                    currentPage.value = 1;
 
-            // 🔹 appeler loadProducts avec toutes les infos
-            loadProducts(1, {
-                searchQuery: newSearch,
-                selectedCategory: newCategory,
-                layout: newLayout,
-                minPrix: newMinPrix,
-                maxPrix: newMaxPrix,
-                livraison: newSelectedLivraison,
-                stock: newSelectedStock,
-            });
-        },
-        reloadloadProducts
+                    // 🔹 appeler loadProducts avec toutes les infos
+                    router.replace({
+                        name: 'element_produit',
+                        query: {
+                            search: newSearch || undefined,
+                            category: newCategory || undefined,
+                            minPrix: newMinPrix || undefined,
+                            maxPrix: newMaxPrix || undefined,
+                            livraison: newSelectedLivraison || undefined,
+                            stock: newSelectedStock || undefined,
+                            layout: newLayout || undefined
+                        }
+                    })
+
+                    loadProducts(1, {
+                        searchQuery: newSearch,
+                        selectedCategory: newCategory,
+                        layout: newLayout,
+                        minPrix: newMinPrix,
+                        maxPrix: newMaxPrix,
+                        livraison: newSelectedLivraison,
+                        stock: newSelectedStock,
+                    });
+                },
+            reloadloadProducts
     },
     { footerBtn: getFooterButtons() }
   )
@@ -665,6 +678,20 @@ function scrollToTop() {
             behavior: 'smooth',
             block: 'start'
         });
+    }
+}
+
+async function scrollProduit() {
+    const fromCode = route.query.fromProductCode
+    if (fromCode) {
+        await nextTick() // attend que le DOM soit mis à jour
+        const el = document.getElementById(`product-${fromCode}`)
+        if (el) {
+            console.log('Scroll to product:', fromCode)
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            el.classList.add('product-highlight')
+            setTimeout(() => el.classList.remove('product-highlight'), 1500)
+        }
     }
 }
 
@@ -682,7 +709,22 @@ function updateCategoryOptions() {
 
 // --- Chargement initial
 onMounted(() => {
-    loadProducts(1, {
+
+    searchQuery.value = route.query.search ?? ''
+
+    selectedCategory.value = Number(route.query.category) || 0
+    minPrix.value = Number(route.query.minPrix) || 0
+    maxPrix.value = Number(route.query.maxPrix) || 1000000
+    selectedLivraison.value = Number(route.query.livraison) || 0
+    selectedStock.value = Number(route.query.stock) || 0
+
+    layout.value = route.query.layout ?? 'grid'
+
+    const page = Number(route.query.page) || 1
+    currentPage.value = page
+    first.value = (page - 1) * limit
+
+    loadProducts(page, {
         searchQuery: searchQuery.value,
         selectedCategory: selectedCategory.value,
         layout: layout.value,
@@ -691,7 +733,17 @@ onMounted(() => {
         livraison: selectedLivraison.value,
         stock: selectedStock.value,
     });
-});
+})
+
+watch(
+    () => loading.value,
+    async (isLoading) => {
+        // Quand le loading passe à false, c'est que les produits sont affichés
+        if (!isLoading) {
+            scrollProduit()
+        }
+    }
+)
 </script>
 
 <style>
@@ -722,4 +774,14 @@ onMounted(() => {
     pointer-events: none;
 }
 
+
+
+.product-highlight {
+    animation: flash 1.5s ease;
+}
+
+@keyframes flash {
+    0% { background: #fff3cd; }
+    100% { background: transparent; }
+}
 </style>

@@ -92,11 +92,12 @@ export const ProductService = {
         const bigList = [];
 
         for (let i = 0; i < total; i++) {
-            const randomIndex = Math.floor(Math.random() * baseProducts.length);
-            const p = baseProducts[randomIndex];
+
+            const p = baseProducts[i % baseProducts.length];
 
             bigList.push({
                 ...p,
+                code: `${p.code}${i + 1}`,
                 id: i + 1,
                 nom: `${p.nom} #${i + 1}`
             });
@@ -116,6 +117,10 @@ export const ProductService = {
                 resolve(product)
             }, 300)
         })
+    },
+
+    getProductsSmall() {
+        return Promise.resolve(this.getProductsData(10));
     },
 
     getProductsPaginated(offset = 0, limit = 20, filters = {}) {
