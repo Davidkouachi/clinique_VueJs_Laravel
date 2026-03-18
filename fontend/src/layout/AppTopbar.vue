@@ -1,6 +1,6 @@
 <template>
     <div class="layout-topbar">
-        <div class="layout-topbar-logo-container">
+        <div class="layout-topbar-logo-container items-center">
             <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
@@ -8,7 +8,7 @@
                 <!-- <router-link to="/" class="layout-topbar-logo xl:hidden">
                     <img src="@/assets/img/logo.png" class="w-[3rem] shrink-0" alt="Logo">
                 </router-link> -->
-                <span class="font-semibold text-[1.5rem]" v-if="breadcrumbMenu.items.length">
+                <span class="font-semibold text-[1rem] md:text-[1.5rem]" v-if="breadcrumbMenu.items.length">
                     {{ breadcrumbMenu.items[breadcrumbMenu.items.length - 1].label }}
                 </span>
             </div>
@@ -60,13 +60,15 @@
                 </button>
 
                 <div
+                    id="user-menu-panel"
                     class="config-panel hidden absolute top-[3.25rem] right-0 w-64 p-0 bg-surface-0 dark:bg-surface-900 border border-surface rounded-border origin-top shadow-[0px_3px_5px_rgba(0,0,0,0.02),0px_0px_2px_rgba(0,0,0,0.05),0px_1px_4px_rgba(0,0,0,0.08)]"
                 >
                     <div class="flex justify-center border-0">
                         <Menu :model="items" class="w-full">
                             <template #start>
-                                <button v-ripple class="relative overflow-hidden w-full border-0 bg-transparent flex items-start p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200">
-                                    <Avatar icon="pi pi-user" class="mr-2" size="large" shape="circle" />
+                                <button v-ripple class="relative overflow-hidden w-full border-0 bg-transparent flex items-start p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200 gap-2">
+                                    <!-- <Avatar icon="pi pi-user" class="mr-2" size="large" shape="circle" /> -->
+                                    <img src="@/assets/img/user.png" class="w-[3rem] shrink-0 border rounded-full" alt="Logo">
                                     <span class="inline-flex flex-col items-start">
                                         <span class="font-bold text-lg">{{ auth.user?.email || 'Invité' }}</span>
                                         <span class="text-md">Admin</span>

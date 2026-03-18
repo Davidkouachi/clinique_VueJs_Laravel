@@ -21,23 +21,24 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->string('prenom', 100);
 
-            // Contacts (uniques)
+            // Contacts
             $table->string('email')->unique();
             $table->string('telephone', 10)->unique();
 
             // Professionnel
             $table->foreignId('titre_id')
+                ->nullable()
                 ->constrained('medecintitres')
                 ->nullOnDelete();
 
             $table->foreignId('specialite_id')
+                ->nullable()
                 ->constrained('specialites')
                 ->nullOnDelete();
 
             $table->string('numero_ordre', 50)->nullable()->unique();
             $table->boolean('statut')->default(true);
 
-            // Timestamps
             $table->timestamps();
         });
 

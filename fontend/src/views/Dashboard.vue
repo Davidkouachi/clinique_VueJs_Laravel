@@ -36,36 +36,149 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-12 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12">
-            <div class="card !bg-blue-800">
-                <div class="flex flex-wrap">
-                    <div class="w-1/2 flex justify-start">
-                        <div>
-                            <div class="text-2xl text-white">Total Balance</div>
-                            <div class="mt-4 flex items-center gap-2">
-                                <div class="text-4xl font-semibold text-white">
-                                    $673,742.90
-                                </div>
-                                <span class="bg-green-500 p-1 rounded-[0.5rem]">
-                                    <span class="text-sm text-white">17%</span>
-                                </span>
-                            </div>
-                            <div class="mt-2 flex items-center gap-2">
-                                <span class="text-dark/70 text-white">
-                                    Compared to last month
-                                </span>
-                                <span class="font-medium text-green-400">$148,157.94</span>
-                            </div>
-                        </div>
+<div class="col-span-12">
+<div class="flex flex-col xl:flex-row gap-3">
+    <div class="relative w-full mx-0 p-3">
+        
+        <!-- Carte -->
+        <div class="rounded-2xl p-6 text-white shadow-xl bg-gradient-to-br from-gray-900 via-gray-800 to-black hover:scale-105 transition duration-300">
+
+            <!-- Header -->
+            <div class="flex justify-between items-start">
+                <div class="text-lg font-semibold tracking-wider">
+                    My Bank 
+                    <button @click="toggleVisibility" class="mx-2">
+                        <i :class="showData ? 'pi pi-eye-slash' : 'pi pi-eye'" class="text-white"></i>
+                    </button>
+                </div>
+
+                <!-- Logo Mastercard -->
+                <!-- <div class="flex items-center gap-1">
+                    <div class="w-5 h-5 bg-red-500 rounded-full"></div>
+                    <div class="w-5 h-5 bg-yellow-400 rounded-full -ml-2"></div>
+                </div> -->
+
+                <div class="text-lg font-bold tracking-widest text-surface-0 flex items-center justify-center p-0 rounded">
+                    MasterCard
+                </div>
+            </div>
+
+            <!-- Chip -->
+            <div class="mt-2">
+                <div class="w-12 h-8 bg-yellow-300 rounded-md"></div>
+            </div>
+
+            <!-- Numéro carte -->
+            <div class="mt-2 text-xl tracking-widest font-mono">
+                {{ showData ? '5356 7890 1234 5678' : '**** **** **** 5678' }}
+            </div>
+
+            <!-- Infos -->
+            <div class="mt-2 flex justify-between items-end">
+                <div>
+                    <div class="text-xs opacity-70">Card Holder</div>
+                    <div class="font-semibold uppercase">
+                        {{ showData ? 'David Kouachi' : '*************' }}
                     </div>
-                    <div class="w-1/2 flex justify-end items-center hidden md:flex">
-                        <div class="">
-                            <i class="pi pi-wallet text-surface-0 !text-[5rem]" ></i>
-                        </div>
+                </div>
+
+                <div>
+                    <div class="text-xs opacity-70">Expires</div>
+                    <div class="font-semibold">
+                        {{ showData ? '12/28' : '**/**' }}
                     </div>
                 </div>
             </div>
+
+            <!-- Balance -->
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="text-sm opacity-80">Balance</div>
+                    <div class="text-2xl font-bold">
+                        {{ showData ? '$673,742.90' : '******' }}
+                    </div>
+                </div>
+
+                <!-- Logo Mastercard -->
+                <div class="flex items-center gap-1">
+                    <div class="w-5 h-5 bg-red-500 rounded-full"></div>
+                    <div class="w-5 h-5 bg-yellow-400 rounded-full -ml-2"></div>
+                </div>
+
+            </div>
+
         </div>
+
+        <!-- Effet glass overlay -->
+        <!-- <div class="absolute inset-0 rounded-2xl bg-white/10 backdrop-blur-sm pointer-events-none"></div> -->
+
+    </div>
+    <div class="relative w-full mx-0 p-3">
+        
+        <!-- Carte -->
+        <div class="rounded-2xl p-6 text-white shadow-xl bg-gradient-to-br from-green-900 via-green-700 to-green-500 hover:scale-105 transition duration-300">
+
+            <!-- Header -->
+            <div class="flex justify-between items-start">
+                <div class="text-lg font-semibold tracking-wider">
+                    My Bank
+                </div>
+
+                <!-- Logo Mastercard -->
+                <!-- <div class="flex items-center gap-1">
+                    <div class="w-5 h-5 bg-red-500 rounded-full"></div>
+                    <div class="w-5 h-5 bg-yellow-400 rounded-full -ml-2"></div>
+                </div> -->
+
+                <!-- <div class="text-lg font-bold tracking-widest bg-surface-0 text-blue-700 flex items-center justify-center p-1 rounded">
+                    VISA
+                </div> -->
+            </div>
+
+            <!-- Chip -->
+            <div class="mt-2">
+                <div class="w-12 h-8 bg-yellow-300 rounded-md"></div>
+            </div>
+
+            <!-- Numéro carte -->
+            <div class="mt-2 text-xl tracking-widest font-mono">
+                5356 7890 1234 5678
+            </div>
+
+            <!-- Infos -->
+            <div class="mt-2 flex justify-between items-end">
+                <div>
+                    <div class="text-xs opacity-70">Card Holder</div>
+                    <div class="font-semibold uppercase">David Kouachi</div>
+                </div>
+
+                <div>
+                    <div class="text-xs opacity-70">Expires</div>
+                    <div class="font-semibold">12/28</div>
+                </div>
+            </div>
+
+            <!-- Balance -->
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="text-sm opacity-80">Balance</div>
+                    <div class="text-2xl font-bold">$673,742.90</div>
+                </div>
+
+                <!-- Logo Visa -->
+                <div class="text-lg font-bold tracking-widest bg-surface-0 text-green-900 flex items-center justify-center p-1 rounded">
+                    VISA
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Effet glass overlay -->
+        <!-- <div class="absolute inset-0 rounded-2xl bg-white/10 backdrop-blur-sm pointer-events-none"></div> -->
+
+    </div>
+</div>
+</div>
         <div class="col-span-12 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12">
             <div class="bg-surface-0 dark:bg-surface-950 px-6 py-8 md:px-12 lg:px-20">
                 <div class="flex items-center flex-col lg:flex-row lg:justify-between">
@@ -456,6 +569,13 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue'
 
+const showData = ref(false)
+
+const toggleVisibility = () => {
+    showData.value = !showData.value
+}
+
+// --------------------------------------------------------------
 const stats = ref([])
 
 const statsTb = [

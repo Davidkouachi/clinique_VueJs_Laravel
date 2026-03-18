@@ -548,7 +548,7 @@ const goToPage = (page) => {
         stock: selectedStock.value,
     });
 
-    scrollToTop();
+    // scrollToTop();
 };
 
 const first = ref(0) // index du premier élément

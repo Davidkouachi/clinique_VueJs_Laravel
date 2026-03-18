@@ -194,7 +194,13 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { useToast } from 'primevue/usetoast';
-import { ref, onMounted, onUnmounted, getCurrentInstance, computed, watch } from 'vue'
+import { 
+    ref, 
+    onMounted, 
+    onUnmounted, 
+    getCurrentInstance, 
+    computed, 
+    watch } from 'vue'
 import Swal from 'sweetalert2'
 import axios from '@/function/services/axios';
 import { useToastAlert } from '@/function/function/ToastAlert';
@@ -202,10 +208,16 @@ import { removeLogoutPreloaderAndToast } from '@/function/appGlobal';
 import { useAuthStore } from '@/function/stores/auth';
 import { useRouter } from 'vue-router';
 import { usePreloaderSpinner } from '@/function/function/showPreloader';
-import { setSecureItem, getSecureItem, removeSecureItem } from "@/function/stores/secureStorage";
+import { 
+    setSecureItem, 
+    getSecureItem, 
+    removeSecureItem,
+    clearSecureStorage } from "@/function/stores/secureStorage";
 import { isValidEmail } from '@/function/services/format';
+import { useDeviceStore } from "@/function/stores/deviceStore";
 
 const auth = useAuthStore();
+const deviceStore = useDeviceStore();
 const preloaderSpinner = usePreloaderSpinner();
 const { showToast, removeAllToasts, removeAllExcept } = useToastAlert();
 
@@ -397,28 +409,8 @@ async function resendCode() {
   
 }
 
-function getDeviceId() {
-    let id = getSecureItem("device_id");
-
-    if (!id) {
-        if (crypto.randomUUID) {
-            id = crypto.randomUUID();
-        } else {
-            // Polyfill compatible
-            id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-                const r = (Math.random() * 16) | 0;
-                const v = c === 'x' ? r : (r & 0x3) | 0x8;
-                return v.toString(16);
-            });
-        }
-        setSecureItem("device_id", id);
-    }
-
-    return id;
-}
-
 // usage
-const deviceId = getDeviceId();
+const deviceId = deviceStore.getDeviceId();
 
 const connectLoginForm = async () => {
     if (submitting) return;   // 🔥 empêche 100% des doubles appels
@@ -460,6 +452,7 @@ const connectLoginForm = async () => {
 
             setSecureItem('nu', user.name);
             setSecureItem('me', checked.value ? 'true' : 'false');
+            setSecureItem('device_id', deviceId);
         
             router.push({ name: 'dashboard' });
 
@@ -483,20 +476,24 @@ const connectLoginForm = async () => {
 onMounted(() => {
   Swal.close();
 
-  if (preloaderSpinner.loadingSpiner) preloaderSpinner.hideSpiner()
+    if (preloaderSpinner.loadingSpiner) preloaderSpinner.hideSpiner()
 
-  if (auth.manualLogout === true) {
-    removeLogoutPreloaderAndToast(showToast);
-  }
+    if (auth.manualLogout === true) {
+        removeLogoutPreloaderAndToast(showToast);
+    }
 
-    removeSecureItem("jwt_token");
-    removeSecureItem("refresh_token");
-    removeSecureItem("session_expire");
-    removeSecureItem("session_expired");
-    removeSecureItem("device_id");
-    removeSecureItem("aL");
-    removeSecureItem("nu");
-    removeSecureItem("me");
+    clearSecureStorage()
+
+    // removeSecureItem("jwt_token");
+    // removeSecureItem("refresh_token");
+    // removeSecureItem("session_expire");
+    // removeSecureItem("session_expired");
+    // removeSecureItem("device_id");
+    // removeSecureItem("aL");
+    // removeSecureItem("nu");
+    // removeSecureItem("me");
+
+    // deviceStore.generateDeviceId()
 })
 
 watch(() => activeStep.value, (newStep) => {

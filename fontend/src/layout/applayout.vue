@@ -32,24 +32,32 @@
             </template>
         </ConfirmDialog>
         <!-- afficher modal pour session expirer -->
-        <Dialog :dismissableMask="false" :visible="visibleAuth" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
+        <Dialog appendTo="body" :dismissableMask="false" :visible="visibleAuth" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
             <template #container="{ closeCallback }">
                 <div style="border-radius: 10px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color), rgba(33, 150, 243, 0) 30%)" >
                     <div class="w-[25rem] bg-surface-0 dark:bg-surface-900 py-10 px-2 sm:px-5" style="border-radius: 7px">
                         <form autocomplete="off" @submit.prevent="verifLoginForm">
                             <div class="text-center">
                                 <Avatar icon="pi pi-user" class="block mx-auto mb-4 bg-primary" size="xlarge" shape="circle" style="background-image: radial-gradient(circle at left top, var(--p-primary-400), var(--p-primary-700)); color:white;"/>
-                                <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">{{auth.user.name}}</div>
+                                <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">{{ auth.user?.name || '' }}</div>
                                 <span class="text-muted-color font-medium">Votre session a expiré. Veuillez saisir votre mot de passe pour continuer votre travail</span>
                             </div>
-                            <div class="flex flex-col px-8 py-8 gap-6 rounded-2xl">
+                            <div class="flex flex-col px-1 py-1 gap-6 rounded-2xl">
                                 <div class="inline-flex flex-col gap-2">
                                     <FloatLabel variant="on">
                                         <Password inputId="password1" v-model="passwordAuth" :toggleMask="true" fluid :feedback="false" size="large"/>
                                         <label for="password1" class="text-surface-900 dark:text-surface-0 font-medium text-xl">Mot de passe</label>
                                     </FloatLabel>
                                 </div>
-                                <div class="inline-flex flex-col gap-2">
+                                <div class="inline-flex flex-row gap-2">
+                                    <Button
+                                        size="large"
+                                        class="w-full"
+                                        severity="danger"
+                                        :disabled="loadingAuth"
+                                        label="Fermer"
+                                        @click="hideModalAuthSession"
+                                    />
                                     <Button
                                         size="large"
                                         type="submit"
@@ -57,15 +65,7 @@
                                         :loading="loadingAuth"
                                         severity="success"
                                         :disabled="loadingAuth"
-                                        :label="loadingAuth ? 'Vérification en cours...' : 'Verfier'"
-                                    />
-                                    <Button
-                                        size="large"
-                                        class="w-full"
-                                        severity="primary"
-                                        :disabled="loadingAuth"
-                                        label="Authentification"
-                                        @click="goToLogin"
+                                        :label="loadingAuth ? 'Vérification en cours...' : 'Connexion'"
                                     />
                                 </div>
                             </div>
@@ -74,12 +74,14 @@
                 </div>
             </template>
         </Dialog>
-        <!-- afficher modal pour les recherches produit -->
+        <!-- afficher modal pour les recherches -->
         <Dialog 
+            appendTo="body"
             v-model:visible="dialogUse.loading"
-            modal 
+            modal
+            :position="dialogUse.position"
             :style="{ width: dialogUse.width }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            :breakpoints="dialogUse.breakpoints" >
             <template #header>
                 <div class="flex items-center gap-2">
                     <Avatar v-if="dialogUse.icon" :icon="dialogUse.icon" class="mr-2" size="large" shape="circle" />
@@ -113,6 +115,7 @@
             </template>
         </Dialog>
         <Drawer
+            appendTo="body"
             v-model:visible="drawerUse.loading"
             :position="drawerUse.position"
             :dismissableMask="false"
@@ -176,7 +179,11 @@
                             </span>
                         </nav>
                     </div> -->
-                    <router-view></router-view>
+                    <router-view v-slot="{ Component }">
+                        <KeepAlive include="ProduitList">
+                            <component :is="Component" />
+                        </KeepAlive>
+                    </router-view>
                 </div>
             </div>
             <app-footer></app-footer>
@@ -193,7 +200,7 @@ import { useLayout } from '@/layout/composables/layout';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
-import { computed, ref, watch, onMounted, nextTick, watchEffect } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted, nextTick, watchEffect } from 'vue';
 import { useAuthStore } from '@/function/stores/auth';
 import { useSwalAlert } from '@/function/function/SwalAlert';
 import { usePreloaderStore } from '@/function/stores/preloader';
@@ -227,12 +234,15 @@ const loadingAuth = ref(false);
 let swalShown = false;
 let submitting = false;
 
-const goToLogin = () => {
+const hideModalAuthSession = () => {
     preloaderSpinner.showSpiner('Rédirection en cours...', () => {
         setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+            // window.location.reload();
+            visibleAuth.value = false;
+            auth.logoutLocal(true);
+        }, 500);
     });
+    
 };
 
 const verifLoginForm = async () => {
@@ -348,16 +358,22 @@ function bindOutsideClickListener() {
 
 function unbindOutsideClickListener() {
     if (outsideClickListener.value) {
-        document.removeEventListener('click', outsideClickListener);
-        outsideClickListener.value = null;
+        document.removeEventListener('click', outsideClickListener.value)
+        outsideClickListener.value = null
     }
 }
 
 function isOutsideClicked(event) {
-    const sidebarEl = document.querySelector('.layout-sidebar');
-    const topbarEl = document.querySelector('.layout-menu-button');
+    const sidebarEl = document.querySelector('.layout-sidebar')
+    const topbarEl = document.querySelector('.layout-topbar .layout-menu-button')
 
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+    const clickedSidebar =
+        sidebarEl && (sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target))
+
+    const clickedTopbar =
+        topbarEl && (topbarEl.isSameNode(event.target) || topbarEl.contains(event.target))
+
+    return !(clickedSidebar || clickedTopbar)
 }
 
 router.beforeEach((to, from, next) => {
@@ -400,30 +416,30 @@ watch( () => auth.expired, async (val) => {
 
     hideModal()
 
-    auth.logoutServer(false);
+    try {
+        auth.logoutServer(false);
 
-    const souvenir = getSecureItem('me');
+        const souvenir = getSecureItem('me');
 
-    if (souvenir) {
-        visibleAuth.value = true;
-    } else {
+        if (souvenir) {
+            visibleAuth.value = true;
+        } else {
 
-        const result = await showSwal({
-            icon: 'warning',
-            title: 'Session expirée',
-            text: 'Votre session a expiré. Veuillez vous reconnecter.',
-            confirmButtonText: 'Ok',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-        });
-
-        if (result.isConfirmed) {
-            preloaderSpinner.showSpiner('Rédirection en cours...', () => {
-                setTimeout(() => {
-                    auth.logoutLocal(true);
-                }, 1000);
+            const result = await showSwal({
+                icon: 'warning',
+                title: 'Session expirée',
+                text: 'Votre session a expiré. Veuillez vous reconnecter.',
+                confirmButtonText: 'Ok',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
             });
+
+            if (result.isConfirmed) {
+                auth.logoutLocal(true);
+            }
         }
+    } catch (error) {
+        console.error(error);
     }
 
     swalShown = false;
@@ -475,9 +491,25 @@ watch(() => route.path, (newPath) => {
     { immediate: true }
 );
 
+
+// logique pour fermer le menu sous l'icone user dans le top bar 
+const closeUserMenu = () => {
+    const panel = document.getElementById('user-menu-panel')
+    if (panel) {
+        panel.classList.add('hidden')
+    }
+}
+onMounted(() => {
+    window.addEventListener('close-topbar-menu', closeUserMenu)
+})
+onUnmounted(() => {
+    window.removeEventListener('close-topbar-menu', closeUserMenu)
+})
+
 </script>
 
 <style scoped>
+
 .cardPreloader {
   display: flex;
   justify-content: center;

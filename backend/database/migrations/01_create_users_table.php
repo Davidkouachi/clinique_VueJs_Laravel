@@ -56,11 +56,20 @@ return new class extends Migration
 
         Schema::create('refresh_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('device_id', 255)->nullable()->index();
-            $table->integer('user_id')->index();
-            $table->string('token', 255)->unique();
+
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            $table->uuid('device_id');
+
+            $table->string('token', 64); // SHA256
             $table->timestamp('expires_at');
+
+            $table->string('ip')->nullable();
+            $table->string('user_agent')->nullable();
+
             $table->timestamps();
+
+            $table->unique(['user_id', 'device_id']);
         });
 
         Schema::create('activity_logs', function (Blueprint $table) {
