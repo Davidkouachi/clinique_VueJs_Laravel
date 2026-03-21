@@ -24,7 +24,15 @@
                 </FloatLabel>
                 <!-- Téléphone -->
                 <FloatLabel variant="on">
-                    <InputMask id="telephone" v-model="telephone" size="large" class="w-full" mask="9999999999" inputmode="numeric" pattern="[0-9]*" :invalid="submitted && !telephone" variant="filled" />
+                    <InputText
+                        v-model="telephone"
+                        id="telephone"
+                        inputmode="tel"
+                        placeholder=""
+                        size="large" class="w-full"
+                        :invalid="submitted && !telephone" 
+                        variant="filled"
+                    />
                     <label for="telephone">Téléphone</label>
                 </FloatLabel>
                 <!-- Titre (DR / Professeur) -->
@@ -373,6 +381,28 @@ watch(() => props.data, (val) => {
 
   }
 }, { immediate: true })
+
+// Watch sur form.telephone
+watch(
+    () => telephone.value,
+    async (newVal, oldVal) => {
+        if (!newVal) return
+
+        // filtrer uniquement les chiffres
+        let filtered = number(newVal)
+
+        // forcer + au début
+        if (!filtered.startsWith('+')) {
+            filtered = '+' + filtered
+        }
+
+        // mettre à jour seulement si différent
+        if (filtered !== newVal) {
+            await nextTick()
+            telephone.value = filtered
+        }
+    }
+)
 
 </script>
 

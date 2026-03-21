@@ -32,12 +32,18 @@
             </template>
         </ConfirmDialog>
         <!-- afficher modal pour session expirer -->
-        <Dialog appendTo="body" :dismissableMask="false" :visible="visibleAuth" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
+        <Dialog 
+            appendTo="body" 
+            :dismissableMask="false" 
+            :visible="visibleAuth"
+            position="top"
+            pt:root:class="!border-0 !bg-transparent" 
+            pt:mask:class="backdrop-blur-sm bg-black/50 !pointer-events-auto">
             <template #container="{ closeCallback }">
                 <div style="border-radius: 10px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color), rgba(33, 150, 243, 0) 30%)" >
                     <div class="w-[25rem] bg-surface-0 dark:bg-surface-900 py-10 px-2 sm:px-5" style="border-radius: 7px">
                         <form autocomplete="off" @submit.prevent="verifLoginForm">
-                            <div class="text-center">
+                            <div class="text-center mb-3">
                                 <Avatar icon="pi pi-user" class="block mx-auto mb-4 bg-primary" size="xlarge" shape="circle" style="background-image: radial-gradient(circle at left top, var(--p-primary-400), var(--p-primary-700)); color:white;"/>
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">{{ auth.user?.name || '' }}</div>
                                 <span class="text-muted-color font-medium">Votre session a expiré. Veuillez saisir votre mot de passe pour continuer votre travail</span>
@@ -75,12 +81,11 @@
             </template>
         </Dialog>
         <!-- afficher modal pour les recherches -->
-        <Dialog 
-            appendTo="body"
+        <Dialog
             v-model:visible="dialogUse.loading"
             modal
             :position="dialogUse.position"
-            :style="{ width: dialogUse.width }"
+            :style="{ margin: '0 2rem', width: dialogUse.width }"
             :breakpoints="dialogUse.breakpoints" >
             <template #header>
                 <div class="flex items-center gap-2">
@@ -89,10 +94,10 @@
                 </div>
             </template>
             <component
-              v-if="dialogUse.component"
-              :is="dialogUse.component"
-              v-bind="dialogUse.props"
-              :ref="el => dialogUse.setComponentRef(el)"
+                v-if="dialogUse.component"
+                :is="dialogUse.component"
+                v-bind="dialogUse.props"
+                :ref="el => dialogUse.setComponentRef(el)"
             />
             <!-- <template #footer v-if="dialogUse.propsBtnFotter"> -->
             <template #footer v-if="dialogUse.propsBtnFotter.footerBtn?.length">

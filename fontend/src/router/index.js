@@ -26,6 +26,14 @@ const customPages = [
 ];
 
 const pgsPagesAdministration = [
+    // patient
+    { 
+        path: '/patients/formulaire', 
+        name: 'patient_nouveau', 
+        component: () => import('@/views/pages/pgs/administration/patient/nouveau/index.vue'), 
+        meta: { title: 'nouveau patient', requiresAuth: true } 
+    },
+
     // assurance
     { 
         path: '/assurances', 

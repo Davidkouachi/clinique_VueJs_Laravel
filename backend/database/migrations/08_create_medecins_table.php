@@ -23,7 +23,7 @@ return new class extends Migration
 
             // Contacts
             $table->string('email')->unique();
-            $table->string('telephone', 10)->unique();
+            $table->string('telephone')->unique();
 
             // Professionnel
             $table->foreignId('titre_id')

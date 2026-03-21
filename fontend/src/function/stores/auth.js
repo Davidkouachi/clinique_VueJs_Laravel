@@ -20,7 +20,7 @@ export const useAuthStore = defineStore("auth", {
         tempsRestant: ref(0),
         token: null,
         refreshToken: null,
-        inactivityRestant: ref(1 * 60),
+        inactivityRestant: ref(50 * 60),
         inactivityExpireAt: null,
         _refreshTriggered: false,
 
@@ -125,7 +125,7 @@ export const useAuthStore = defineStore("auth", {
                 const res = await axios.post("/api/refresh", {
                     refresh_token: this.refreshToken,
                     device_id: this.device_id,
-                    user_id: this.user.id
+                    // user_id: this.user.id
                 }, { _isRefresh: true });
 
                 const newToken = res.data.access_token;
@@ -192,7 +192,7 @@ export const useAuthStore = defineStore("auth", {
         // ------------------------------------------------------
         startInactivityTimer() {
             this.clearInactivityTimer();
-            this.inactivityRestant = 1 * 60;
+            this.inactivityRestant = 50 * 60;
             this.inactivityExpireAt = Date.now() + this.inactivityRestant * 1000;
 
             const updateActivity = () => this.resetInactivityTimer();
@@ -214,8 +214,8 @@ export const useAuthStore = defineStore("auth", {
 
         resetInactivityTimer() {
             if (this.user && !this.expired) {
-                this.inactivityExpireAt = Date.now() + 1 * 60 * 1000;
-                this.inactivityRestant = 1 * 60;
+                this.inactivityExpireAt = Date.now() + 50 * 60 * 1000;
+                this.inactivityRestant = 50 * 60;
             }
         },
 

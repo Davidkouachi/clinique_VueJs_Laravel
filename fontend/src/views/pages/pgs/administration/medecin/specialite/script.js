@@ -8,6 +8,7 @@ import { useAuthStore } from '@/function/stores/auth';
 import { formaDateHeure } from '@/function/services/format';
 import insertOption from './insertOption.vue'
 import { useDrawerStore } from '@/function/stores/drawer'
+import { useDialogStore } from '@/function/stores/dialog'
 
 export function useScript() {
 
@@ -16,17 +17,23 @@ export function useScript() {
 	const preloaderSpinner = usePreloaderSpinner();
 	const confirm = useConfirm();
 	const drawerUse = useDrawerStore();
+	const dialogUse = useDialogStore();
 
 	const lists = ref([]);
 	const loading = ref(true);
 	const loadingBtn = ref(true);
 	const filters = ref({});
+	const filtre = ref('');
 	const showModal = ref(false);
 	const listSelected = ref({});
 	const globalFilter = ref('');
 	const dt = ref(null);
 	const menuRefs = ref({});
 	const selectedLists = ref([]);
+
+	const first = ref(0);
+	const limit = ref(10);
+	const totalLists = ref(0);
 
 	// ------------------------ filtre et api -----------------------------
 
@@ -44,11 +51,23 @@ export function useScript() {
 	    // Placeholder pendant le chargement
 	    lists.value = new Array(10).fill({});
 
+	    if (loaderBtn) filtre.value = '';
+
 	    try {
-	        const res = await axios.get('/api/v1/api_get_specialite');
+	    	const page = Math.floor(first.value / limit.value) + 1;
+
+	        const res = await axios.get('/api/v1/api_get_specialite',{
+	        	params: {
+	                page: page,
+	                limit: limit.value,
+	                search: loaderBtn ? null : filtre.value
+	            }
+	        });
 
 	        // Vérifie si la réponse est vide ou status 204
 	        const data = res.data?.data ?? [];
+
+	        totalLists.value = res.data.pagination.total;
 
 	        if (!data.length) {
 	            lists.value = [];
@@ -77,6 +96,14 @@ export function useScript() {
 	        initFilters(false);
 	    }
 	};
+
+	// GESTION CHANGEMENT PAGE
+	function onPageChange(event) {
+	    first.value = event.first;
+	    limit.value = event.rows;
+
+	    fetchLists();
+	}
 
 	const updateRowById = (id, newData) => {
 	  	lists.value = lists.value.map(item =>
@@ -129,7 +156,7 @@ export function useScript() {
 	    icon: 'pi pi-times',
 	    variant: 'outlined',
 	    severity: 'danger',
-	    command: () => drawerUse.hide()
+	    command: () => dialogUse.hide()
 	  },
 	  {
 	    id: 'DrawerBtn',
@@ -137,7 +164,7 @@ export function useScript() {
 	    loadingLabel: 'Opération en cours...',
 	    icon: 'pi pi-check',
 	    severity: 'primary',
-	    command: () => drawerUse.callComponentMethod('submit')
+	    command: () => dialogUse.callComponentMethod('submit')
 	  }
 	]
 
@@ -145,10 +172,10 @@ export function useScript() {
 
 	  const isEdit = !!data
 
-	  drawerUse.show(
+	  dialogUse.show(
 	    isEdit ? "Mise à jour" : "Nouvelle spécialité",
 	    isEdit ? "pi pi-pencil" : "pi pi-plus",
-	    "right",
+	    "center",
 	    "30rem",
 	    markRaw(insertOption),
 	    {
@@ -273,6 +300,7 @@ export function useScript() {
 	    loading,
 	    loadingBtn,
 	    filters,
+	    filtre,
 	    globalFilter,
 	    dt,
 	    menuRefs,
@@ -282,6 +310,10 @@ export function useScript() {
 	    currentPage,
 	    totalRows,
 	    totalPages,
+	    onPageChange,
+	    first,
+	    limit,
+	    totalLists,
 
 	    // ------------------ Sélection
 	    selectedLists,

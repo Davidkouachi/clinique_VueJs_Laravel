@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('uid')->unique()->index();
             $table->string('code')->unique()->index();
-            $table->string('nom')->unique();
+            $table->string('nom')->unique()->index();
+            $table->string('telephone1')->unique()->index();
+            $table->string('telephone2')->nullable()->index();
+            $table->string('email')->nullable();
+            $table->integer('type')->index();
+            $table->string('adresse');
             $table->boolean('statut')->default(true);
             $table->timestamps();
         });

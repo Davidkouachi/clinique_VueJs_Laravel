@@ -28,7 +28,16 @@ class AssuranceService
             // 🔎 Doublons
             $duplicate = DB::table('assurances')
                 ->where(function ($q) use ($data) {
-                    $q->where('nom', $data['nom']);
+                    $q->where('nom', $data['nom'])
+                    ->orWhere('telephone1', $data['telephone1']);
+
+                    if (!empty($data['email'])) {
+                        $q->orWhere('email', $data['email']);
+                    }
+
+                    if (!empty($data['telephone2'])) {
+                        $q->orWhere('telephone2', $data['telephone2']);
+                    }
                 })
                 ->when($isUpdate, fn ($q) => $q->where('uid', '!=', $uid))
                 ->first();
@@ -45,6 +54,11 @@ class AssuranceService
             // Données médecin
             $medecinPayload = [
                 'nom'           => $data['nom'],
+                'email'         => $data['email'],
+                'telephone1'    => $data['telephone1'],
+                'telephone2'    => $data['telephone2'],
+                'type'          => $data['type'],
+                'adresse'       => $data['adresse'],
                 'updated_at'    => now(),
             ];
 

@@ -46,7 +46,7 @@
             <!-- Header -->
             <div class="flex justify-between items-start">
                 <div class="text-lg font-semibold tracking-wider">
-                    My Bank 
+                    BNI 
                     <button @click="toggleVisibility" class="mx-2">
                         <i :class="showData ? 'pi pi-eye-slash' : 'pi pi-eye'" class="text-white"></i>
                     </button>
@@ -76,14 +76,14 @@
             <!-- Infos -->
             <div class="mt-2 flex justify-between items-end">
                 <div>
-                    <div class="text-xs opacity-70">Card Holder</div>
+                    <div class="text-xs opacity-70">Titulaire</div>
                     <div class="font-semibold uppercase">
                         {{ showData ? 'David Kouachi' : '*************' }}
                     </div>
                 </div>
 
                 <div>
-                    <div class="text-xs opacity-70">Expires</div>
+                    <div class="text-xs opacity-70">Expire</div>
                     <div class="font-semibold">
                         {{ showData ? '12/28' : '**/**' }}
                     </div>
@@ -93,9 +93,9 @@
             <!-- Balance -->
             <div class="flex justify-between items-end mt-2">
                 <div>
-                    <div class="text-sm opacity-80">Balance</div>
+                    <div class="text-sm opacity-80">Compte</div>
                     <div class="text-2xl font-bold">
-                        {{ showData ? '$673,742.90' : '******' }}
+                        {{ showData ? '1.000.000.000 Fcfa' : '******' }}
                     </div>
                 </div>
 

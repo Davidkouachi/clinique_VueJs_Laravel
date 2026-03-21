@@ -14,7 +14,7 @@
                 ref="dt"
                 :value="lists"
                 :rows="rowsPerPage"
-                :paginator="true"
+                :paginator="false"
                 @page="onPage"
                 dataKey="id"
                 :rowHover="true"
@@ -36,15 +36,27 @@
 
                 <template #header>
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-                        <FloatLabel variant="in" class="flex-1">
-                            <InputText 
-                                id="in_label" 
-                                v-if="filters.global" 
-                                v-model="filters.global.value" 
-                                autocomplete="off" 
-                            />
-                            <label for="in_label">Recherche...</label>
-                        </FloatLabel>
+                        <div class="flex flex-row gap-2" >
+                            <FloatLabel variant="on" class="flex-1">
+                                <!-- <InputText 
+                                    id="in_label" 
+                                    v-if="filters.global" 
+                                    v-model="filters.global.value" 
+                                    autocomplete="off"
+                                /> -->
+                                <InputText 
+                                    id="in_label" 
+                                    v-model="filtre" 
+                                    autocomplete="off"
+                                />
+                                <label for="in_label">Recherche...</label>
+                            </FloatLabel>
+                            <Button 
+                                icon="pi pi-search" 
+                                label="" 
+                                @click="fetchLists()" 
+                                severity="success"/>
+                        </div>
                         <div class="flex flex-wrap gap-2 mt-2 md:mt-0">
                             <!-- <Button type="button" icon="pi pi-filter-slash" label="Filtre" @click="initFilters" severity="primary"/> -->
                             <Button type="button" icon="pi pi-refresh" @click="fetchLists(true)" severity="warn" :disabled="loadingBtn" :loading="loadingBtn" :label="loadingBtn ? 'en cours...' : 'Actualiser'"/>
@@ -62,7 +74,9 @@
                 <Column sortable field="id" header="N°" style="width:5%">
                     <template #body="{ index }">
                         <Skeleton v-if="loading" width="2rem" height="1rem"/>
-                        <span v-else>{{ (currentPage - 1) * rowsPerPage + index + 1 }}</span>
+                        <span v-else>
+                            {{ first + index + 1 }}
+                        </span>
                     </template>
                 </Column>
 
@@ -151,6 +165,15 @@
                 </Column>
 
                 <template #footer>
+                    <Paginator
+                        :rows="limit"
+                        :totalRecords="totalLists"
+                        :first="first"
+                        @page="onPageChange"
+                        :rowsPerPageOptions="[10, 20, 50]"
+                        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                        class="mt-6"
+                    />
                     <div class="flex justify-between items-center p-3">
                         <span>{{ totalRows.toLocaleString() }} lignes trouvées</span>
 
@@ -188,6 +211,7 @@ const {
         loading,
         loadingBtn,
         filters,
+        filtre,
         globalFilter,
         dt,
         menuRefs,
@@ -197,6 +221,10 @@ const {
         currentPage,
         totalRows,
         totalPages,
+        onPageChange,
+        first,
+        limit,
+        totalLists,
 
         // ------------------ Sélection
         selectedLists,

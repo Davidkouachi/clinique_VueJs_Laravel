@@ -53,7 +53,7 @@ class MedecinController extends Controller
             'nom'            => 'required|string|max:100',
             'prenom'         => 'required|string|max:100',
             'email'          => 'required|email',
-            'telephone'      => 'required|string|max:10',
+            'telephone'      => 'required|string',
             'titre_id'       => 'required|exists:medecintitres,id',
             'specialite_id'  => 'required|exists:specialites,id',
             'numero_ordre'   => 'nullable|string|max:50',
@@ -202,9 +202,53 @@ class MedecinController extends Controller
         }
     }
 
-    public function getAllmedecin()
+    // public function getAllmedecin()
+    // {
+    //     $data = DB::table('medecins')
+    //         ->leftJoin('users', 'medecins.uid', '=', 'users.uid')
+    //         ->leftJoin('specialites', 'medecins.specialite_id', '=', 'specialites.id')
+    //         ->leftJoin('medecintitres', 'medecins.titre_id', '=', 'medecintitres.id')
+    //         ->select(
+    //             'medecins.id',
+    //             'medecins.uid',
+    //             'medecins.code',
+    //             'medecins.nom',
+    //             'medecins.prenom',
+    //             'medecins.email',
+    //             'medecins.telephone',
+    //             'medecins.numero_ordre',
+    //             'medecins.statut',
+    //             'medecins.specialite_id',
+    //             'medecins.titre_id',
+    //             'specialites.nom as specialite',
+    //             'medecintitres.nom as titre',
+    //             'medecintitres.signe',
+    //             'users.login',
+    //             'medecins.created_at',
+    //             DB::raw("
+    //                 CASE medecins.statut
+    //                     WHEN 1 THEN 'Actif'
+    //                     WHEN 0 THEN 'Inactif'
+    //                     ELSE 'Inconnu'
+    //                 END as statut_label
+    //             "),
+    //         )
+    //         ->orderBy('medecins.created_at', 'desc')
+    //         ->orderBy('medecins.id', 'desc')
+    //         ->get();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $data ?? []
+    //     ], 200);
+    // }
+
+    public function getAllmedecin(Request $request)
     {
-        $data = DB::table('medecins')
+        $limit = $request->get('limit', 10);
+        $page = $request->get('page', 1);
+
+        $query = DB::table('medecins')
             ->leftJoin('users', 'medecins.uid', '=', 'users.uid')
             ->leftJoin('specialites', 'medecins.specialite_id', '=', 'specialites.id')
             ->leftJoin('medecintitres', 'medecins.titre_id', '=', 'medecintitres.id')
@@ -231,16 +275,39 @@ class MedecinController extends Controller
                         WHEN 0 THEN 'Inactif'
                         ELSE 'Inconnu'
                     END as statut_label
-                "),
+                ")
             )
             ->orderBy('medecins.created_at', 'desc')
-            ->orderBy('medecins.id', 'desc')
-            ->get();
+            ->orderBy('medecins.id', 'desc');
+
+        if ($request->filled('search')) {
+
+            $terms = explode(' ', trim($request->search));
+
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($sub) use ($term) {
+                        $sub->where('medecins.nom', 'like', "%{$term}%")
+                            ->orWhere('medecins.prenom', 'like', "%{$term}%")
+                            ->orWhere('medecins.code', 'like', "%{$term}%")
+                            ->orWhere('specialites.nom', 'like', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+        $data = $query->paginate($limit, ['*'], 'page', $page);
 
         return response()->json([
             'success' => true,
-            'data' => $data ?? []
-        ], 200);
+            'data' => $data->items(),
+            'pagination' => [
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total()
+            ]
+        ]);
     }
 
     // ------------------------------------------------------------
@@ -335,9 +402,12 @@ class MedecinController extends Controller
         }
     }
 
-    public function getAllspecialite()
+    public function getAllspecialite(Request $request)
     {
-        $data = DB::table('specialites')
+        $limit = $request->get('limit', 10);
+        $page = $request->get('page', 1);
+
+        $query = DB::table('specialites')
             ->leftJoin('medecins', 'specialites.id', '=', 'medecins.specialite_id')
             ->select(
                 'specialites.id',
@@ -360,13 +430,33 @@ class MedecinController extends Controller
                 'specialites.nom',
                 'specialites.statut',
                 'specialites.created_at',
-            )
-            ->get();
+            );
+
+        if ($request->filled('search')) {
+
+            $terms = explode(' ', trim($request->search));
+
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($sub) use ($term) {
+                        $sub->where('specialites.nom', 'like', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+        $data = $query->paginate($limit, ['*'], 'page', $page);
 
         return response()->json([
             'success' => true,
-            'data' => $data ?? []
-        ], 200);
+            'data' => $data->items(),
+            'pagination' => [
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total()
+            ]
+        ]);
     }
 
     public function updatSpecialiteStatut(int $id = null, int $mode = null )

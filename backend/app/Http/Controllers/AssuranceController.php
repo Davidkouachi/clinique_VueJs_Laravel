@@ -51,7 +51,11 @@ class AssuranceController extends Controller
 
         $rules = [
             'nom'            => 'required|string|max:100',
-            'statut'         => 'nullable|boolean',
+            'email'          => 'nullable|email',
+            'telephone1'     => 'required|string',
+            'telephone2'     => 'nullable|string',
+            'type'           => 'required|integer',
+            'adresse'        => 'required|string|max:100',
         ];
 
         Log::info($uid);
@@ -113,8 +117,8 @@ class AssuranceController extends Controller
                     'id',
                     'uid',
                     'code',
-                    'nom',
                     'statut',
+                    'type',
                     'created_at',
                     DB::raw("
                         CASE statut
@@ -123,9 +127,14 @@ class AssuranceController extends Controller
                             ELSE 'Inconnu'
                         END as statut_label
                     "),
+                    DB::raw("
+                        CASE type
+                            WHEN 1 THEN 'Privé'
+                            WHEN 0 THEN 'Public'
+                            ELSE 'Inconnu'
+                        END as type_label
+                    "),
                 )
-                ->orderBy('created_at', 'desc')
-                ->orderBy('id', 'desc')
                 ->first();
 
             return response()->json([
@@ -160,6 +169,11 @@ class AssuranceController extends Controller
                 'assurances.uid',
                 'assurances.code',
                 'assurances.nom',
+                'assurances.email',
+                'assurances.telephone1',
+                'assurances.telephone2',
+                'assurances.type',
+                'assurances.adresse',
                 'assurances.statut',
                 'assurances.created_at',
                 DB::raw("
@@ -168,6 +182,13 @@ class AssuranceController extends Controller
                         WHEN 0 THEN 'Inactif'
                         ELSE 'Inconnu'
                     END as statut_label
+                "),
+                DB::raw("
+                    CASE assurances.type
+                        WHEN 1 THEN 'Privé'
+                        WHEN 0 THEN 'Public'
+                        ELSE 'Inconnu'
+                    END as type_label
                 "),
             )
             ->orderBy('assurances.created_at', 'desc')

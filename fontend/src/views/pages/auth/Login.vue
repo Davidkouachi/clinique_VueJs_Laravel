@@ -1,43 +1,62 @@
 <template>
     <FloatingConfigurator />
-    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden" :style="{ backgroundImage: `url(${backgroundImage})` }">
-        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:0;"></div>
-        <div class="flex flex-col items-center justify-center" style="position:relative; z-index:1;">
-            <div style="border-radius: 10px; padding: 0.3rem; background: linear-gradient(180deg, #fb923c 10%, rgba(33, 150, 243, 0) 30%)" >
-                <div class="w-full bg-surface-0 dark:bg-surface-900 py-10 px-8 sm:px-10" style="border-radius: 7px">
-                    <form @submit.prevent="connectLoginForm" autocomplete="off">
-                        <div class="text-center mb-8">
-                            <img height="130" width="130" src="@/assets/img/logo.png" class="mb-8 w-23 shrink-0 mx-auto" alt="Logo">
-                            <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">Bienvenue ! 👋</div>
-                            <span class="text-muted-color font-medium">Plateforme de gestion santé</span>
-                        </div>
-                        <div class="flex flex-col gap-6 rounded-2xl">
-                            <FloatLabel variant="on">                                
-                                <InputText id="login1" type="text" v-model="login" size="large" class="w-full"/>
-                                <label for="login1" class="text-surface-900 dark:text-surface-0 font-medium text-xl">Login</label>
-                            </FloatLabel>
-                            <FloatLabel variant="on">
-                                <Password inputId="password1" v-model="password" :toggleMask="true" fluid :feedback="false" size="large"/>
-                                <label for="password1" class="text-surface-900 dark:text-surface-0 font-medium text-xl">Mot de passe</label>
-                            </FloatLabel>
-                            <div class="flex items-center justify-between mt-2 mb-2 gap-8">
-                                <div class="flex items-center">
-                                    <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
-                                    <label for="rememberme1">Se souvenir de moi</label>
-                                </div>
-                                <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" @click="openMdp()" >Mot de passe oublié?</span>
+
+    <div class="relative flex items-center justify-center overflow-hidden h-[100dvh] w-[100vw]">
+        <!-- Overlay gradient médical -->
+        <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-green-900/40 backdrop-blur-[3px]"></div>
+        <!-- Container principal -->
+        <div class="relative z-10 w-full px-4 flex items-center justify-center">
+            <!-- Carte -->
+            <div class="w-full max-w-md animate-fade-in">
+                <div class="rounded-3xl shadow-2xl bg-white/90 dark:bg-surface-900/90 backdrop-blur-xl p-8 border border-white/20">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <div class="flex justify-center mb-4">
+                            <div class="p-3 rounded-2xl bg-green-500/10">
+                                <img src="@/assets/img/logo.png" class="w-16 h-16" alt="Logo" />
                             </div>
-                            <Button
-                                size="large"
-                                type="submit"
-                                class="w-full"
-                                :loading="loading"
-                                severity="success"
-                                :disabled="loading"
-                                :label="loading ? 'Connexion en cours...' : 'Connexion'"
-                            />
                         </div>
+                        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
+                            Espace Clinique
+                        </h2>
+                        <p class="text-gray-500 text-sm mt-2">
+                            Gestion intelligente des patients & rendez-vous
+                        </p>
+                    </div>
+                    <!-- Form -->
+                    <form @submit.prevent="connectLoginForm" class="space-y-5">
+                        <!-- Login -->
+                        <FloatLabel variant="on">
+                            <InputText id="login1" v-model="login" class="w-full" />
+                            <label for="login1">Identifiant</label>
+                        </FloatLabel>
+                        <!-- Password -->
+                        <FloatLabel variant="on">
+                            <Password inputId="password1" v-model="password" :toggleMask="true" fluid :feedback="false" />
+                            <label for="password1">Mot de passe</label>
+                        </FloatLabel>
+                        <!-- Options -->
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center">
+                                <Checkbox v-model="checked" binary class="mr-2" />
+                                <label class="text-gray-600 dark:text-gray-300">
+                                    Se souvenir
+                                </label>
+                            </div>
+                            <span class="cursor-pointer text-green-600 hover:underline font-medium" @click="openMdp()">
+                                Mot de passe oublié ?
+                            </span>
+                        </div>
+                        <!-- Bouton -->
+                        <Button type="submit" class="w-full !rounded-xl !py-3 !text-base" :loading="loading" severity="success" :disabled="loading" :label="loading ? 'Connexion...' : 'Se connecter'" />
                     </form>
+                    <!-- Footer -->
+                    <div class="text-center mt-6 text-xs text-gray-400">
+                        © 2026 - Plateforme de Gestion Santé
+                    </div>
+                    <div class="text-center mt-1 text-xs text-gray-400">
+                        Dévéloppé par DAVID Kouachi
+                    </div>
                 </div>
             </div>
         </div>
@@ -516,9 +535,6 @@ watch(() => activeStep.value, (newStep) => {
     margin-right: 1rem;
 }
 
-
-
-
 .custom-otp-input {
     width: 48px;
     height: 48px;
@@ -553,5 +569,20 @@ watch(() => activeStep.value, (newStep) => {
     border-right-width: 1px;
     border-right-style: solid;
     border-color: var(--p-inputtext-border-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
 }
 </style>

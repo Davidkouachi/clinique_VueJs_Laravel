@@ -26,6 +26,7 @@ export function useScript() {
 	const loading = ref(true);
 	const loadingBtn = ref(true);
 	const filters = ref({});
+	const filtre = ref('');
 	const showModal = ref(false);
 	const showModalView = ref(false);
 	const listSelected = ref({});
@@ -33,6 +34,10 @@ export function useScript() {
 	const dt = ref(null);
 	const menuRefs = ref({});
 	const selectedLists = ref([]);
+
+	const first = ref(0);
+	const limit = ref(10);
+	const totalLists = ref(0);
 
 	// ------------------------ filtre et api -----------------------------
 
@@ -49,11 +54,25 @@ export function useScript() {
 	    // Placeholder pendant le chargement
 	    lists.value = new Array(10).fill({});
 
+	    if (loaderBtn) filtre.value = '';
+
 	    try {
-	        const res = await axios.get('/api/v1/api_get_medecin',{ signal: controller.signal });
+	        // const res = await axios.get('/api/v1/api_get_medecin',{ signal: controller.signal });
+
+	        const page = Math.floor(first.value / limit.value) + 1;
+
+	        const res = await axios.get('/api/v1/api_get_medecin', {
+	            params: {
+	                page: page,
+	                limit: limit.value,
+	                search: loaderBtn ? null : filtre.value
+	            }
+	        });
 
 	        // Vérifie si la réponse est vide ou status 204
 	        const data = res.data?.data ?? [];
+
+	        totalLists.value = res.data.pagination.total;
 
 	        if (!data.length) {
 	            lists.value = [];
@@ -91,6 +110,14 @@ export function useScript() {
 	        initFilters(false);
 	    }
 	};
+
+	// GESTION CHANGEMENT PAGE
+	function onPageChange(event) {
+	    first.value = event.first;
+	    limit.value = event.rows;
+
+	    fetchLists();
+	}
 
 	const updateRowByUid = (uid, newData) => {
 	  	lists.value = lists.value.map(item =>
@@ -289,6 +316,7 @@ export function useScript() {
 	    loading,
 	    loadingBtn,
 	    filters,
+	    filtre,
 	    globalFilter,
 	    dt,
 	    menuRefs,
@@ -298,6 +326,10 @@ export function useScript() {
 	    currentPage,
 	    totalRows,
 	    totalPages,
+	    onPageChange,
+	    first,
+	    limit,
+	    totalLists,
 
 	    // ------------------ Sélection
 	    selectedLists,

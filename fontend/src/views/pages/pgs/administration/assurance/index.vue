@@ -94,6 +94,36 @@
                     </template>
                 </Column>
 
+                <Column sortable field="email" header="Email" style="min-width: 10rem">
+                    <template #body="{ data }">
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
+                        <span v-else>{{ data?.email ?? '-' }}</span>
+                    </template>
+                </Column>
+
+                <Column sortable field="telephone1" header="Contact" style="min-width: 10rem">
+                    <template #body="{ data }">
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
+                        <span v-else>
+                            {{ data?.telephone1 ?? '-' }} 
+                            {{ data?.telephone2 ? ' / ' + data.telephone2 : '' }}
+                        </span>
+                    </template>
+                </Column>
+
+                <Column sortable field="type" header="Type" style="min-width: 10rem">
+                    <template #body="{ data }">
+                        <Skeleton v-if="loading" width="8rem" height="1rem"/>
+                        <span
+                            v-else
+                            :class="typeClass(data?.type)"
+                            class="font-bold px-2 py-1 rounded text-sm"
+                        >
+                          {{ data?.type_label ?? '-' }}
+                        </span>
+                    </template>
+                </Column>
+
                 <Column sortable field="statut" header="Statut" style="min-width: 10rem">
                     <template #body="{ data }">
                         <Skeleton v-if="loading" width="8rem" height="1rem"/>
@@ -119,7 +149,6 @@
                         <Skeleton v-if="loading" width="6rem" height="2rem" />
                         <div class="flex flex-row gap-1" v-else >
                             <Button
-                                rounded
                                 variant=""
                                 size="normal"
                                 severity="info" 
@@ -130,7 +159,6 @@
                                 v-if="data.statut === 1"
                             />
                             <Button
-                                rounded
                                 variant=""
                                 size="normal"
                                 type="button" 
@@ -165,11 +193,22 @@ import { useScript } from './script'
 const actionClass = (action) => {
     switch (action) {
         case 1:
-            return 'bg-green-500 text-white'
+            return 'bg-green-600 text-white'
         case 0:
-            return 'bg-red-500 text-white'
+            return 'bg-red-600 text-white'
         default:
-            return 'bg-gray-500 text-white'
+            return 'bg-gray-600 text-white'
+    }
+}
+
+const typeClass = (action) => {
+    switch (action) {
+        case 1:
+            return 'bg-blue-600 text-white'
+        case 0:
+            return 'bg-green-600 text-white'
+        default:
+            return 'bg-gray-600 text-white'
     }
 }
 

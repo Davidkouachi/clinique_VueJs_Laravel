@@ -46,7 +46,7 @@ export const model = ref([
                 icon: 'pi pi-fw pi-users',
                 permissions: ['administrateur','user'],
                 items: [
-                    { label: 'Nouveau patient', icon: 'pi pi-plus', to: '/patients/create', permissions: ['administrateur','user'] },
+                    { label: 'Nouveau patient', icon: 'pi pi-plus', to: '/patients/formulaire', permissions: ['administrateur','user'] },
                     { label: 'Liste des patients', icon: 'pi pi-list', to: '/patients', permissions: ['administrateur','user'] },
                     { label: 'Dossiers médicaux', icon: 'pi pi-folder', to: '/patients/dossiers', permissions: ['administrateur','medecin'] },
                 ]
