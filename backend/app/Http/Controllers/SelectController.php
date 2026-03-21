@@ -68,4 +68,14 @@ class SelectController extends Controller
         ], 200);
     }
 
+    public function select_assurances()
+    {
+        $data = DB::table('assurances')->select('id', 'nom')->where('statut', true)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
 }
