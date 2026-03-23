@@ -61,16 +61,16 @@ app.use(PrimeVue, {
         choose: 'Choisir',
         upload: 'Téléverser',
         cancel: 'Annuler',
-        dayNames: ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'],
-        dayNamesShort: ['dim','lun','mar','mer','jeu','ven','sam'],
+        dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+        dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
         dayNamesMin: ['D','L','M','M','J','V','S'],
         monthNames: [
-            'janvier','février','mars','avril','mai','juin',
-            'juillet','août','septembre','octobre','novembre','décembre'
+            'Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
         ],
         monthNamesShort: [
-            'janv','févr','mars','avr','mai','juin',
-            'juil','août','sept','oct','nov','déc'
+            'Janv','Févr','Mars','Avr','Mai','Juin',
+            'Juil','Août','Sept','Oct','Nov','Déc'
         ],
         today: 'Aujourd’hui',
         weekHeader: 'Sem',

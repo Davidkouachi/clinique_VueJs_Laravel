@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?PowerDesigner AppLocale="UTF16" ID="{6DBC831E-35A3-4D91-B602-E67344423B02}" Label="" LastModificationDate="1774026213" Name="clinique_mcd" Objects="60" Symbols="58" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" signature="CDM_DATA_MODEL_XML" version="15.1.0.2850"?>
+<?PowerDesigner AppLocale="UTF16" ID="{6DBC831E-35A3-4D91-B602-E67344423B02}" Label="" LastModificationDate="1774026919" Name="clinique_mcd" Objects="63" Symbols="61" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" signature="CDM_DATA_MODEL_XML" version="15.1.0.2850"?>
 <!-- Veuillez ne pas modifier ce fichier -->
 
 <Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
@@ -12,7 +12,7 @@
 <a:Code>CLINIQUE_MCD</a:Code>
 <a:CreationDate>1769445019</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1774026213</a:ModificationDate>
+<a:ModificationDate>1774026919</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <a:PackageOptionsText>[FolderOptions]
 
@@ -417,7 +417,7 @@ NameToCode=No</a:ModelOptionsText>
 <a:Code>DIAGRAMME_1</a:Code>
 <a:CreationDate>1769445024</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1774026213</a:ModificationDate>
+<a:ModificationDate>1774026919</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <a:DisplayPreferences>[DisplayPreferences]
 
@@ -1065,26 +1065,6 @@ Shadow=0</a:DisplayPreferences>
 </c:Object>
 </o:ExtendedDependencySymbol>
 <o:ExtendedDependencySymbol Id="o48">
-<a:CreationDate>1769513149</a:CreationDate>
-<a:ModificationDate>1769513304</a:ModificationDate>
-<a:Rect>((-66322,12434), (-53422,13034))</a:Rect>
-<a:ListOfPoints>((-66322,12734),(-53422,12734))</a:ListOfPoints>
-<a:CornerStyle>2</a:CornerStyle>
-<a:ArrowStyle>8</a:ArrowStyle>
-<a:LineColor>4194432</a:LineColor>
-<a:ShadowColor>12632256</a:ShadowColor>
-<a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
-<c:SourceSymbol>
-<o:EntitySymbol Ref="o49"/>
-</c:SourceSymbol>
-<c:DestinationSymbol>
-<o:EntitySymbol Ref="o50"/>
-</c:DestinationSymbol>
-<c:Object>
-<o:ExtendedDependency Ref="o51"/>
-</c:Object>
-</o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o52">
 <a:CreationDate>1769513261</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:Rect>((-39247,-10391), (-35047,1559))</a:Rect>
@@ -1098,13 +1078,13 @@ Shadow=0</a:DisplayPreferences>
 <o:EntitySymbol Ref="o6"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o53"/>
+<o:EntitySymbol Ref="o49"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o54"/>
+<o:ExtendedDependency Ref="o50"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o55">
+<o:ExtendedDependencySymbol Id="o51">
 <a:CreationDate>1769513264</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:Rect>((-33172,-10391), (-29197,1634))</a:Rect>
@@ -1118,13 +1098,13 @@ Shadow=0</a:DisplayPreferences>
 <o:EntitySymbol Ref="o6"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o56"/>
+<o:EntitySymbol Ref="o52"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o57"/>
+<o:ExtendedDependency Ref="o53"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o58">
+<o:ExtendedDependencySymbol Id="o54">
 <a:CreationDate>1769513669</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:Rect>((-26497,-12438), (-15997,-11838))</a:Rect>
@@ -1135,7 +1115,27 @@ Shadow=0</a:DisplayPreferences>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
 <c:SourceSymbol>
-<o:EntitySymbol Ref="o56"/>
+<o:EntitySymbol Ref="o52"/>
+</c:SourceSymbol>
+<c:DestinationSymbol>
+<o:EntitySymbol Ref="o55"/>
+</c:DestinationSymbol>
+<c:Object>
+<o:ExtendedDependency Ref="o56"/>
+</c:Object>
+</o:ExtendedDependencySymbol>
+<o:ExtendedDependencySymbol Id="o57">
+<a:CreationDate>1769515383</a:CreationDate>
+<a:ModificationDate>1774026562</a:ModificationDate>
+<a:Rect>((8948,-9632), (21173,-4532))</a:Rect>
+<a:ListOfPoints>((8948,-4532),(21173,-4532),(21173,-9632))</a:ListOfPoints>
+<a:CornerStyle>2</a:CornerStyle>
+<a:ArrowStyle>8</a:ArrowStyle>
+<a:LineColor>4194432</a:LineColor>
+<a:ShadowColor>12632256</a:ShadowColor>
+<a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
+<c:SourceSymbol>
+<o:EntitySymbol Ref="o58"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
 <o:EntitySymbol Ref="o59"/>
@@ -1145,10 +1145,10 @@ Shadow=0</a:DisplayPreferences>
 </c:Object>
 </o:ExtendedDependencySymbol>
 <o:ExtendedDependencySymbol Id="o61">
-<a:CreationDate>1769515383</a:CreationDate>
-<a:ModificationDate>1769516517</a:ModificationDate>
-<a:Rect>((8948,-10682), (12473,-4532))</a:Rect>
-<a:ListOfPoints>((8948,-4532),(12473,-4532),(12473,-10682))</a:ListOfPoints>
+<a:CreationDate>1769516851</a:CreationDate>
+<a:ModificationDate>1774025922</a:ModificationDate>
+<a:Rect>((-70481,-54979), (-57206,-54379))</a:Rect>
+<a:ListOfPoints>((-70481,-54679),(-57206,-54679))</a:ListOfPoints>
 <a:CornerStyle>2</a:CornerStyle>
 <a:ArrowStyle>8</a:ArrowStyle>
 <a:LineColor>4194432</a:LineColor>
@@ -1165,46 +1165,6 @@ Shadow=0</a:DisplayPreferences>
 </c:Object>
 </o:ExtendedDependencySymbol>
 <o:ExtendedDependencySymbol Id="o65">
-<a:CreationDate>1769515389</a:CreationDate>
-<a:ModificationDate>1769515389</a:ModificationDate>
-<a:Rect>((9248,-3857), (18773,-3257))</a:Rect>
-<a:ListOfPoints>((9248,-3557),(18773,-3557))</a:ListOfPoints>
-<a:CornerStyle>2</a:CornerStyle>
-<a:ArrowStyle>8</a:ArrowStyle>
-<a:LineColor>4194432</a:LineColor>
-<a:ShadowColor>12632256</a:ShadowColor>
-<a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
-<c:SourceSymbol>
-<o:EntitySymbol Ref="o62"/>
-</c:SourceSymbol>
-<c:DestinationSymbol>
-<o:EntitySymbol Ref="o66"/>
-</c:DestinationSymbol>
-<c:Object>
-<o:ExtendedDependency Ref="o67"/>
-</c:Object>
-</o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o68">
-<a:CreationDate>1769516851</a:CreationDate>
-<a:ModificationDate>1774025922</a:ModificationDate>
-<a:Rect>((-70481,-54979), (-57206,-54379))</a:Rect>
-<a:ListOfPoints>((-70481,-54679),(-57206,-54679))</a:ListOfPoints>
-<a:CornerStyle>2</a:CornerStyle>
-<a:ArrowStyle>8</a:ArrowStyle>
-<a:LineColor>4194432</a:LineColor>
-<a:ShadowColor>12632256</a:ShadowColor>
-<a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
-<c:SourceSymbol>
-<o:EntitySymbol Ref="o69"/>
-</c:SourceSymbol>
-<c:DestinationSymbol>
-<o:EntitySymbol Ref="o70"/>
-</c:DestinationSymbol>
-<c:Object>
-<o:ExtendedDependency Ref="o71"/>
-</c:Object>
-</o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o72">
 <a:CreationDate>1769516856</a:CreationDate>
 <a:ModificationDate>1774026120</a:ModificationDate>
 <a:Rect>((-54056,-55691), (-36956,-54641))</a:Rect>
@@ -1215,16 +1175,16 @@ Shadow=0</a:DisplayPreferences>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
 <c:SourceSymbol>
-<o:EntitySymbol Ref="o70"/>
+<o:EntitySymbol Ref="o63"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
 <o:EntitySymbol Ref="o22"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o73"/>
+<o:ExtendedDependency Ref="o66"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o74">
+<o:ExtendedDependencySymbol Id="o67">
 <a:CreationDate>1769518378</a:CreationDate>
 <a:ModificationDate>1769518378</a:ModificationDate>
 <a:Rect>((-58106,-12383), (-41906,-11783))</a:Rect>
@@ -1235,20 +1195,20 @@ Shadow=0</a:DisplayPreferences>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
 <c:SourceSymbol>
-<o:EntitySymbol Ref="o75"/>
+<o:EntitySymbol Ref="o68"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o53"/>
+<o:EntitySymbol Ref="o49"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o76"/>
+<o:ExtendedDependency Ref="o69"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o77">
+<o:ExtendedDependencySymbol Id="o70">
 <a:CreationDate>1774025899</a:CreationDate>
-<a:ModificationDate>1774025930</a:ModificationDate>
-<a:Rect>((-36494,-20033), (-15044,-13658))</a:Rect>
-<a:ListOfPoints>((-36494,-20033),(-15044,-20033),(-15044,-13658))</a:ListOfPoints>
+<a:ModificationDate>1774026660</a:ModificationDate>
+<a:Rect>((-36494,-20033), (-28222,-12053))</a:Rect>
+<a:ListOfPoints>((-36494,-20033),(-28222,-20033),(-28222,-12053))</a:ListOfPoints>
 <a:CornerStyle>2</a:CornerStyle>
 <a:ArrowStyle>8</a:ArrowStyle>
 <a:LineColor>4194432</a:LineColor>
@@ -1258,13 +1218,13 @@ Shadow=0</a:DisplayPreferences>
 <o:EntitySymbol Ref="o15"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o59"/>
+<o:EntitySymbol Ref="o52"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o78"/>
+<o:ExtendedDependency Ref="o71"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o79">
+<o:ExtendedDependencySymbol Id="o72">
 <a:CreationDate>1774026193</a:CreationDate>
 <a:ModificationDate>1774026193</a:ModificationDate>
 <a:Rect>((-21071,-71659), (-20471,-61909))</a:Rect>
@@ -1275,16 +1235,16 @@ Shadow=0</a:DisplayPreferences>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
 <c:SourceSymbol>
-<o:EntitySymbol Ref="o80"/>
+<o:EntitySymbol Ref="o73"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o81"/>
+<o:EntitySymbol Ref="o74"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o82"/>
+<o:ExtendedDependency Ref="o75"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o83">
+<o:ExtendedDependencySymbol Id="o76">
 <a:CreationDate>1774026205</a:CreationDate>
 <a:ModificationDate>1774026205</a:ModificationDate>
 <a:Rect>((-32921,-59359), (-21521,-55084))</a:Rect>
@@ -1298,13 +1258,13 @@ Shadow=0</a:DisplayPreferences>
 <o:EntitySymbol Ref="o22"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o81"/>
+<o:EntitySymbol Ref="o74"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o84"/>
+<o:ExtendedDependency Ref="o77"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
-<o:ExtendedDependencySymbol Id="o85">
+<o:ExtendedDependencySymbol Id="o78">
 <a:CreationDate>1774026213</a:CreationDate>
 <a:ModificationDate>1774026213</a:ModificationDate>
 <a:Rect>((-22346,-59284), (-21746,-42559))</a:Rect>
@@ -1318,10 +1278,30 @@ Shadow=0</a:DisplayPreferences>
 <o:EntitySymbol Ref="o29"/>
 </c:SourceSymbol>
 <c:DestinationSymbol>
-<o:EntitySymbol Ref="o81"/>
+<o:EntitySymbol Ref="o74"/>
 </c:DestinationSymbol>
 <c:Object>
-<o:ExtendedDependency Ref="o86"/>
+<o:ExtendedDependency Ref="o79"/>
+</c:Object>
+</o:ExtendedDependencySymbol>
+<o:ExtendedDependencySymbol Id="o80">
+<a:CreationDate>1774026542</a:CreationDate>
+<a:ModificationDate>1774026542</a:ModificationDate>
+<a:Rect>((-17422,-29603), (-5338,-29003))</a:Rect>
+<a:ListOfPoints>((-17422,-29303),(-5338,-29303))</a:ListOfPoints>
+<a:CornerStyle>2</a:CornerStyle>
+<a:ArrowStyle>8</a:ArrowStyle>
+<a:LineColor>4194432</a:LineColor>
+<a:ShadowColor>12632256</a:ShadowColor>
+<a:FontList>OBJXSTR 0 Arial,8,N</a:FontList>
+<c:SourceSymbol>
+<o:EntitySymbol Ref="o81"/>
+</c:SourceSymbol>
+<c:DestinationSymbol>
+<o:EntitySymbol Ref="o82"/>
+</c:DestinationSymbol>
+<c:Object>
+<o:ExtendedDependency Ref="o83"/>
 </c:Object>
 </o:ExtendedDependencySymbol>
 <o:EntitySymbol Id="o5">
@@ -1342,7 +1322,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o87"/>
+<o:Entity Ref="o84"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o6">
@@ -1363,7 +1343,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o12">
@@ -1384,7 +1364,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o89"/>
+<o:Entity Ref="o86"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o9">
@@ -1405,7 +1385,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o90"/>
+<o:Entity Ref="o87"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o16">
@@ -1426,7 +1406,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o91"/>
+<o:Entity Ref="o88"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o40">
@@ -1447,7 +1427,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o92"/>
+<o:Entity Ref="o89"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o19">
@@ -1468,7 +1448,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o93"/>
+<o:Entity Ref="o90"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o15">
@@ -1489,7 +1469,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o94"/>
+<o:Entity Ref="o91"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o36">
@@ -1510,7 +1490,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o95"/>
+<o:Entity Ref="o92"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o33">
@@ -1531,7 +1511,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o96"/>
+<o:Entity Ref="o93"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o29">
@@ -1552,49 +1532,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o97"/>
-</c:Object>
-</o:EntitySymbol>
-<o:EntitySymbol Id="o49">
-<a:CreationDate>1769510040</a:CreationDate>
-<a:ModificationDate>1769513304</a:ModificationDate>
-<a:IconMode>-1</a:IconMode>
-<a:Rect>((-73344,11003), (-65454,15002))</a:Rect>
-<a:LineColor>4227200</a:LineColor>
-<a:FillColor>8637161</a:FillColor>
-<a:ShadowColor>12632256</a:ShadowColor>
-<a:FontList>STRN 0 Arial,8,N
-DISPNAME 0 Arial,8,N
-Attributes 0 Arial,8,N
-LABL 0 Arial,8,N
-EntityPrimaryAttribute 0 Arial,8,U
-Identifiers 0 Arial,8,N</a:FontList>
-<a:BrushStyle>6</a:BrushStyle>
-<a:GradientFillMode>65</a:GradientFillMode>
-<a:GradientEndColor>16777215</a:GradientEndColor>
-<c:Object>
-<o:Entity Ref="o98"/>
-</c:Object>
-</o:EntitySymbol>
-<o:EntitySymbol Id="o50">
-<a:CreationDate>1769510041</a:CreationDate>
-<a:ModificationDate>1769513304</a:ModificationDate>
-<a:IconMode>-1</a:IconMode>
-<a:Rect>((-55418,11378), (-48877,15377))</a:Rect>
-<a:LineColor>4227200</a:LineColor>
-<a:FillColor>8637161</a:FillColor>
-<a:ShadowColor>12632256</a:ShadowColor>
-<a:FontList>STRN 0 Arial,8,N
-DISPNAME 0 Arial,8,N
-Attributes 0 Arial,8,N
-LABL 0 Arial,8,N
-EntityPrimaryAttribute 0 Arial,8,U
-Identifiers 0 Arial,8,N</a:FontList>
-<a:BrushStyle>6</a:BrushStyle>
-<a:GradientFillMode>65</a:GradientFillMode>
-<a:GradientEndColor>16777215</a:GradientEndColor>
-<c:Object>
-<o:Entity Ref="o99"/>
+<o:Entity Ref="o94"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o22">
@@ -1615,7 +1553,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o26">
@@ -1636,7 +1574,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o101"/>
+<o:Entity Ref="o96"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o23">
@@ -1657,7 +1595,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o102"/>
+<o:Entity Ref="o97"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o30">
@@ -1678,7 +1616,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o103"/>
+<o:Entity Ref="o98"/>
 </c:Object>
 </o:EntitySymbol>
 <o:EntitySymbol Id="o37">
@@ -1699,10 +1637,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o104"/>
+<o:Entity Ref="o99"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o53">
+<o:EntitySymbol Id="o49">
 <a:CreationDate>1769513156</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1720,10 +1658,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o105"/>
+<o:Entity Ref="o100"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o56">
+<o:EntitySymbol Id="o52">
 <a:CreationDate>1769513193</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1741,10 +1679,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o106"/>
+<o:Entity Ref="o101"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o59">
+<o:EntitySymbol Id="o55">
 <a:CreationDate>1769513319</a:CreationDate>
 <a:ModificationDate>1769514373</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1762,14 +1700,14 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o107"/>
+<o:Entity Ref="o102"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o66">
+<o:EntitySymbol Id="o82">
 <a:CreationDate>1769514396</a:CreationDate>
-<a:ModificationDate>1769515342</a:ModificationDate>
+<a:ModificationDate>1774026535</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
-<a:Rect>((18018,-5211), (23734,-1212))</a:Rect>
+<a:Rect>((-7444,-31011), (-604,-27012))</a:Rect>
 <a:LineColor>4227200</a:LineColor>
 <a:FillColor>8637161</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -1783,10 +1721,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o108"/>
+<o:Entity Ref="o103"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o62">
+<o:EntitySymbol Id="o58">
 <a:CreationDate>1769514992</a:CreationDate>
 <a:ModificationDate>1769515339</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1804,14 +1742,14 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o109"/>
+<o:Entity Ref="o104"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o63">
+<o:EntitySymbol Id="o59">
 <a:CreationDate>1769515358</a:CreationDate>
-<a:ModificationDate>1769516517</a:ModificationDate>
+<a:ModificationDate>1774026562</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
-<a:Rect>((10627,-14257), (15668,-10258))</a:Rect>
+<a:Rect>((19327,-13207), (24368,-9208))</a:Rect>
 <a:LineColor>4227200</a:LineColor>
 <a:FillColor>8637161</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -1825,10 +1763,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o110"/>
+<o:Entity Ref="o105"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o69">
+<o:EntitySymbol Id="o62">
 <a:CreationDate>1769516812</a:CreationDate>
 <a:ModificationDate>1774025922</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1846,10 +1784,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o111"/>
+<o:Entity Ref="o106"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o70">
+<o:EntitySymbol Id="o63">
 <a:CreationDate>1769516814</a:CreationDate>
 <a:ModificationDate>1774025922</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1867,10 +1805,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o112"/>
+<o:Entity Ref="o107"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o75">
+<o:EntitySymbol Id="o68">
 <a:CreationDate>1769518153</a:CreationDate>
 <a:ModificationDate>1769518362</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1888,10 +1826,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o113"/>
+<o:Entity Ref="o108"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o80">
+<o:EntitySymbol Id="o73">
 <a:CreationDate>1774026092</a:CreationDate>
 <a:ModificationDate>1774026187</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1909,10 +1847,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o114"/>
+<o:Entity Ref="o109"/>
 </c:Object>
 </o:EntitySymbol>
-<o:EntitySymbol Id="o81">
+<o:EntitySymbol Id="o74">
 <a:CreationDate>1774026161</a:CreationDate>
 <a:ModificationDate>1774026179</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
@@ -1930,7 +1868,28 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
 <c:Object>
-<o:Entity Ref="o115"/>
+<o:Entity Ref="o110"/>
+</c:Object>
+</o:EntitySymbol>
+<o:EntitySymbol Id="o81">
+<a:CreationDate>1774026485</a:CreationDate>
+<a:ModificationDate>1774026485</a:ModificationDate>
+<a:IconMode>-1</a:IconMode>
+<a:Rect>((-21202,-31134), (-16403,-27135))</a:Rect>
+<a:LineColor>4227200</a:LineColor>
+<a:FillColor>8637161</a:FillColor>
+<a:ShadowColor>12632256</a:ShadowColor>
+<a:FontList>STRN 0 Arial,8,N
+DISPNAME 0 Arial,8,N
+Attributes 0 Arial,8,N
+LABL 0 Arial,8,N
+EntityPrimaryAttribute 0 Arial,8,U
+Identifiers 0 Arial,8,N</a:FontList>
+<a:BrushStyle>6</a:BrushStyle>
+<a:GradientFillMode>65</a:GradientFillMode>
+<a:GradientEndColor>16777215</a:GradientEndColor>
+<c:Object>
+<o:Entity Ref="o111"/>
 </c:Object>
 </o:EntitySymbol>
 </c:Symbols>
@@ -1940,7 +1899,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:ConceptualDiagram Ref="o3"/>
 </c:DefaultDiagram>
 <c:Entities>
-<o:Entity Id="o87">
+<o:Entity Id="o84">
 <a:ObjectID>BA5A8F8F-32BC-4572-9F56-8239600836C4</a:ObjectID>
 <a:Name>entreprise</a:Name>
 <a:Code>ENTREPRISE</a:Code>
@@ -1949,7 +1908,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769445260</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o88">
+<o:Entity Id="o85">
 <a:ObjectID>6E589466-6A94-450C-89B7-ADC1B82BBB3E</a:ObjectID>
 <a:Name>user</a:Name>
 <a:Code>USER</a:Code>
@@ -1958,7 +1917,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769445282</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o89">
+<o:Entity Id="o86">
 <a:ObjectID>5DB140B3-8337-4FDB-816B-D60005807104</a:ObjectID>
 <a:Name>roles</a:Name>
 <a:Code>ROLES</a:Code>
@@ -1967,7 +1926,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769445902</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o90">
+<o:Entity Id="o87">
 <a:ObjectID>46F82AEB-D67D-49D6-991E-D46E4C197500</a:ObjectID>
 <a:Name>employes</a:Name>
 <a:Code>EMPLOYES</a:Code>
@@ -1976,7 +1935,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513286</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o91">
+<o:Entity Id="o88">
 <a:ObjectID>4949F5E0-5786-440D-BC0C-3E9ECCD0CBD1</a:ObjectID>
 <a:Name>type_consultation</a:Name>
 <a:Code>TYPE_CONSULTATION</a:Code>
@@ -1985,7 +1944,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509680</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o92">
+<o:Entity Id="o89">
 <a:ObjectID>2B640D54-079F-4C94-A214-9EBD597F6705</a:ObjectID>
 <a:Name>type_examen</a:Name>
 <a:Code>TYPE_EXAMEN</a:Code>
@@ -1994,7 +1953,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509765</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o93">
+<o:Entity Id="o90">
 <a:ObjectID>D0D66595-CE71-4068-8F4B-A86BF7CEDE60</a:ObjectID>
 <a:Name>consultation</a:Name>
 <a:Code>CONSULTATION</a:Code>
@@ -2003,7 +1962,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509718</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o94">
+<o:Entity Id="o91">
 <a:ObjectID>E6BA2487-FB8B-4F71-8C78-78A458F3F2C6</a:ObjectID>
 <a:Name>specialite</a:Name>
 <a:Code>SPECIALITE</a:Code>
@@ -2012,7 +1971,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769465499</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o95">
+<o:Entity Id="o92">
 <a:ObjectID>A91DB691-9374-4314-8277-B707B432047C</a:ObjectID>
 <a:Name>examen</a:Name>
 <a:Code>EXAMEN</a:Code>
@@ -2021,7 +1980,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509784</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o96">
+<o:Entity Id="o93">
 <a:ObjectID>98A7FB1D-A9E1-4650-8A61-4BF6FDA63A1C</a:ObjectID>
 <a:Name>soins_infirmier</a:Name>
 <a:Code>SOINS_INFIRMIER</a:Code>
@@ -2030,7 +1989,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1774026066</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o97">
+<o:Entity Id="o94">
 <a:ObjectID>14066C5B-0769-459B-ACEE-EDEF12161FA9</a:ObjectID>
 <a:Name>soins_ambulatoires</a:Name>
 <a:Code>SOINS_AMBULATOIRES</a:Code>
@@ -2039,25 +1998,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509920</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o98">
-<a:ObjectID>9658C333-E9EF-4D13-874D-7A2E086C8DCB</a:ObjectID>
-<a:Name>produits_pharmacie</a:Name>
-<a:Code>PRODUITS_PHARMACIE</a:Code>
-<a:CreationDate>1769510040</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769510055</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-</o:Entity>
-<o:Entity Id="o99">
-<a:ObjectID>B6503B11-9F03-4935-9FF2-F22F95BCEDEA</a:ObjectID>
-<a:Name>produits_utilises</a:Name>
-<a:Code>PRODUITS_UTILISES</a:Code>
-<a:CreationDate>1769510041</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769510065</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-</o:Entity>
-<o:Entity Id="o100">
+<o:Entity Id="o95">
 <a:ObjectID>7F102F09-3867-4454-9D82-C228492FF84E</a:ObjectID>
 <a:Name>hospitalisation</a:Name>
 <a:Code>HOSPITALISATION</a:Code>
@@ -2066,7 +2007,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769510094</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o101">
+<o:Entity Id="o96">
 <a:ObjectID>67BE3346-853B-4E60-8624-D563C1A84EC9</a:ObjectID>
 <a:Name>prestations</a:Name>
 <a:Code>PRESTATIONS</a:Code>
@@ -2075,7 +2016,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769510106</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o102">
+<o:Entity Id="o97">
 <a:ObjectID>CE5EB73C-2CE9-491F-AF3D-65C185A34062</a:ObjectID>
 <a:Name>hospitalisation_details</a:Name>
 <a:Code>HOSPITALISATION_DETAILS</a:Code>
@@ -2084,7 +2025,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769510120</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o103">
+<o:Entity Id="o98">
 <a:ObjectID>BB32DD99-45C0-495F-A05C-07DF4610D0E7</a:ObjectID>
 <a:Name>details_soins</a:Name>
 <a:Code>DETAILS_SOINS</a:Code>
@@ -2093,7 +2034,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769512946</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o104">
+<o:Entity Id="o99">
 <a:ObjectID>EDDC314D-D866-4AA7-87DB-990EA4E7725B</a:ObjectID>
 <a:Name>detail_examen</a:Name>
 <a:Code>DETAIL_EXAMEN</a:Code>
@@ -2102,7 +2043,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769512995</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o105">
+<o:Entity Id="o100">
 <a:ObjectID>586C38BE-9E7B-4BE2-BE33-B19A42BE1933</a:ObjectID>
 <a:Name>patient</a:Name>
 <a:Code>PATIENT</a:Code>
@@ -2111,7 +2052,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513166</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o106">
+<o:Entity Id="o101">
 <a:ObjectID>95BB1430-A8D9-4E88-BA56-E347C40E2926</a:ObjectID>
 <a:Name>medecin</a:Name>
 <a:Code>MEDECIN</a:Code>
@@ -2120,7 +2061,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513198</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o107">
+<o:Entity Id="o102">
 <a:ObjectID>1612C421-C0C5-45F8-8E0A-808A2F2E8BAD</a:ObjectID>
 <a:Name>horaires_medecin</a:Name>
 <a:Code>HORAIRES_MEDECIN</a:Code>
@@ -2129,16 +2070,16 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513355</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o108">
+<o:Entity Id="o103">
 <a:ObjectID>DED41E2F-9FE9-4D50-9363-4C626F170B3C</a:ObjectID>
-<a:Name>encaissement</a:Name>
-<a:Code>ENCAISSEMENT</a:Code>
+<a:Name>operation_caisse</a:Name>
+<a:Code>OPERATION_CAISSE</a:Code>
 <a:CreationDate>1769514396</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769514407</a:ModificationDate>
+<a:ModificationDate>1774026586</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o109">
+<o:Entity Id="o104">
 <a:ObjectID>6433B108-196E-456B-9F88-F245EE808713</a:ObjectID>
 <a:Name>caisse</a:Name>
 <a:Code>CAISSE</a:Code>
@@ -2147,7 +2088,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769515007</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o110">
+<o:Entity Id="o105">
 <a:ObjectID>1A654611-0DBC-49F4-94E4-EC2B9DA866C7</a:ObjectID>
 <a:Name>caisse_mail</a:Name>
 <a:Code>CAISSE_MAIL</a:Code>
@@ -2156,7 +2097,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769515374</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o111">
+<o:Entity Id="o106">
 <a:ObjectID>7FB0668C-F9D5-4796-A623-B3BB73945A0C</a:ObjectID>
 <a:Name>chambre</a:Name>
 <a:Code>CHAMBRE</a:Code>
@@ -2165,7 +2106,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769516820</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o112">
+<o:Entity Id="o107">
 <a:ObjectID>D931F0D5-5D6A-4D52-A545-09C365D3F959</a:ObjectID>
 <a:Name>lit</a:Name>
 <a:Code>LIT</a:Code>
@@ -2174,7 +2115,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769516838</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o113">
+<o:Entity Id="o108">
 <a:ObjectID>074EEF9D-07C5-4AF5-86ED-4380850DB050</a:ObjectID>
 <a:Name>assurance</a:Name>
 <a:Code>ASSURANCE</a:Code>
@@ -2183,7 +2124,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769518174</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o114">
+<o:Entity Id="o109">
 <a:ObjectID>EEFB62C6-F6EA-4C17-A3DD-0BD7C4A04AEA</a:ObjectID>
 <a:Name>produit</a:Name>
 <a:Code>PRODUIT</a:Code>
@@ -2192,13 +2133,22 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1774026108</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
-<o:Entity Id="o115">
+<o:Entity Id="o110">
 <a:ObjectID>117A598B-2445-451C-B898-7ADFF3D555B0</a:ObjectID>
 <a:Name>produit_utiliser</a:Name>
 <a:Code>PRODUIT_UTILISER</a:Code>
 <a:CreationDate>1774026161</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1774026171</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+</o:Entity>
+<o:Entity Id="o111">
+<a:ObjectID>4D0BAC23-981F-4877-9DE7-68437463E0AA</a:ObjectID>
+<a:Name>factures</a:Name>
+<a:Code>FACTURES</a:Code>
+<a:CreationDate>1774026485</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1774026491</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 </o:Entity>
 </c:Entities>
@@ -2210,10 +2160,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769446121</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o87"/>
+<o:Entity Ref="o84"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o10">
@@ -2223,10 +2173,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769446131</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o90"/>
+<o:Entity Ref="o87"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o13">
@@ -2236,10 +2186,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769446136</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o89"/>
+<o:Entity Ref="o86"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o17">
@@ -2249,10 +2199,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509848</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o91"/>
+<o:Entity Ref="o88"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o94"/>
+<o:Entity Ref="o91"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o20">
@@ -2262,10 +2212,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769509871</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o93"/>
+<o:Entity Ref="o90"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o91"/>
+<o:Entity Ref="o88"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o24">
@@ -2275,10 +2225,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769510134</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o102"/>
+<o:Entity Ref="o97"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o27">
@@ -2288,10 +2238,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769510137</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o102"/>
+<o:Entity Ref="o97"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o101"/>
+<o:Entity Ref="o96"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o31">
@@ -2301,10 +2251,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769512979</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o103"/>
+<o:Entity Ref="o98"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o97"/>
+<o:Entity Ref="o94"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o34">
@@ -2314,10 +2264,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769512981</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o103"/>
+<o:Entity Ref="o98"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o96"/>
+<o:Entity Ref="o93"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o38">
@@ -2327,10 +2277,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513011</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o104"/>
+<o:Entity Ref="o99"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o95"/>
+<o:Entity Ref="o92"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o41">
@@ -2340,10 +2290,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513012</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o104"/>
+<o:Entity Ref="o99"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o92"/>
+<o:Entity Ref="o89"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o43">
@@ -2353,10 +2303,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513079</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o95"/>
+<o:Entity Ref="o92"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o45">
@@ -2366,10 +2316,10 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513084</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o97"/>
+<o:Entity Ref="o94"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object2>
 </o:ExtendedDependency>
 <o:ExtendedDependency Id="o47">
@@ -2379,56 +2329,69 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1769513087</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o93"/>
+<o:Entity Ref="o90"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o51">
-<a:ObjectID>32C12168-0868-4353-8681-7F4894E7CDB6</a:ObjectID>
-<a:CreationDate>1769513149</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769513149</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o99"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o98"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o54">
+<o:ExtendedDependency Id="o50">
 <a:ObjectID>6535FF04-7091-480C-BBCA-229CF3EA6375</a:ObjectID>
 <a:CreationDate>1769513261</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1769513261</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o105"/>
+<o:Entity Ref="o100"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o57">
+<o:ExtendedDependency Id="o53">
 <a:ObjectID>4A9DCBB9-0EA0-4209-9E6C-79EB7B956CF1</a:ObjectID>
 <a:CreationDate>1769513264</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1769513264</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o106"/>
+<o:Entity Ref="o101"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o88"/>
+<o:Entity Ref="o85"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o60">
+<o:ExtendedDependency Id="o56">
 <a:ObjectID>C6F7F905-27CB-4E4B-84F6-CAC4F8B5A90E</a:ObjectID>
 <a:CreationDate>1769513669</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1769513669</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o102"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o101"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o60">
+<a:ObjectID>518E1BFF-7DA9-4FCE-9A5C-EE3CBFD62233</a:ObjectID>
+<a:CreationDate>1769515383</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1769515383</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o105"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o104"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o64">
+<a:ObjectID>99F0F6BC-BEFB-49B5-BC15-3CB4569CA91D</a:ObjectID>
+<a:CreationDate>1769516851</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1769516851</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
 <o:Entity Ref="o107"/>
@@ -2437,11 +2400,50 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:Entity Ref="o106"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o64">
-<a:ObjectID>518E1BFF-7DA9-4FCE-9A5C-EE3CBFD62233</a:ObjectID>
-<a:CreationDate>1769515383</a:CreationDate>
+<o:ExtendedDependency Id="o66">
+<a:ObjectID>7D32A07D-F607-494C-92DE-782D403D3597</a:ObjectID>
+<a:CreationDate>1769516856</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769515383</a:ModificationDate>
+<a:ModificationDate>1769516856</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o95"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o107"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o69">
+<a:ObjectID>31E74307-94AD-43B4-B195-746DA0014EF8</a:ObjectID>
+<a:CreationDate>1769518378</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1769518378</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o100"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o108"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o71">
+<a:ObjectID>83BE0212-F490-45EF-8722-4D58DADF75E3</a:ObjectID>
+<a:CreationDate>1774025899</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1774026660</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o101"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o91"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o75">
+<a:ObjectID>D03E1F53-480A-445E-909A-A7AAE7699EF8</a:ObjectID>
+<a:CreationDate>1774026193</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1774026193</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
 <o:Entity Ref="o110"/>
@@ -2450,108 +2452,43 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:Entity Ref="o109"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o67">
-<a:ObjectID>2B3F4A29-CB9F-43F8-ACA6-43EC1CAA7D5D</a:ObjectID>
-<a:CreationDate>1769515389</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769515389</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o108"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o109"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o71">
-<a:ObjectID>99F0F6BC-BEFB-49B5-BC15-3CB4569CA91D</a:ObjectID>
-<a:CreationDate>1769516851</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769516851</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o112"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o111"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o73">
-<a:ObjectID>7D32A07D-F607-494C-92DE-782D403D3597</a:ObjectID>
-<a:CreationDate>1769516856</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769516856</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o100"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o112"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o76">
-<a:ObjectID>31E74307-94AD-43B4-B195-746DA0014EF8</a:ObjectID>
-<a:CreationDate>1769518378</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1769518378</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o105"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o113"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o78">
-<a:ObjectID>83BE0212-F490-45EF-8722-4D58DADF75E3</a:ObjectID>
-<a:CreationDate>1774025899</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1774025899</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o107"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o94"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o82">
-<a:ObjectID>D03E1F53-480A-445E-909A-A7AAE7699EF8</a:ObjectID>
-<a:CreationDate>1774026193</a:CreationDate>
-<a:Creator>DAVID KOUACHI</a:Creator>
-<a:ModificationDate>1774026193</a:ModificationDate>
-<a:Modifier>DAVID KOUACHI</a:Modifier>
-<c:Object1>
-<o:Entity Ref="o115"/>
-</c:Object1>
-<c:Object2>
-<o:Entity Ref="o114"/>
-</c:Object2>
-</o:ExtendedDependency>
-<o:ExtendedDependency Id="o84">
+<o:ExtendedDependency Id="o77">
 <a:ObjectID>A7A74ED6-2940-40E8-9EC2-6593134F2A05</a:ObjectID>
 <a:CreationDate>1774026205</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1774026205</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o115"/>
+<o:Entity Ref="o110"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o100"/>
+<o:Entity Ref="o95"/>
 </c:Object2>
 </o:ExtendedDependency>
-<o:ExtendedDependency Id="o86">
+<o:ExtendedDependency Id="o79">
 <a:ObjectID>7636CEF7-D520-4D11-9382-414720E35DCA</a:ObjectID>
 <a:CreationDate>1774026213</a:CreationDate>
 <a:Creator>DAVID KOUACHI</a:Creator>
 <a:ModificationDate>1774026213</a:ModificationDate>
 <a:Modifier>DAVID KOUACHI</a:Modifier>
 <c:Object1>
-<o:Entity Ref="o115"/>
+<o:Entity Ref="o110"/>
 </c:Object1>
 <c:Object2>
-<o:Entity Ref="o97"/>
+<o:Entity Ref="o94"/>
+</c:Object2>
+</o:ExtendedDependency>
+<o:ExtendedDependency Id="o83">
+<a:ObjectID>BE5F3152-82D0-49CD-8990-3735DC23026D</a:ObjectID>
+<a:CreationDate>1774026542</a:CreationDate>
+<a:Creator>DAVID KOUACHI</a:Creator>
+<a:ModificationDate>1774026542</a:ModificationDate>
+<a:Modifier>DAVID KOUACHI</a:Modifier>
+<c:Object1>
+<o:Entity Ref="o103"/>
+</c:Object1>
+<c:Object2>
+<o:Entity Ref="o111"/>
 </c:Object2>
 </o:ExtendedDependency>
 </c:ChildExtendedDependencies>
