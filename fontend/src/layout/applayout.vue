@@ -83,7 +83,9 @@
         <!-- afficher modal pour les recherches -->
         <Dialog
             v-model:visible="dialogUse.loading"
-            modal
+            :modal="true"
+            :dismissableMask="false"
+            :blockScroll="true"
             :position="dialogUse.position"
             :style="{ margin: '0 2rem', width: dialogUse.width }"
             :breakpoints="dialogUse.breakpoints" >

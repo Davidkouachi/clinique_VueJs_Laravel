@@ -8,14 +8,13 @@ export function useScript() {
     const { showToast } = useToastAlert()
 
     const steps = [
-    { value: '1', icon: 'pi pi-user', label: 'Informations de base' },
-    { value: '2', icon: 'pi pi-phone', label: 'Contact' },
-    { value: '3', icon: 'pi pi-briefcase', label: 'Assurance' },
-    { value: '4', icon: 'pi pi-exclamation-triangle', label: 'Urgence' },
-    { value: '5', icon: 'pi pi-heart', label: 'Infos médicales' },
-    { value: '6', icon: 'pi pi-check-circle', label: 'Validation' }
-]
-
+	    { value: '1', icon: 'pi pi-user', label: 'Informations de base' },
+	    { value: '2', icon: 'pi pi-phone', label: 'Contact' },
+	    { value: '3', icon: 'pi pi-briefcase', label: 'Assurance' },
+	    { value: '4', icon: 'pi pi-exclamation-triangle', label: 'Urgence' },
+	    { value: '5', icon: 'pi pi-heart', label: 'Infos médicales' },
+	    { value: '6', icon: 'pi pi-check-circle', label: 'Validation' }
+	]
 
 	const currentStep = ref('1')
 
@@ -86,90 +85,165 @@ export function useScript() {
 
 	// --------------------------------------------------------
 
+	const controls = {
+	    '1': () => {
+	        // return (
+	        //     form.value.nom !== '' &&
+	        //     form.value.prenoms !== '' &&
+	        //     form.value.sexe !== null &&
+	        //     form.value.lieunais !== '' &&
+	        //     form.value.datenais !== null
+	        // )
+
+	        return true
+	    },
+
+	    '2': () => {
+	        // return (
+	        //     form.value.telephone1 !== '' &&
+	        //     form.value.adresse !== ''
+	        // )
+
+	        return true
+	    },
+
+	    '3': () => {
+	        if (isAssure.value === 1) {
+	            return (
+	                form.value.assurance_id !== null &&
+	                form.value.numero_assure !== '' &&
+	                form.value.taux !== 0
+	            )
+	        }
+	        return true
+	    },
+
+	    '4': () => {
+		    // Vérifie que toutes les urgences ont tous les champs obligatoires remplis
+		    // const allFilled = urgences.value.every(u =>
+		    //     u.nom?.trim() !== '' &&
+		    //     u.lien?.trim() !== '' &&
+		    //     u.telephone1?.trim() !== ''
+		    // )
+		    // if (!allFilled) return false
+
+		    // // Vérifie s'il y a des numéros de téléphone dupliqués
+		    // const phones = urgences.value.map(u => u.telephone1.trim())
+		    // const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
+		    // if (hasDuplicate) return false
+
+		    // Si tout est ok, retourne true
+		    return true
+		},
+
+	    '5': () => {
+	        // return (
+	        //     form.value.groupe_sanguin !== '' &&
+	        //     form.value.antecedents !== '' &&
+	        //     form.value.allergies !== ''
+	        // )
+
+	        return true
+	    },
+
+	    '6': () => true
+	}
+
+	const errorMessages = {
+	    '1': "Tous les champs sont obligatoires",
+	    '2': "Téléphone et adresse requis",
+	    '3': "Infos assurance invalides",
+	    '4': "Contacts d'urgence incomplets",
+	    '5': "Infos médicales requises"
+	}
+
+	// --------------------------------------------------------
+
 	const validateStep1 = () => {
-	    // if (!form.nom) {
-	    //     errors.step1 = "Tous les champs sont obligatoires"
-	    //     return false
-	    // }
+	    if (!controls['1']()) {
+	        errors.step1 = errorMessages['1']
+	        return false
+	    }
 	    errors.step1 = ''
 	    return true
 	}
 
 	const validateStep2 = () => {
-	    // if (!form.prenom) {
-	    //     errors.step2 = "Tous les champs sont obligatoires"
-	    //     return false
-	    // }
+	    if (!controls['2']()) {
+	        errors.step2 = errorMessages['2']
+	        return false
+	    }
 	    errors.step2 = ''
 	    return true
 	}
 
 	const validateStep3 = () => {
+	    if (!controls['3']()) {
+	        errors.step3 = errorMessages['3']
+	        return false
+	    }
 	    errors.step3 = ''
 	    return true
 	}
 
 	const validateStep4 = () => {
+	    if (!controls['4']()) {
+	        errors.step4 = errorMessages['4']
+	        return false
+	    }
 	    errors.step4 = ''
 	    return true
 	}
 
 	const validateStep5 = () => {
+	    if (!controls['5']()) {
+	        errors.step5 = errorMessages['5']
+	        return false
+	    }
 	    errors.step5 = ''
 	    return true
 	}
 
 	// --------------------------------------------------------
 
-	const isStep1Valid = computed(() => {
-	    return form.value.nom !== ''
-	})
+	const rules = {
+	    '1': () => controls['1'](),
+	    '2': () => controls['2'](),
+	    '3': () => controls['3'](),
+	    '4': () => controls['4'](),
+	    '5': () => controls['5'](),
+	    '6': () => controls['6']()
+	}
 
-	const isStep2Valid = computed(() => {
-	    return form.value.prenom !== ''
-	})
+	const isStepValid = (step) => {
+	    const stepNumber = Number(step)
 
-	const isStep3Valid = computed(() => {
-	    return form.value.prenom !== ''
-	})
+	    for (let i = 1; i <= stepNumber ; i++) {
+	        const key = String(i)
+	        if (!rules[key]?.()) {
+	            return false
+	        }
+	    }
 
-	const isStep4Valid = computed(() => {
-	    return form.value.prenom !== ''
-	})
-
-	const isStep5Valid = computed(() => {
-	    return form.value.prenom !== ''
-	})
+	    return true
+	}
 
 	// --------------------------------------------------------
 
-	const goToStep2 = (activateCallback) => {
-	    if (validateStep1()) {
-	        activateCallback('2')
-	    }
+	const stepValidators = {
+	    '2': () => validateStep1(),
+	    '3': () => validateStep1() && validateStep2(),
+	    '4': () => validateStep1() && validateStep2() && validateStep3(),
+	    '5': () => validateStep1() && validateStep2() && validateStep3() && validateStep4(),
+	    '6': () => validateStep1() && validateStep2() && validateStep3() && validateStep4() && validateStep5()
 	}
 
-	const goToStep3 = (activateCallback) => {
-	    if (validateStep2()) {
-	        activateCallback('3')
-	    }
-	}
+	const goToStep = (step, activateCallback) => {
+	    const validate = stepValidators[step]
 
-	const goToStep4 = (activateCallback) => {
-	    if (validateStep3()) {
-	        activateCallback('4')
-	    }
-	}
-
-	const goToStep5 = (activateCallback) => {
-	    if (validateStep4()) {
-	        activateCallback('5')
-	    }
-	}
-
-	const goToStep6 = (activateCallback) => {
-	    if (validateStep5()) {
-	        activateCallback('6')
+	    if (!validate || validate()) {
+	        currentStep.value = step
+	        activateCallback(step)
 	    }
 	}
 
@@ -258,43 +332,43 @@ export function useScript() {
 	    }
 	}
 
-	const validateUrgences = () => {
-	    for (let i = 0; i < urgences.value.length; i++) {
-	        const u = urgences.value[i]
+	// const validateUrgences = () => {
+	//     for (let i = 0; i < urgences.value.length; i++) {
+	//         const u = urgences.value[i]
 
-	        // téléphone obligatoire
-	        if (!u.telephone1) {
-	            showToast(
-	                'warn',
-	                'Alerte',
-	                `Téléphone obligatoire pour le contact d'urgence #${i + 1}`
-	            )
-	            return false
-	        }
+	//         // téléphone obligatoire
+	//         if (!u.telephone1) {
+	//             showToast(
+	//                 'warn',
+	//                 'Alerte',
+	//                 `Téléphone obligatoire pour le contact d'urgence #${i + 1}`
+	//             )
+	//             return false
+	//         }
 
-	        // nom optionnel mais recommandé
-	        if (!u.nom) {
-	            showToast(
-	                'warn',
-	                'Alerte',
-	                `Nom manquant pour le contact d'urgence #${i + 1}`
-	            )
-	            return false
-	        }
+	//         // nom optionnel mais recommandé
+	//         if (!u.nom) {
+	//             showToast(
+	//                 'warn',
+	//                 'Alerte',
+	//                 `Nom manquant pour le contact d'urgence #${i + 1}`
+	//             )
+	//             return false
+	//         }
 
-	        // lien optionnel mais recommandé
-	        if (!u.lien) {
-	            showToast(
-	                'warn',
-	                'Alerte',
-	                `Lien manquant pour le contact d'urgence #${i + 1}`
-	            )
-	            return false
-	        }
-	    }
+	//         // lien optionnel mais recommandé
+	//         if (!u.lien) {
+	//             showToast(
+	//                 'warn',
+	//                 'Alerte',
+	//                 `Lien manquant pour le contact d'urgence #${i + 1}`
+	//             )
+	//             return false
+	//         }
+	//     }
 
-	    return true
-	}
+	//     return true
+	// }
 
     // 🔹 SUBMIT
     const submitForm = async () => {
@@ -325,29 +399,29 @@ export function useScript() {
 		    }
 		}
 
-		if (!validateUrgences()) {
-		    return
-		}
+		// if (!validateUrgences()) {
+		//     return
+		// }
 
 		// BONUS (anti doublon téléphone 🔥)
-		const phones = urgences.value.map(u => u.telephone1)
+		// const phones = urgences.value.map(u => u.telephone1)
 
-		const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
+		// const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
 
-		if (hasDuplicate) {
-		    showToast('warn', 'Alerte', 'Numéros en double interdits')
-		    return false
-		}
+		// if (hasDuplicate) {
+		//     showToast('warn', 'Alerte', 'Numéros en double interdits')
+		//     return false
+		// }
 
 		// VERSION ULTRA PRO (tolérance + suppression des vides)
-		const cleanUrgences = urgences.value
-		    .filter(u => u.telephone1) // garder seulement les valides
-		    .map(u => ({
-		        nom: u.nom || null,
-		        lien: u.lien || null,
-		        telephone1: u.telephone1,
-		        telephone2: u.telephone2 || null
-		    }))
+		// const cleanUrgences = urgences.value
+		//     .filter(u => u.telephone1)
+		//     .map(u => ({
+		//         nom: u.nom || null,
+		//         lien: u.lien || null,
+		//         telephone1: u.telephone1,
+		//         telephone2: u.telephone2 || null
+		//     }))
 
         if (!checked.value) {
             showToast('warn', 'Alerte', 'Veuillez confirmer les informations')
@@ -429,17 +503,9 @@ export function useScript() {
         validateStep4,
         validateStep5,
 
-        isStep1Valid,
-        isStep2Valid,
-        isStep3Valid,
-        isStep4Valid,
-        isStep5Valid,
+        isStepValid,
 
-        goToStep2,
-        goToStep3,
-        goToStep4,
-        goToStep5,
-        goToStep6,
+        goToStep,
 
         goToStepReset
     }

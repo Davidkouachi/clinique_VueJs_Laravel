@@ -1,70 +1,69 @@
 <template>
-    <Fluid>
-        <div class="flex flex-col gap-2">
-            <div class="flex flex-col justify-center items-center">
-                <img height="100" width="100" src="@/assets/img/fiche.png" />
-            </div>
+    <div class="flex flex-col gap-2">
+        <div class="flex flex-col justify-center items-center">
+            <img height="100" width="100" src="@/assets/img/fiche.png" />
         </div>
-        <form id="medecinForm" @submit.prevent="formSubmit" class="flex flex-col gap-4 w-full mt-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <!-- Nom -->
-                <FloatLabel variant="on">
-                    <InputText id="nom" v-model="nom" size="large" class="w-full" variant="filled" :invalid="submitted && !nom" @input="nom = nom.toUpperCase()"/>
-                    <label for="nom">Nom</label>
-                </FloatLabel>
-                <FloatLabel variant="on">
-                    <InputText id="email" v-model="email" size="large" class="w-full" variant="filled" />
-                    <label for="email">Email</label>
-                </FloatLabel>
-                <FloatLabel variant="on">
-                    <InputText
-                        v-model="telephone1"
-                        id="telephone1"
-                        inputmode="tel"
-                        placeholder=""
-                        size="large" class="w-full"
-                        :invalid="submitted && !telephone1" 
-                        variant="filled"
-                    />
-                    <label for="telephone1">Contact 1</label>
-                </FloatLabel>
-                <FloatLabel variant="on">
-                    <InputText
-                        v-model="telephone2"
-                        id="telephone2"
-                        inputmode="tel"
-                        placeholder=""
-                        size="large" class="w-full"
-                        variant="filled"
-                    />
-                    <label for="telephone2">Contact 2</label>
-                </FloatLabel>
-                <FloatLabel class="w-full" variant="on">
-                    <Select
-                        fluid
-                        appendTo="body"
-                        class="w-full"
-                        v-model="type"
-                        inputId="on_label" 
-                        :options="types"
-                        optionLabel="label"
-                        optionValue="value"
-                        placeholder=""
-                        variant="filled"
-                        size="large" />
-                    <label for="on_label">Type</label>
-                </FloatLabel>
-                <FloatLabel variant="on">
-                    <InputText id="adresse" v-model="adresse" size="large" class="w-full" variant="filled" :invalid="submitted && !adresse" />
-                    <label for="adresse">Adresse</label>
-                </FloatLabel>
-            </div>
-            <div class="flex items-center gap-2 mt-4">
-                <Checkbox v-model="checked" binary />
-                <span>Je confirme les informations</span>
-            </div>
-        </form>
-    </Fluid>
+    </div>
+    <form id="medecinForm" @submit.prevent="formSubmit" class="flex flex-col gap-4 w-full mt-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Nom -->
+            <FloatLabel variant="on">
+                <InputText id="nom" v-model="nom" size="large" class="w-full" variant="filled" :invalid="submitted && !nom" @input="nom = nom.toUpperCase()"/>
+                <label for="nom">Nom</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText id="email" v-model="email" size="large" class="w-full" variant="filled" />
+                <label for="email">Email</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText
+                    v-model="telephone1"
+                    id="telephone1"
+                    inputmode="tel"
+                    placeholder=""
+                    size="large" class="w-full"
+                    :invalid="submitted && !telephone1" 
+                    variant="filled"
+                />
+                <label for="telephone1">Contact 1</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText
+                    v-model="telephone2"
+                    id="telephone2"
+                    inputmode="tel"
+                    placeholder=""
+                    size="large" class="w-full"
+                    variant="filled"
+                />
+                <label for="telephone2">Contact 2</label>
+            </FloatLabel>
+            <FloatLabel class="w-full" variant="on">
+                <Select
+                    fluid
+                    appendTo="self"
+                    class="w-full"
+                    v-model="type"
+                    inputId="on_label" 
+                    :options="types"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder=""
+                    variant="filled"
+                    size="large" />
+                <label for="on_label">Type</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText id="adresse" v-model="adresse" size="large" class="w-full" variant="filled" :invalid="submitted && !adresse" />
+                <label for="adresse">Adresse</label>
+            </FloatLabel>
+        </div>
+        <div class="flex items-center gap-2 mt-10">
+            <Checkbox v-model="checked" binary />
+            <span>Je confirme les informations</span>
+        </div>
+    </form>
+
 </template>
 
 <script setup>

@@ -1,17 +1,18 @@
 <template>
     <TitrePage />
 
-<form @submit.prevent="submitForm" class="card flex flex-col gap-6 justify-center mb-0">
+<div class="card flex flex-col gap-6 justify-center mb-0">
     <div class="text-center mt-4 mb-4 text-2xl font-bold">
         FORMULAIRE
     </div>
-    <Stepper linear value="1" v-model:value="currentStep" class="basis-full">
+
+    <Stepper value="1" v-model:value="currentStep" class="basis-full">
         
         <StepList >
             <Step v-for="(step, index) in steps" :key="step.value" v-slot="{ activateCallback, value, a11yAttrs }" asChild :value="step.value">
                 <!-- si c'est le dernier step -->
                 <div :class="index === steps.length - 1 ? 'flex flex-row pl-2' : 'flex flex-row flex-auto gap-2'" v-bind="a11yAttrs.root">
-                    <button class="bg-transparent border-0 inline-flex flex-col gap-2" @click="activateCallback" v-bind="a11yAttrs.header">
+                    <button class="bg-transparent border-0 inline-flex flex-col gap-2" @click="activateCallback" v-bind="a11yAttrs.header" :disabled="!isStepValid(step.value - 1)">
                         <span :class="[
                         'rounded-full border-2 w-12 h-12 inline-flex items-center justify-center',
                         { 'bg-primary text-primary-contrast border-primary': value <= currentStep, 'border-surface-200 dark:border-surface-700': value > currentStep }
@@ -81,12 +82,12 @@
 
                 <div class="flex pt-6 justify-end">
                     <Button
-                        :disabled="!isStep1Valid"
+                        :disabled="!isStepValid('1')"
                         label="Suivant"
                         severity="success"
                         icon="pi pi-arrow-right"
                         iconPos="right"
-                        @click="goToStep2(activateCallback)" 
+                        @click="goToStep('2', activateCallback)" 
                     />
                 </div>
             </StepPanel>
@@ -134,12 +135,12 @@
                         @click="activateCallback('1')" 
                     />
                     <Button
-                        :disabled="!isStep2Valid"
+                        :disabled="!isStepValid('2')"
                         label="Suivant"
                         severity="success"
                         icon="pi pi-arrow-right"
                         iconPos="right"
-                        @click="goToStep3(activateCallback)" 
+                        @click="goToStep('3', activateCallback)"
                     />
                 </div>
             </StepPanel>
@@ -209,7 +210,7 @@
                         </template>
 
                     </div>
-                    <small class="text-red-500">{{ errors.step2 }}</small>
+                    <small class="text-red-500">{{ errors.step3 }}</small>
                 </div>
 
                 <div class="flex pt-6 justify-between">
@@ -221,12 +222,12 @@
                         @click="activateCallback('2')" 
                     />
                     <Button
-                        :disabled="!isStep2Valid"
+                        :disabled="!isStepValid('3')"
                         label="Suivant"
                         severity="success"
                         icon="pi pi-arrow-right"
                         iconPos="right"
-                        @click="goToStep4(activateCallback)" 
+                        @click="goToStep('4', activateCallback)"
                     />
                 </div>
             </StepPanel>
@@ -294,7 +295,7 @@
                         </Fieldset>
 
                     </div>
-                    <small class="text-red-500">{{ errors.step2 }}</small>
+                    <small class="text-red-500">{{ errors.step4 }}</small>
                 </div>
 
                 <div class="flex pt-6 justify-between">
@@ -306,12 +307,12 @@
                         @click="activateCallback('3')" 
                     />
                     <Button
-                        :disabled="!isStep2Valid"
+                        :disabled="!isStepValid('4')"
                         label="Suivant"
                         severity="success"
                         icon="pi pi-arrow-right"
                         iconPos="right"
-                        @click="goToStep5(activateCallback)" 
+                        @click="goToStep('5', activateCallback)"
                     />
                 </div>
             </StepPanel>
@@ -340,7 +341,7 @@
                         </FloatLabel>
 
                     </div>
-                    <small class="text-red-500">{{ errors.step2 }}</small>
+                    <small class="text-red-500">{{ errors.step5 }}</small>
                 </div>
 
                 <div class="flex pt-6 justify-between">
@@ -352,12 +353,12 @@
                         @click="activateCallback('4')" 
                     />
                     <Button
-                        :disabled="!isStep2Valid"
+                        :disabled="!isStepValid('5')"
                         label="Suivant"
                         severity="success"
                         icon="pi pi-arrow-right"
                         iconPos="right"
-                        @click="goToStep6(activateCallback)" 
+                        @click="goToStep('6', activateCallback)"
                     />
                 </div>
             </StepPanel>
@@ -368,9 +369,78 @@
                     <div class="text-center mt-4 mb-4 text-xl font-semibold">
                         {{ currentStepLabel }}
                     </div>
-                    <p><strong>Nom:</strong> {{ form.nom }}</p>
-                    <p><strong>Prénom:</strong> {{ form.prenom }}</p>
-                    <div class="flex items-center gap-2">
+                    <!-- Informations de base -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Informations de base</h3>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Nom :</span> {{ form.nom }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Prénoms :</span> {{ form.prenoms }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Sexe :</span> {{ sexes.find(s => s.value === form.sexe)?.label || '-' }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Date de naissance :</span> {{ form.datenais ? form.datenais : '-' }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Lieu de naissance :</span> {{ form.lieunais || '-' }}</p>
+                    </div>
+                    <!-- Contact -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Contact</h3>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Téléphone :</span> {{ form.telephone1 }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Téléphone secondaire :</span> {{ form.telephone2 || '-' }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Email :</span> {{ form.email || '-' }}</p>
+                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Adresse :</span> {{ form.adresse }}</p>
+                    </div>
+                    <!-- Assurance -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Assurance</h3>
+                        <template v-if="isAssure === 1">
+                            <p class="text-base mb-2">
+                                <span class="font-bold text-gray-700">Assurance :</span> {{ assurances.find(a => a.value === form.assurance_id)?.label || '-' }}
+                            </p>
+                            <p class="text-base mb-2">
+                                <span class="font-bold text-gray-700">Numéro assuré :</span> {{ form.numero_assure }}
+                            </p>
+                            <p class="text-base mb-2">
+                                <span class="font-bold text-gray-700">Taux :</span> {{ form.taux }}%
+                            </p>
+                        </template>
+                        <template v-else>
+                            <p class="text-base mb-2">
+                                <span class="font-bold text-gray-700">
+                                    Non assurer
+                                </span>
+                            </p>
+                        </template>
+                    </div>
+                    <!-- Urgences -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Contacts d'urgence</h3>
+                        <div v-for="(u, index) in urgences" :key="index" class="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm">
+                            <p class="text-base mb-1">
+                                <span class="font-bold text-gray-700">Nom :</span> {{ u.nom }}
+                            </p>
+                            <p class="text-base mb-1">
+                                <span class="font-bold text-gray-700">Lien :</span> {{ u.lien }}
+                            </p>
+                            <p class="text-base mb-1">
+                                <span class="font-bold text-gray-700">Téléphone principal :</span> {{ u.telephone1 }}
+                            </p>
+                            <p v-if="u.telephone2" class="text-base mb-1">
+                                <span class="font-bold text-gray-700">Téléphone secondaire :</span> {{ u.telephone2 }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Infos médicales -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Infos médicales</h3>
+                        <p class="text-base mb-2">
+                            <span class="font-bold text-gray-700">Groupe sanguin :</span> {{ form.groupe_sanguin || '-' }}
+                        </p>
+                        <p class="text-base mb-2">
+                            <span class="font-bold text-gray-700">Antécédents :</span> {{ form.antecedents || '-' }}
+                        </p>
+                        <p class="text-base mb-2">
+                            <span class="font-bold text-gray-700">Allergies :</span> {{ form.allergies || '-' }}
+                        </p>
+                    </div>
+                    <!-- Confirmation -->
+                    <div class="flex items-center gap-2 mt-4">
                         <Checkbox v-model="checked" binary />
                         <span>Je confirme les informations</span>
                     </div>
@@ -385,7 +455,7 @@
                             iconPos="left"
                             size="small"
                             :fluid="false"
-                            @click="goToStep5(activateCallback)"
+                            @click="activateCallback('5')" 
                         />
                     </div>
 
@@ -400,7 +470,7 @@
                             @click="goToStepReset(activateCallback)" 
                         />
                         <Button
-                            type="submit"
+                            @click="submitForm"
                             icon="pi pi-check"
                             severity="success"
                             :loading="loadingForm"
@@ -415,13 +485,14 @@
 
         </StepPanels>
     </Stepper>
-</form>
+</div>
+
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick, watch } from 'vue';
 import TitrePage from '@/layout/elements/TitrePage.vue';
-import { number } from '@/function/services/format';
+import { number, formaDateHeure } from '@/function/services/format';
 import { useScript } from './script'
 import { useToastAlert } from '@/function/function/ToastAlert'
 
@@ -457,17 +528,9 @@ const {
         validateStep4,
         validateStep5,
 
-        isStep1Valid,
-        isStep2Valid,
-        isStep3Valid,
-        isStep4Valid,
-        isStep5Valid,
+        isStepValid,
 
-        goToStep2,
-        goToStep3,
-        goToStep4,
-        goToStep5,
-        goToStep6,
+        goToStep,
 
         goToStepReset
 } = useScript()
@@ -505,7 +568,7 @@ watch(
 
 // Watch sur form.telephone
 watch(
-    () => form.value.urgence_tel1,
+    () => form.value.telephone1,
     async (newVal, oldVal) => {
         if (!newVal) return
 
@@ -520,13 +583,13 @@ watch(
         // mettre à jour seulement si différent
         if (filtered !== newVal) {
             await nextTick()
-            form.value.urgence_tel1 = filtered
+            form.value.telephone1 = filtered
         }
     }
 )
 
 watch(
-    () => form.value.urgence_tel2,
+    () => form.value.telephone2,
     async (newVal, oldVal) => {
         if (!newVal) return
 
@@ -541,9 +604,43 @@ watch(
         // mettre à jour seulement si différent
         if (filtered !== newVal) {
             await nextTick()
-            form.value.urgence_tel2 = filtered
+            form.value.telephone2 = filtered
         }
     }
+)
+
+watch(
+    urgences,
+    async (newVal) => {
+        for (let i = 0; i < newVal.length; i++) {
+            const u = newVal[i]
+
+            // 🔹 téléphone1
+            if (u.telephone1) {
+                let filtered = number(u.telephone1) // filtrer uniquement les chiffres
+                if (!filtered.startsWith('+')) {    // forcer + au début
+                    filtered = '+' + filtered
+                }
+                if (filtered !== u.telephone1) {    // mettre à jour seulement si différent
+                    await nextTick()
+                    u.telephone1 = filtered
+                }
+            }
+
+            // 🔹 téléphone2
+            if (u.telephone2) {
+                let filtered = number(u.telephone2) // filtrer uniquement les chiffres
+                if (!filtered.startsWith('+')) {    // forcer + au début
+                    filtered = '+' + filtered
+                }
+                if (filtered !== u.telephone2) {    // mettre à jour seulement si différent
+                    await nextTick()
+                    u.telephone2 = filtered
+                }
+            }
+        }
+    },
+    { deep: true } // pour détecter les changements à l'intérieur de urgences.value
 )
 
 watch(isAssure, (val) => {
