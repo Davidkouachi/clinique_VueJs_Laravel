@@ -78,4 +78,24 @@ class SelectController extends Controller
         ], 200);
     }
 
+    public function select_antecedents()
+    {
+        $data = DB::table('antecedents')->select('id', 'nom')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
+    public function select_allergies()
+    {
+        $data = DB::table('allergies')->select('id', 'nom')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
 }

@@ -1,4 +1,4 @@
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, nextTick } from 'vue'
 import axios from 'axios'
 import { useToastAlert } from '@/function/function/ToastAlert'
 import { isValidEmail } from '@/function/services/format'
@@ -35,11 +35,21 @@ export function useScript() {
         adresse: '',
         assurance_id: null,
         numero_assure: '',
-        taux: '',
+        taux: 0,
         groupe_sanguin: '',
-        allergies: '',
-        antecedents: ''
+        allergies: [],
+		antecedents: []
     })
+
+	const antecedentSelectRef = ref(null)
+    const antecedentsOption = ref([]);
+    const loadingSelectAntecedent = ref(false)
+    const loadingSelectAntecedentRefresh = ref(false)
+
+    const allergieSelectRef = ref(null)
+    const allergiesOption = ref([]);
+    const loadingSelectAllergie = ref(false)
+    const loadingSelectAllergieRefresh = ref(false)
 
     const urgences = ref([
 	    {
@@ -87,24 +97,24 @@ export function useScript() {
 
 	const controls = {
 	    '1': () => {
-	        // return (
-	        //     form.value.nom !== '' &&
-	        //     form.value.prenoms !== '' &&
-	        //     form.value.sexe !== null &&
-	        //     form.value.lieunais !== '' &&
-	        //     form.value.datenais !== null
-	        // )
+	        return (
+	            form.value.nom !== '' &&
+	            form.value.prenoms !== '' &&
+	            form.value.sexe !== null &&
+	            form.value.lieunais !== '' &&
+	            form.value.datenais !== null
+	        )
 
-	        return true
+	        // return true
 	    },
 
 	    '2': () => {
-	        // return (
-	        //     form.value.telephone1 !== '' &&
-	        //     form.value.adresse !== ''
-	        // )
+	        return (
+	            form.value.telephone1 !== '' &&
+	            form.value.adresse !== ''
+	        )
 
-	        return true
+	        // return true
 	    },
 
 	    '3': () => {
@@ -115,33 +125,29 @@ export function useScript() {
 	                form.value.taux !== 0
 	            )
 	        }
+	        
 	        return true
 	    },
 
 	    '4': () => {
 		    // Vérifie que toutes les urgences ont tous les champs obligatoires remplis
-		    // const allFilled = urgences.value.every(u =>
-		    //     u.nom?.trim() !== '' &&
-		    //     u.lien?.trim() !== '' &&
-		    //     u.telephone1?.trim() !== ''
-		    // )
-		    // if (!allFilled) return false
+		    const allFilled = urgences.value.every(u =>
+		        u.nom?.trim() !== '' &&
+		        u.lien?.trim() !== '' &&
+		        u.telephone1?.trim() !== ''
+		    )
+		    if (!allFilled) return false
 
 		    // // Vérifie s'il y a des numéros de téléphone dupliqués
-		    // const phones = urgences.value.map(u => u.telephone1.trim())
-		    // const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
-		    // if (hasDuplicate) return false
+		    const phones = urgences.value.map(u => u.telephone1.trim())
+		    const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
+		    if (hasDuplicate) return false
 
 		    // Si tout est ok, retourne true
 		    return true
 		},
 
 	    '5': () => {
-	        // return (
-	        //     form.value.groupe_sanguin !== '' &&
-	        //     form.value.antecedents !== '' &&
-	        //     form.value.allergies !== ''
-	        // )
 
 	        return true
 	    },
@@ -295,8 +301,8 @@ export function useScript() {
 	// --------------------------------------------
 
     const sexes = [
-        { label: 'Masculin', value: 'M' },
-        { label: 'Féminin', value: 'F' }
+        { label: 'Masculin', value: 'Masculin' },
+        { label: 'Féminin', value: 'Féminin' }
     ]
 
     const optionAssure = [
@@ -304,6 +310,7 @@ export function useScript() {
         { label: 'Oui', value: 1 }
     ]
 
+    const assuranceSelectRef = ref(null)
     const assurances = ref([])
     const isAssure = ref(0)
     const loadingSelectAssurance = ref(false)
@@ -315,7 +322,16 @@ export function useScript() {
 
     // 🔹 FETCH ASSURANCES
     const fetchAssurances = async (refresh) => {
-		if(refresh) loadingSelectAssuranceRefresh.value = true
+
+		if(refresh) {
+			
+			assuranceSelectRef.value?.hide()
+    		await nextTick()
+    		assuranceSelectRef.value.filterValue = '';
+    		form.value.assurance_id = null
+			loadingSelectAssuranceRefresh.value = true
+		}
+
 		loadingSelectAssurance.value = true
 
 	    try {
@@ -332,96 +348,84 @@ export function useScript() {
 	    }
 	}
 
-	// const validateUrgences = () => {
-	//     for (let i = 0; i < urgences.value.length; i++) {
-	//         const u = urgences.value[i]
-
-	//         // téléphone obligatoire
-	//         if (!u.telephone1) {
-	//             showToast(
-	//                 'warn',
-	//                 'Alerte',
-	//                 `Téléphone obligatoire pour le contact d'urgence #${i + 1}`
-	//             )
-	//             return false
-	//         }
-
-	//         // nom optionnel mais recommandé
-	//         if (!u.nom) {
-	//             showToast(
-	//                 'warn',
-	//                 'Alerte',
-	//                 `Nom manquant pour le contact d'urgence #${i + 1}`
-	//             )
-	//             return false
-	//         }
-
-	//         // lien optionnel mais recommandé
-	//         if (!u.lien) {
-	//             showToast(
-	//                 'warn',
-	//                 'Alerte',
-	//                 `Lien manquant pour le contact d'urgence #${i + 1}`
-	//             )
-	//             return false
-	//         }
-	//     }
-
-	//     return true
-	// }
-
-    // 🔹 SUBMIT
-    const submitForm = async () => {
-
-        submitted.value = true
-
-        // ✅ validation
-        if (
-            !form.value.nom ||
-            !form.value.prenoms ||
-            !form.value.sexe ||
-            !form.value.telephone1 ||
-            !form.value.adresse
-        ) {
-            showToast('warn', 'Alerte', 'Formulaire incomplet')
-            return
-        }
-
-        if (form.value.email && !isValidEmail(form.value.email)) {
-            showToast('warn', 'Email invalide', 'Veuillez saisir un email valide')
-            return
-        }
-
-        if (isAssure.value) {
-		    if (!form.value.assurance_id || !form.value.numero_assure || !form.value.taux) {
-		        showToast('warn', 'Alerte', 'Veuillez saisir toutes les informations du volet assurance')
-		        return
-		    }
+	const fetchAntecedents = async (refresh) => {
+		if(refresh) {
+			
+			antecedentSelectRef.value?.hide()
+    		await nextTick()
+    		antecedentSelectRef.value.filterValue = '';
+    		form.value.antecedents = ''
+			loadingSelectAntecedentRefresh.value = true
 		}
 
-		// if (!validateUrgences()) {
-		//     return
-		// }
+		loadingSelectAntecedent.value = true
 
-		// BONUS (anti doublon téléphone 🔥)
-		// const phones = urgences.value.map(u => u.telephone1)
+	    try {
+	        const res = await axios.get('/api/v1/select_antecedents')
+	        antecedentsOption.value = res.data.data.map(r => ({
+	            label: r.nom,
+	            value: r.id
+	        }))
+	    } catch (e) {
+	        showToast('error', 'Erreur', 'Impossible de charger les données')
+	    } finally {
+	    	loadingSelectAntecedent.value = false
+	    	if(refresh) loadingSelectAntecedentRefresh.value = false
+	    }
+	}
 
-		// const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
+	const fetchAllergies = async (refresh) => {
+		if(refresh) {
+			
+			allergieSelectRef.value?.hide()
+    		await nextTick()
+    		allergieSelectRef.value.filterValue = '';
+    		form.value.allergies = ''
+			loadingSelectAllergieRefresh.value = true
+		}
 
-		// if (hasDuplicate) {
-		//     showToast('warn', 'Alerte', 'Numéros en double interdits')
-		//     return false
-		// }
+		loadingSelectAllergie.value = true
 
-		// VERSION ULTRA PRO (tolérance + suppression des vides)
-		// const cleanUrgences = urgences.value
-		//     .filter(u => u.telephone1)
-		//     .map(u => ({
-		//         nom: u.nom || null,
-		//         lien: u.lien || null,
-		//         telephone1: u.telephone1,
-		//         telephone2: u.telephone2 || null
-		//     }))
+	    try {
+	        const res = await axios.get('/api/v1/select_allergies')
+	        allergiesOption.value = res.data.data.map(r => ({
+	            label: r.nom,
+	            value: r.id
+	        }))
+	    } catch (e) {
+	        showToast('error', 'Erreur', 'Impossible de charger les données')
+	    } finally {
+	    	loadingSelectAllergie.value = false
+	    	if(refresh) loadingSelectAllergieRefresh.value = false
+	    }
+	}
+
+	// Antécédents sélectionnés avec labels
+	const antecedentsLabels = computed(() => {
+	    if (!form.value.antecedents || form.value.antecedents.length === 0) return '-'
+	    return form.value.antecedents
+	        .map(id => antecedentsOption.value.find(a => a.value === id)?.label)
+	        .filter(Boolean)
+	        .join(', ')
+	})
+
+	// Allergies sélectionnées avec labels
+	const allergiesLabels = computed(() => {
+	    if (!form.value.allergies || form.value.allergies.length === 0) return '-'
+	    return form.value.allergies
+	        .map(id => allergiesOption.value.find(a => a.value === id)?.label)
+	        .filter(Boolean)
+	        .join(', ')
+	})
+
+	const urgencesValides = computed(() => {
+	    return urgences.value.filter(u =>
+	        u.nom?.trim() !== '' &&
+	        u.telephone1?.trim() !== ''
+	    )
+	})
+
+    const submitForm = async () => {
 
         if (!checked.value) {
             showToast('warn', 'Alerte', 'Veuillez confirmer les informations')
@@ -434,6 +438,10 @@ export function useScript() {
 		    ...form.value,
 		    urgences: urgences.value
 		}
+
+		console.log(payload)
+
+		return
 
         try {
             const res = await axios.post('/api/v1/api_insert_patient', payload)
@@ -475,17 +483,32 @@ export function useScript() {
 
     return {
         form,
+        antecedentsOption,
+        allergiesOption,
         sexes,
         assurances,
         isAssure,
         optionAssure,
         loadingSelectAssurance,
+        loadingSelectAntecedent,
+        loadingSelectAllergie,
         loadingSelectAssuranceRefresh,
+        loadingSelectAntecedentRefresh,
+        loadingSelectAllergieRefresh,
+        assuranceSelectRef,
+        antecedentSelectRef,
+        allergieSelectRef,
         checked,
         submitted,
         loadingForm,
         fetchAssurances,
+        fetchAntecedents,
+        fetchAllergies,
         submitForm,
+
+        antecedentsLabels,
+        allergiesLabels,
+        urgencesValides,
 
         urgences,
         addUrgence,

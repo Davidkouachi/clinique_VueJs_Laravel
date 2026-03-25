@@ -37,13 +37,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3">
 
                         <FloatLabel variant="on">
-                            <InputText id="nom" v-model="form.nom" class="w-full" variant="" :invalid="submitted && !form.nom" @input="form.nom = form.nom.toUpperCase()" size="large" />
+                            <InputText id="nom" v-model="form.nom" class="w-full" variant="" @input="form.nom = form.nom.toUpperCase()" size="large" />
                             <label for="nom">Nom *</label>
                         </FloatLabel>
 
                         <FloatLabel variant="on">
-                            <InputText id="prenoms" v-model="form.prenoms" class="w-full" variant=""
-                                :invalid="submitted && !form.prenoms" size="large"/>
+                            <InputText id="prenoms" v-model="form.prenoms" class="w-full" variant="" size="large" @input="form.prenoms = form.prenoms.toUpperCase()"/>
                             <label for="prenoms">Prénoms *</label>
                         </FloatLabel>
 
@@ -100,8 +99,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3">
 
                         <FloatLabel variant="on">
-                            <InputText v-model="form.telephone1" class="w-full" variant=""
-                                :invalid="submitted && !form.telephone1" size="large"/>
+                            <InputText v-model="form.telephone1" class="w-full" variant="" size="large"/>
                             <label>Téléphone *</label>
                         </FloatLabel>
 
@@ -116,8 +114,7 @@
                         </FloatLabel>
 
                         <FloatLabel variant="on">
-                            <InputText v-model="form.adresse" class="w-full" variant=""
-                                :invalid="submitted && !form.adresse" size="large"/>
+                            <InputText v-model="form.adresse" class="w-full" variant="" size="large"/>
                             <label>Adresse *</label>
                         </FloatLabel>
                     </div>
@@ -166,42 +163,50 @@
 
                         <template v-if="isAssure === 1" >
 
-                            <div class="flex gap-2 w-full">
-                                <FloatLabel variant="on" class="flex-1">
-                                    <Select
-                                        filter
-                                        v-model="form.assurance_id"
-                                        :options="assurances || []"
-                                        optionLabel="label"
-                                        optionValue="value"
-                                        class="w-full"
-                                        appendTo="self"
-                                        :loading="loadingSelectAssurance"
-                                        emptyMessage="Aucune donnée disponible"
-                                        emptyFilterMessage="Aucun résultat trouvé"
-                                        :invalid="submitted && !form.assurance_id && isAssure"
-                                        size="large"
-                                    />
-                                    <label>Assurance</label>
-                                </FloatLabel>
-                                <Button
-                                    icon="pi pi-refresh"
-                                    size="large"
-                                    severity="warn"
-                                    :loading="loadingSelectAssuranceRefresh"
-                                    :disabled="loadingSelectAssuranceRefresh" 
-                                    @click="fetchAssurances(true)"
-                                    variant=""
-                                />
-                            </div>
+                            <FloatLabel variant="on" class="flex-1">
+                                <Select
+                                    ref="assuranceSelectRef"
+                                    filter
+                                    v-model="form.assurance_id"
+                                    :options="assurances || []"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    class="w-full"
+                                    appendTo="self"
+                                    :loading="loadingSelectAssurance"
+                                    emptyMessage="Aucune donnée disponible"
+                                    emptyFilterMessage="Aucun résultat trouvé"
+                                    size="large">
+                                    <template #header>
+                                        <div class="font-medium px-3 py-2">
+                                            Veuillez sélectionner votre assurance
+                                        </div>
+                                    </template>
+                                    <template #option="slotProps">
+                                        <div class="flex items-center">
+                                            <div>
+                                                {{ slotProps.option.label }}
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template #footer>
+                                        <div class="p-3 flex justify-between">
+                                            <Button label="Actualiser" severity="warn" variant="" size="small" icon="pi pi-refresh" :loading="loadingSelectAssuranceRefresh"
+                                            :disabled="loadingSelectAssuranceRefresh" 
+                                            @click="fetchAssurances(true)" />
+                                        </div>
+                                    </template>
+                                </Select>
+                                <label>Assurance</label>
+                            </FloatLabel>
 
                             <FloatLabel variant="on">
-                                <InputText v-model="form.numero_assure" class="w-full" variant="" :invalid="submitted && !form.numero_assure && isAssure" size="large"/>
+                                <InputText v-model="form.numero_assure" class="w-full" variant="" size="large"/>
                                 <label>Numéro assuré</label>
                             </FloatLabel>
 
                             <FloatLabel variant="on">
-                                <InputText v-model="form.taux" class="w-full" variant="" :invalid="submitted && !form.taux && isAssure" size="large"/>
+                                <InputText v-model="form.taux" class="w-full" variant="" size="large"/>
                                 <label>Taux (%)</label>
                             </FloatLabel>
 
@@ -319,15 +324,95 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3">
 
-                        <FloatLabel variant="on">
-                            <Textarea v-model="form.allergies" rows="5" cols="30" style="resize: none" size="large" variant="" class="w-full"/>
-                            <label>Allergies</label>
-                        </FloatLabel>
-
-                        <FloatLabel variant="on">
-                            <Textarea v-model="form.antecedents" rows="5" cols="30" style="resize: none" size="large" variant="" class="w-full"/>
+                        <FloatLabel variant="on" class="">
+                            <MultiSelect
+                                ref="antecedentSelectRef"
+                                v-model="form.antecedents"
+                                :options="antecedentsOption || []" 
+                                optionLabel="label"
+                                optionValue="value"
+                                :loading="loadingSelectAntecedent"
+                                filter 
+                                placeholder="" 
+                                display="chip"
+                                :maxSelectedLabels="2"
+                                selectedItemsLabel="{0} éléments sélectionnés" 
+                                class="w-full" 
+                                size="large" 
+                                emptyMessage="Aucune donnée disponible"
+                                emptyFilterMessage="Aucun résultat trouvé">
+                                <template #header>
+                                    <div class="font-medium px-3 py-2">
+                                        Vous pouvez sélectionner plusieurs
+                                    </div>
+                                </template>
+                                <template #option="slotProps">
+                                    <div class="flex items-center">
+                                        <div>
+                                            {{ slotProps.option.label }}
+                                        </div>
+                                    </div>
+                                </template>
+                                <!-- icon dans la zone de placeholder -->
+                                <!-- <template #dropdownicon>
+                                    <i class="pi pi-map" />
+                                </template> -->
+                                <!-- icon dans la zone de recherche -->
+                                <!-- <template #filtericon>
+                                    <i class="pi pi-map-marker" />
+                                </template> -->
+                                <template #footer>
+                                    <div class="p-3 flex justify-between">
+                                        <Button label="Ajouter" severity="success" variant="" size="small" icon="pi pi-plus" />
+                                        <Button label="Actualiser" severity="warn" variant="" size="small" icon="pi pi-refresh" :loading="loadingSelectAntecedentRefresh"
+                                        :disabled="loadingSelectAntecedentRefresh" 
+                                        @click="fetchAntecedents(true)" />
+                                    </div>
+                                </template>
+                            </MultiSelect>
                             <label>Antécédents</label>
                         </FloatLabel>
+
+                        <FloatLabel variant="on" class="">
+                            <MultiSelect
+                                ref="allergieSelectRef"
+                                v-model="form.allergies"
+                                :options="allergiesOption || []" 
+                                optionLabel="label"
+                                optionValue="value"
+                                :loading="loadingSelectAllergie"
+                                filter 
+                                placeholder="" 
+                                display="chip"
+                                :maxSelectedLabels="2"
+                                selectedItemsLabel="{0} éléments sélectionnés" 
+                                class="w-full" 
+                                size="large" 
+                                emptyMessage="Aucune donnée disponible"
+                                emptyFilterMessage="Aucun résultat trouvé">
+                                <template #header>
+                                    <div class="font-medium px-3 py-2">
+                                        Vous pouvez sélectionner plusieurs
+                                    </div>
+                                </template>
+                                <template #option="slotProps">
+                                    <div class="flex items-center">
+                                        <div>
+                                            {{ slotProps.option.label }}
+                                        </div>
+                                    </div>
+                                </template>
+                                <template #footer>
+                                    <div class="p-3 flex justify-between">
+                                        <Button label="Ajouter" severity="success" variant="" size="small" icon="pi pi-plus" />
+                                        <Button label="Actualiser" severity="warn" variant="" size="small" icon="pi pi-refresh" :loading="loadingSelectAllergieRefresh"
+                                        :disabled="loadingSelectAllergieRefresh" 
+                                        @click="fetchAllergies(true)" />
+                                    </div>
+                                </template>
+                            </MultiSelect>
+                            <label>Allergies</label>
+                        </FloatLabel>  
 
                         <FloatLabel variant="on">
                             <InputText v-model="form.groupe_sanguin" class="w-full" variant="" size="large"/>
@@ -357,85 +442,138 @@
 
             <!-- STEP 6 -->
             <StepPanel v-slot="{ activateCallback }" value="6">
-                <div class="flex flex-col gap-2">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">
-                        {{ currentStepLabel }}
+                <div class="flex flex-col gap-6">
+
+                    <!-- 🔷 STEP TITLE -->
+                    <div class="text-center mt-4">
+                        <div class="text-2xl font-bold text-blue-600 tracking-wide">
+                            {{ currentStepLabel }}
+                        </div>
+                        <div class="w-16 h-1 bg-blue-500 mx-auto mt-2 rounded"></div>
                     </div>
-                    <!-- Informations de base -->
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Informations de base</h3>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Nom :</span> {{ form.nom }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Prénoms :</span> {{ form.prenoms }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Sexe :</span> {{ sexes.find(s => s.value === form.sexe)?.label || '-' }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Date de naissance :</span> {{ form.datenais ? form.datenais : '-' }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Lieu de naissance :</span> {{ form.lieunais || '-' }}</p>
-                    </div>
-                    <!-- Contact -->
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Contact</h3>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Téléphone :</span> {{ form.telephone1 }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Téléphone secondaire :</span> {{ form.telephone2 || '-' }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Email :</span> {{ form.email || '-' }}</p>
-                        <p class="text-base mb-2"><span class="font-bold text-gray-700">Adresse :</span> {{ form.adresse }}</p>
-                    </div>
-                    <!-- Assurance -->
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Assurance</h3>
-                        <template v-if="isAssure === 1">
-                            <p class="text-base mb-2">
-                                <span class="font-bold text-gray-700">Assurance :</span> {{ assurances.find(a => a.value === form.assurance_id)?.label || '-' }}
-                            </p>
-                            <p class="text-base mb-2">
-                                <span class="font-bold text-gray-700">Numéro assuré :</span> {{ form.numero_assure }}
-                            </p>
-                            <p class="text-base mb-2">
-                                <span class="font-bold text-gray-700">Taux :</span> {{ form.taux }}%
-                            </p>
-                        </template>
-                        <template v-else>
-                            <p class="text-base mb-2">
-                                <span class="font-bold text-gray-700">
-                                    Non assurer
-                                </span>
-                            </p>
-                        </template>
-                    </div>
-                    <!-- Urgences -->
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Contacts d'urgence</h3>
-                        <div v-for="(u, index) in urgences" :key="index" class="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm">
-                            <p class="text-base mb-1">
-                                <span class="font-bold text-gray-700">Nom :</span> {{ u.nom }}
-                            </p>
-                            <p class="text-base mb-1">
-                                <span class="font-bold text-gray-700">Lien :</span> {{ u.lien }}
-                            </p>
-                            <p class="text-base mb-1">
-                                <span class="font-bold text-gray-700">Téléphone principal :</span> {{ u.telephone1 }}
-                            </p>
-                            <p v-if="u.telephone2" class="text-base mb-1">
-                                <span class="font-bold text-gray-700">Téléphone secondaire :</span> {{ u.telephone2 }}
-                            </p>
+
+                    <!-- 🧾 INFORMATIONS DE BASE -->
+                    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+                            <i class="pi pi-user"></i> Informations de base
+                        </h3>
+
+                        <div class="grid md:grid-cols-2 gap-3 text-gray-700">
+                            <p><span class="font-bold">Nom :</span> {{ form.nom }}</p>
+                            <p><span class="font-bold">Prénoms :</span> {{ form.prenoms }}</p>
+                            <p><span class="font-bold">Sexe :</span> {{ sexes.find(s => s.value === form.sexe)?.label || '-' }}</p>
+                            <p><span class="font-bold">Date de naissance :</span> {{ form.datenais || '-' }}</p>
+                            <p class="md:col-span-2"><span class="font-bold">Lieu de naissance :</span> {{ form.lieunais || '-' }}</p>
                         </div>
                     </div>
-                    <!-- Infos médicales -->
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Infos médicales</h3>
-                        <p class="text-base mb-2">
-                            <span class="font-bold text-gray-700">Groupe sanguin :</span> {{ form.groupe_sanguin || '-' }}
-                        </p>
-                        <p class="text-base mb-2">
-                            <span class="font-bold text-gray-700">Antécédents :</span> {{ form.antecedents || '-' }}
-                        </p>
-                        <p class="text-base mb-2">
-                            <span class="font-bold text-gray-700">Allergies :</span> {{ form.allergies || '-' }}
-                        </p>
+
+                    <!-- 📞 CONTACT -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-700 mb-4 flex items-center gap-2">
+                            <i class="pi pi-phone"></i> Contact
+                        </h3>
+
+                        <div class="grid md:grid-cols-2 gap-3 text-gray-700">
+                            <p><span class="font-bold">Téléphone :</span> {{ form.telephone1 }}</p>
+                            <p><span class="font-bold">Téléphone secondaire :</span> {{ form.telephone2 || '-' }}</p>
+                            <p><span class="font-bold">Email :</span> {{ form.email || '-' }}</p>
+                            <p><span class="font-bold">Adresse :</span> {{ form.adresse }}</p>
+                        </div>
                     </div>
-                    <!-- Confirmation -->
-                    <div class="flex items-center gap-2 mt-4">
+
+                    <!-- 🛡️ ASSURANCE -->
+                    <div class="bg-green-50 border border-green-100 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
+                            <i class="pi pi-briefcase"></i> Assurance
+                        </h3>
+
+                        <template v-if="isAssure === 1">
+                            <div class="grid md:grid-cols-2 gap-3 text-gray-700">
+                                <p>
+                                    <span class="font-bold">Assurance :</span> 
+                                    {{ assurances.find(a => a.value === form.assurance_id)?.label || '-' }}
+                                </p>
+                                <p><span class="font-bold">Numéro :</span> {{ form.numero_assure }}</p>
+                                <p><span class="font-bold">Taux :</span> 
+                                    <span class="text-green-600 font-bold">{{ form.taux }}%</span>
+                                </p>
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <p class="text-gray-500 italic">Aucune assurance</p>
+                        </template>
+                    </div>
+
+                    <!-- 🚑 URGENCES -->
+                    <div class="bg-red-50 border border-red-100 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
+                            <i class="pi pi-exclamation-triangle"></i> Contacts d'urgence
+                        </h3>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <template v-if="urgencesValides.length > 0">
+                                <div 
+                                    v-for="(u, index) in urgencesValides" 
+                                    :key="index"
+                                    class="bg-white border border-red-100 rounded-xl p-4 shadow-sm"
+                                >
+                                    <p><span class="font-bold">Nom :</span> {{ u.nom }}</p>
+                                    <p><span class="font-bold">Lien :</span> {{ u.lien || '-' }}</p>
+                                    <p><span class="font-bold">Téléphone :</span> {{ u.telephone1 }}</p>
+
+                                    <p v-if="u.telephone2">
+                                        <span class="font-bold">Secondaire :</span> {{ u.telephone2 }}
+                                    </p>
+                                </div>
+                            </template>
+
+                            <template v-else>
+                                <p class="text-gray-500 italic">Aucun contact d'urgence</p>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- ❤️ INFOS MÉDICALES -->
+                    <div class="bg-purple-50 border border-purple-100 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-xl font-bold text-purple-700 mb-4 flex items-center gap-2">
+                            <i class="pi pi-heart"></i> Infos médicales
+                        </h3>
+
+                        <div class="space-y-3 text-gray-700">
+
+                            <p>
+                                <span class="font-bold">Groupe sanguin :</span> 
+                                <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg">
+                                    {{ form.groupe_sanguin || '-' }}
+                                </span>
+                            </p>
+
+                            <p>
+                                <span class="font-bold">Antécédents :</span>
+                                <span class="text-gray-800">
+                                    {{ antecedentsLabels }}
+                                </span>
+                            </p>
+
+                            <p>
+                                <span class="font-bold">Allergies :</span>
+                                <span class="text-red-600 font-medium">
+                                    {{ allergiesLabels }}
+                                </span>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <!-- ✅ CONFIRMATION -->
+                    <div class="bg-gray-100 border border-gray-200 rounded-xl p-4 flex items-center gap-3 shadow-sm">
                         <Checkbox v-model="checked" binary />
-                        <span>Je confirme les informations</span>
+                        <span class="text-gray-700 font-medium">
+                            Je confirme les informations saisies
+                        </span>
                     </div>
+
                 </div>
 
                 <div class="flex flex-wrap items-center gap-4 pt-6">             
@@ -481,17 +619,32 @@ const { showToast } = useToastAlert()
 
 const {
         form,
+        antecedentsOption,
+        allergiesOption,
         sexes,
         assurances,
         isAssure,
         optionAssure,
         loadingSelectAssurance,
+        loadingSelectAntecedent,
+        loadingSelectAllergie,
         loadingSelectAssuranceRefresh,
+        loadingSelectAntecedentRefresh,
+        loadingSelectAllergieRefresh,
+        assuranceSelectRef,
+        antecedentSelectRef,
+        allergieSelectRef,
         checked,
         submitted,
         loadingForm,
         fetchAssurances,
+        fetchAntecedents,
+        fetchAllergies,
         submitForm,
+
+        antecedentsLabels,
+        allergiesLabels,
+        urgencesValides,
 
         urgences,
         addUrgence,
@@ -518,25 +671,42 @@ const {
 
 onMounted(() => {
     fetchAssurances()
+    fetchAntecedents()
+    fetchAllergies()
 })
 
+// Watch sur form.taux
 watch(
     () => form.value.taux,
     async (newVal) => {
-        if (!newVal) return
+
+        // 🔹 Si vide → remettre 0
+        if (newVal === '' || newVal === null || newVal === undefined) {
+            await nextTick()
+            form.value.taux = 0
+            return
+        }
 
         // 🔹 garder uniquement chiffres
         let filtered = number(newVal)
 
+        // 🔹 supprimer les zéros au début (ex: 05 → 5)
+        filtered = filtered.replace(/^0+/, '')
+
+        // 🔹 si tout supprimé → remettre 0
+        if (filtered === '') {
+            filtered = 0
+        }
+
         // 🔹 limiter à 3 chiffres
         filtered = filtered.slice(0, 3)
 
-        // 🔹 convertir en nombre pour contrôle max
-        let numericValue = parseInt(filtered || '0')
+        // 🔹 contrôle max 100
+        let numericValue = parseInt(filtered)
 
         if (numericValue > 100) {
             filtered = '100'
-            showToast('warn', 'Attention', 'le taux (%) de couverture d\'assurance ne dépasse pas 100%')
+            showToast('warn', 'Attention', "Le taux (%) ne peut pas dépasser 100%")
         }
 
         // 🔹 éviter boucle infinie
@@ -590,6 +760,7 @@ watch(
     }
 )
 
+// Watch sur urgences.telephone
 watch(
     urgences,
     async (newVal) => {
@@ -628,7 +799,7 @@ watch(isAssure, (val) => {
     if (!val) {
         form.value.assurance_id = null
         form.value.numero_assure = ''
-        form.value.taux = ''
+        form.value.taux = 0
     }
 })
 </script>
@@ -636,3 +807,4 @@ watch(isAssure, (val) => {
 <style scoped lang="scss">
 
 </style>
+ 

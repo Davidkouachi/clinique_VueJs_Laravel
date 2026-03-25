@@ -11,21 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('allergies', function (Blueprint $table) {
+            $table->id();
+            $table->string('nom')->unique();
+            $table->timestamps();
+        });
+
+        Schema::create('antecedents', function (Blueprint $table) {
+            $table->id();
+            $table->string('nom')->unique();
+            $table->timestamps();
+        });
+
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->string('uid')->unique();
-            $table->string('numdossier')->unique();
+            $table->string('uid')->unique()->index();
+            $table->string('numdossier')->unique()->index();
 
-            $table->string('nom');
-            $table->string('prenoms')->nullable();
+            $table->string('nom')->index();
+            $table->string('prenoms')->nullable()->index();
 
             $table->string('sexe', 10);
             $table->date('datenais')->nullable();
             $table->string('lieunais')->nullable();
 
-            $table->string('telephone1');
-            $table->string('telephone2')->nullable();
-            $table->string('email')->nullable();
+            $table->string('telephone1')->index();
+            $table->string('telephone2')->nullable()->index();
+            $table->string('email')->nullable()->index();
+
+            $table->string('groupe_sanguin')->nullable();
 
             $table->string('adresse')->nullable();
             $table->string('photo')->nullable();
@@ -35,18 +49,31 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('patients_info', function (Blueprint $table) {
+        Schema::create('patient_allergies', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('patient_id')
-                ->constrained('patients')
+                ->constrained()
                 ->cascadeOnDelete();
 
-            $table->string('groupe_sanguin')->nullable();
+            $table->foreignId('allergie_id')
+                ->constrained('allergies')
+                ->cascadeOnDelete();
 
-            $table->json('allergies')->nullable();     // 🔥 JSON
-            $table->json('antecedents')->nullable();   // 🔥 JSON
+            $table->timestamps();
+        });
 
+        Schema::create('patient_antecedents', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('patient_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('antecedent_id')
+                ->constrained('antecedents')
+                ->cascadeOnDelete();
+                
             $table->timestamps();
         });
 

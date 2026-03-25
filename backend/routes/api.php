@@ -74,5 +74,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::get('/select_tritremedecin', [SelectController::class, 'select_tritremedecin']);
     Route::get('/select_specialite', [SelectController::class, 'select_specialite']);
     Route::get('/select_assurances', [SelectController::class, 'select_assurances']);
+    Route::get('/select_antecedents', [SelectController::class, 'select_antecedents']);
+    Route::get('/select_allergies', [SelectController::class, 'select_allergies']);
 
 });
