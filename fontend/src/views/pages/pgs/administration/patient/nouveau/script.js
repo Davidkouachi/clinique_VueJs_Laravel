@@ -1,11 +1,18 @@
-import { ref, reactive, computed, nextTick } from 'vue'
+import { ref, reactive, computed, nextTick, markRaw } from 'vue'
 import axios from 'axios'
 import { useToastAlert } from '@/function/function/ToastAlert'
-import { isValidEmail } from '@/function/services/format'
+import { useDialogStore } from '@/function/stores/dialog'
+import { 
+	number, 
+	formatDateForApi, 
+	isValidEmail } from '@/function/services/format';
+
+import pageInsertAssurance from '@/views/pages/pgs/administration/assurance/insertOption.vue'
 
 export function useScript() {
 
     const { showToast } = useToastAlert()
+    const dialogUse = useDialogStore();
 
     const steps = [
 	    { value: '1', icon: 'pi pi-user', label: 'Informations de base' },
@@ -97,51 +104,51 @@ export function useScript() {
 
 	const controls = {
 	    '1': () => {
-	        return (
-	            form.value.nom !== '' &&
-	            form.value.prenoms !== '' &&
-	            form.value.sexe !== null &&
-	            form.value.lieunais !== '' &&
-	            form.value.datenais !== null
-	        )
+	        // return (
+	        //     form.value.nom !== '' &&
+	        //     form.value.prenoms !== '' &&
+	        //     form.value.sexe !== null &&
+	        //     form.value.lieunais !== '' &&
+	        //     form.value.datenais !== null
+	        // )
 
-	        // return true
+	        return true
 	    },
 
 	    '2': () => {
-	        return (
-	            form.value.telephone1 !== '' &&
-	            form.value.adresse !== ''
-	        )
+	        // return (
+	        //     form.value.telephone1 !== '' &&
+	        //     form.value.adresse !== ''
+	        // )
 
-	        // return true
+	        return true
 	    },
 
 	    '3': () => {
-	        if (isAssure.value === 1) {
-	            return (
-	                form.value.assurance_id !== null &&
-	                form.value.numero_assure !== '' &&
-	                form.value.taux !== 0
-	            )
-	        }
+	        // if (isAssure.value === 1) {
+	        //     return (
+	        //         form.value.assurance_id !== null &&
+	        //         form.value.numero_assure !== '' &&
+	        //         form.value.taux !== 0
+	        //     )
+	        // }
 	        
 	        return true
 	    },
 
 	    '4': () => {
 		    // Vérifie que toutes les urgences ont tous les champs obligatoires remplis
-		    const allFilled = urgences.value.every(u =>
-		        u.nom?.trim() !== '' &&
-		        u.lien?.trim() !== '' &&
-		        u.telephone1?.trim() !== ''
-		    )
-		    if (!allFilled) return false
+		    // const allFilled = urgences.value.every(u =>
+		    //     u.nom?.trim() !== '' &&
+		    //     u.lien?.trim() !== '' &&
+		    //     u.telephone1?.trim() !== ''
+		    // )
+		    // if (!allFilled) return false
 
 		    // // Vérifie s'il y a des numéros de téléphone dupliqués
-		    const phones = urgences.value.map(u => u.telephone1.trim())
-		    const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
-		    if (hasDuplicate) return false
+		    // const phones = urgences.value.map(u => u.telephone1.trim())
+		    // const hasDuplicate = phones.some((p, i) => phones.indexOf(p) !== i)
+		    // if (hasDuplicate) return false
 
 		    // Si tout est ok, retourne true
 		    return true
@@ -221,6 +228,7 @@ export function useScript() {
 	    '6': () => controls['6']()
 	}
 
+	// quand je click sur les icones
 	const isStepValid = (step) => {
 	    const stepNumber = Number(step)
 
@@ -244,49 +252,49 @@ export function useScript() {
 	    '6': () => validateStep1() && validateStep2() && validateStep3() && validateStep4() && validateStep5()
 	}
 
-	const goToStep = (step, activateCallback) => {
+	const goToStep = (step) => {
 	    const validate = stepValidators[step]
 
 	    if (!validate || validate()) {
 	        currentStep.value = step
-	        activateCallback(step)
 	    }
 	}
 
 	// --------------------------------------------------------
 
-	const goToStepReset = (activateCallback) => {
-	    // Revenir au premier step
+	const goToStepReset = () => {
+
+	    // 🔹 Revenir au step 1
 	    currentStep.value = '1'
 
-	    // Reset formulaire
+	    // 🔹 Reset formulaire
 	    form.value = {
-            nom: '',
-            prenoms: '',
-            sexe: null,
-            datenais: null,
-            lieunais: '',
-            telephone1: '',
-            telephone2: '',
-            email: '',
-            adresse: '',
-            assurance_id: null,
-            numero_assure: '',
-            taux: '',
-            urgence_nom: '',
-            urgence_lien: '',
-            urgence_tel1: '',
-            urgence_tel2: '',
-            groupe_sanguin: '',
-            allergies: '',
-            antecedents: ''
-        }
+	        nom: '',
+	        prenoms: '',
+	        sexe: null,
+	        datenais: null,
+	        lieunais: '',
+	        telephone1: '',
+	        telephone2: '',
+	        email: '',
+	        adresse: '',
+	        assurance_id: null,
+	        numero_assure: '',
+	        taux: 0,
+	        urgence_nom: '',
+	        urgence_lien: '',
+	        urgence_tel1: '',
+	        urgence_tel2: '',
+	        groupe_sanguin: '',
+	        allergies: [],
+	        antecedents: []
+	    }
 
-        checked.value = false
-        submitted.value = false
-        isAssure.value = 0
+	    checked.value = false
+	    submitted.value = false
+	    isAssure.value = 0
 
-	    // Reset erreurs
+	    // 🔹 Reset erreurs
 	    errors.step1 = ''
 	    errors.step2 = ''
 	    errors.step3 = ''
@@ -295,7 +303,6 @@ export function useScript() {
 
 	    cleanUrgences()
 
-	    activateCallback('1')
 	}
 
 	// --------------------------------------------
@@ -436,38 +443,18 @@ export function useScript() {
 
         const payload = {
 		    ...form.value,
+		    datenais: formatDateForApi(form.value.datenais, false),
 		    urgences: urgences.value
-		}
-
-		console.log(payload)
-
-		return
+		};
 
         try {
             const res = await axios.post('/api/v1/api_insert_patient', payload)
 
-            // $request->validate([
-			//     'nom' => 'required',
-			//     'prenoms' => 'required',
-			//     'telephone1' => 'required',
-			//     'urgences' => 'required|array|min:1',
-			//     'urgences.*.telephone1' => 'required'
-			// ]);
-
-			// foreach ($request->urgences as $urgence) {
-			//     PatientUrgence::create([
-			//         'patient_id' => $patient->id,
-			//         'nom' => $urgence['nom'],
-			//         'lien' => $urgence['lien'],
-			//         'telephone1' => $urgence['telephone1'],
-			//         'telephone2' => $urgence['telephone2'],
-			//     ]);
-			// }
-
             if (res.status === 200) {
                 showToast('success', 'Succès', res.data.msg)
-                cleanUrgences()
-                resetForm()
+                goToStepReset()
+            } else {
+            	showToast('warn', 'Alerte', res.data.msg)
             }
 
         } catch (err) {
@@ -480,6 +467,65 @@ export function useScript() {
             loadingForm.value = false
         }
     }
+
+    // -----------------------------------------------------
+
+    const addRowAssurance = (newItem) => {
+	    if (!newItem?.id || !newItem?.nom) return
+
+	    assurances.value = [
+	        {
+	            label: newItem.nom,
+	            value: newItem.id
+	        },
+	        ...assurances.value
+	    ]
+	}
+
+	// -----------------------------------------------------
+
+	const getFooterButtons = () => [
+	  	{
+	    	id: 'logout',
+	    	label: 'Fermer',
+	    	icon: 'pi pi-times',
+	    	variant: 'outlined',
+	    	severity: 'danger',
+	    	command: () => dialogUse.hide()
+	  	},
+	  	{
+	    	id: 'DialogBtn',
+	    	label: 'Enregistrer',
+	    	loadingLabel: 'Opération en cours...',
+	    	icon: 'pi pi-check',
+	    	severity: 'success',
+	    	command: () => dialogUse.callComponentMethod('submit')
+	  	}
+	]
+
+	// -----------------------------------------------------
+
+	const insertAssurance = () => {
+
+	    dialogUse.show(
+	        "Nouvelle assurance",
+	        "pi pi-plus",
+	        "center",
+	        "60rem",
+	        markRaw(pageInsertAssurance),
+	        {
+	            data: null,
+	            fetchLists: null,
+	            updateRowById: null,
+	            addRow: addRowAssurance,
+	            editMode: null,
+	            editUid: null
+	        },
+	        { footerBtn: getFooterButtons() }
+	    )
+	}
+
+	// -----------------------------------------------------
 
     return {
         form,
@@ -530,6 +576,8 @@ export function useScript() {
 
         goToStep,
 
-        goToStepReset
+        goToStepReset,
+
+        insertAssurance
     }
 }

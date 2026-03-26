@@ -48,6 +48,7 @@ class PatientController extends Controller
 
     public function insertUpdatePatient(Request $request, $uid = null)
     {
+
         $rules = [
             'nom'          => 'required|string|max:100',
             'prenoms'      => 'nullable|string|max:150',
@@ -76,7 +77,7 @@ class PatientController extends Controller
             'antecedents.*' => 'exists:antecedents,id',
 
             // Urgences
-            'urgences' => 'nullable|array',
+            'urgences' => 'required|array|min:1',
             'urgences.*.nom' => 'required|string|max:150',
             'urgences.*.telephone1' => 'required|string|max:20',
             'urgences.*.telephone2' => 'nullable|string|max:20',

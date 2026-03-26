@@ -183,9 +183,8 @@ const formSubmit = async () => {
                     type: type.value,
                     type_label: type.value === 1 ? 'Privé' : 'Public'
 		        })
-	        } else {
 
-                console.log(res.data.data)
+	        } else {
 
 			    props.addRow?.({
                     id: res.data.data.id,

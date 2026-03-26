@@ -6,7 +6,7 @@
         FORMULAIRE
     </div>
 
-    <Stepper value="1" v-model:value="currentStep" class="basis-full">
+    <Stepper v-model:value="currentStep" class="basis-full">
         
         <StepList >
             <Step v-for="(step, index) in steps" :key="step.value" v-slot="{ activateCallback, value, a11yAttrs }" asChild :value="step.value">
@@ -84,7 +84,7 @@
                             severity="success"
                             icon="pi pi-arrow-right"
                             iconPos="right"
-                            @click="goToStep('2', activateCallback)" 
+                            @click="goToStep('2')" 
                         />
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                             severity="success"
                             icon="pi pi-arrow-right"
                             iconPos="right"
-                            @click="goToStep('3', activateCallback)"
+                            @click="goToStep('3')"
                         />
                     </div>
                 </div>
@@ -191,6 +191,7 @@
                                     </template>
                                     <template #footer>
                                         <div class="p-3 flex justify-between">
+                                            <Button label="Ajouter" severity="success" variant="" size="small" icon="pi pi-plus" @click="insertAssurance()" />
                                             <Button label="Actualiser" severity="warn" variant="" size="small" icon="pi pi-refresh" :loading="loadingSelectAssuranceRefresh"
                                             :disabled="loadingSelectAssuranceRefresh" 
                                             @click="fetchAssurances(true)" />
@@ -227,7 +228,7 @@
                             severity="success"
                             icon="pi pi-arrow-right"
                             iconPos="right"
-                            @click="goToStep('4', activateCallback)"
+                            @click="goToStep('4')"
                         />
                     </div>
                 </div>
@@ -310,7 +311,7 @@
                             severity="success"
                             icon="pi pi-arrow-right"
                             iconPos="right"
-                            @click="goToStep('5', activateCallback)"
+                            @click="goToStep('5')"
                         />
                     </div>
                 </div>
@@ -434,7 +435,7 @@
                             severity="success"
                             icon="pi pi-arrow-right"
                             iconPos="right"
-                            @click="goToStep('6', activateCallback)"
+                            @click="goToStep('6')"
                         />
                     </div>
                 </div>
@@ -462,7 +463,7 @@
                             <p><span class="font-bold">Nom :</span> {{ form.nom }}</p>
                             <p><span class="font-bold">Prénoms :</span> {{ form.prenoms }}</p>
                             <p><span class="font-bold">Sexe :</span> {{ sexes.find(s => s.value === form.sexe)?.label || '-' }}</p>
-                            <p><span class="font-bold">Date de naissance :</span> {{ form.datenais || '-' }}</p>
+                            <p><span class="font-bold">Date de naissance :</span> {{ formatDate(form.datenais) || '-' }}</p>
                             <p class="md:col-span-2"><span class="font-bold">Lieu de naissance :</span> {{ form.lieunais || '-' }}</p>
                         </div>
                     </div>
@@ -590,7 +591,7 @@
                         severity="warn"
                         label="Réinitialiser"
                         class="w-auto"
-                        @click="goToStepReset(activateCallback)" 
+                        @click="goToStepReset()" 
                     />
                     <Button
                         @click="submitForm"
@@ -602,6 +603,7 @@
                     />
                 </div>
             </StepPanel>
+
         </StepPanels>
     </Stepper>
 </div>
@@ -611,7 +613,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick, watch } from 'vue';
 import TitrePage from '@/layout/elements/TitrePage.vue';
-import { number, formaDateHeure } from '@/function/services/format';
+import { number, formatDate } from '@/function/services/format';
 import { useScript } from './script'
 import { useToastAlert } from '@/function/function/ToastAlert'
 
@@ -666,7 +668,9 @@ const {
 
         goToStep,
 
-        goToStepReset
+        goToStepReset,
+
+        insertAssurance
 } = useScript()
 
 onMounted(() => {
@@ -680,39 +684,36 @@ watch(
     () => form.value.taux,
     async (newVal) => {
 
-        // 🔹 Si vide → remettre 0
         if (newVal === '' || newVal === null || newVal === undefined) {
             await nextTick()
             form.value.taux = 0
             return
         }
 
-        // 🔹 garder uniquement chiffres
+        // 🔹 nettoyer (string temporaire)
         let filtered = number(newVal)
 
-        // 🔹 supprimer les zéros au début (ex: 05 → 5)
+        // 🔹 supprimer les zéros au début
         filtered = filtered.replace(/^0+/, '')
 
-        // 🔹 si tout supprimé → remettre 0
         if (filtered === '') {
-            filtered = 0
+            filtered = '0'
         }
 
         // 🔹 limiter à 3 chiffres
         filtered = filtered.slice(0, 3)
 
-        // 🔹 contrôle max 100
         let numericValue = parseInt(filtered)
 
         if (numericValue > 100) {
-            filtered = '100'
+            numericValue = 100
             showToast('warn', 'Attention', "Le taux (%) ne peut pas dépasser 100%")
         }
 
         // 🔹 éviter boucle infinie
-        if (filtered !== newVal) {
+        if (numericValue !== newVal) {
             await nextTick()
-            form.value.taux = filtered
+            form.value.taux = numericValue // 👈 NUMBER
         }
     }
 )

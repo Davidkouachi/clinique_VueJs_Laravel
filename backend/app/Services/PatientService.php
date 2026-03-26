@@ -46,17 +46,17 @@ class PatientService
 
             // 🧾 Payload patient
             $patientPayload = [
-                'nom'         => $data['nom'],
-                'prenoms'     => $data['prenoms'] ?? null,
-                'sexe'        => $data['sexe'],
-                'datenais'    => $data['datenais'] ?? null,
-                'lieunais'    => $data['lieunais'] ?? null,
-                'telephone1'  => $data['telephone1'],
-                'telephone2'  => $data['telephone2'] ?? null,
-                'email'       => $data['email'] ?? null,
-                'adresse'     => $data['adresse'] ?? null,
-                'groupe_sanguin' => $data['groupe_sanguin'] ?? null,
-                'updated_at'  => now(),
+                'nom'               => $data['nom'],
+                'prenoms'           => $data['prenoms'] ?? null,
+                'sexe'              => $data['sexe'],
+                'datenais'          => $data['datenais'] ?? null,
+                'lieunais'          => $data['lieunais'] ?? null,
+                'telephone1'        => $data['telephone1'],
+                'telephone2'        => $data['telephone2'] ?? null,
+                'email'             => $data['email'] ?? null,
+                'adresse'           => $data['adresse'] ?? null,
+                'groupe_sanguin'    => $data['groupe_sanguin'] ?? null,
+                'updated_at'        => now(),
             ];
 
             // INSERT / UPDATE patient

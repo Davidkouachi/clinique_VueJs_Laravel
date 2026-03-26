@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectController;
 use App\Http\Controllers\MedecinController;
 use App\Http\Controllers\AssuranceController;
+use App\Http\Controllers\PatientController;
 
 // Routes publiques
 Route::post('/login', [AuthController::class, 'traitement_login']);
@@ -45,6 +46,7 @@ Route::prefix($prefix)->middleware('auth:api')->group(function () {
     Route::post('/api_insert_specialite', [MedecinController::class, 'insertUpdatespecialite']);
     Route::post('/api_insert_medecins', [MedecinController::class, 'insertUpdateMedecin']);
     Route::post('/api_insert_assurances', [AssuranceController::class, 'insertUpdateAssurance']);
+    Route::post('/api_insert_patient', [PatientController::class, 'insertUpdatePatient']);
 
     //----------- Get -------------------//
     Route::get('/api_get_parametre', [ParametreController::class, 'getAllParametre']);
